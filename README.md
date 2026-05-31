@@ -26,6 +26,9 @@ consume.
 docs/
   failure_taxonomy.md   Failure modes the verifier should eventually detect.
   schema_contract.md    Structured output contract for benchmark and verifier data.
+  tolerance_policy.md   Numeric comparison defaults for benchmark checks.
+prompts/
+  pressure_vessel_prompt_v1.md  Canonical prompt for real-run benchmark capture.
 benchmark/
   README.md             Benchmark case format and contribution rules.
   real_world/           Transcript-backed failures from real engineering work.

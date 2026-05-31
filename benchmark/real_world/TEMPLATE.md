@@ -7,12 +7,66 @@ correction are available.
 ## Metadata
 
 - Case ID:
-- Schema version: `0.1.0`
+- Schema version: `0.2.0`
 - Source type: `real_world`
+- Status: `pending_capture` or `complete`
 - Course or project context:
 - Date of LLM interaction:
-- Model:
+- Model name:
+- Model version:
+- Prompt ID:
+- Temperature:
 - Anonymization notes:
+
+```json
+{
+  "case_id": "",
+  "schema_version": "0.2.0",
+  "source_type": "real_world",
+  "status": "pending_capture",
+  "source": {
+    "kind": "manual_model_run",
+    "description": "",
+    "raw_output_available": false
+  },
+  "model_name": null,
+  "model_version": null,
+  "run_date": null,
+  "prompt_id": "pressure_vessel_prompt_v1",
+  "temperature": null,
+  "run_settings": {},
+  "problem_statement": "",
+  "llm_response": {
+    "prompt": "prompts/pressure_vessel_prompt_v1.md",
+    "response": ""
+  },
+  "expected_result": {
+    "value": null,
+    "unit": null,
+    "method": "",
+    "required_assumptions": []
+  },
+  "failure_modes": [],
+  "formulas_used": [],
+  "inputs": [],
+  "outputs": [],
+  "units": {
+    "system": "SI",
+    "canonical_outputs": {}
+  },
+  "tolerance": {
+    "relative": 0.005,
+    "absolute": null,
+    "policy": "docs/tolerance_policy.md"
+  },
+  "notes": {
+    "assumptions_stated": [],
+    "limitations": ["Pending raw model output."],
+    "reviewer_notes": "",
+    "expected_verifier_behavior": "Pending classification after raw output is captured."
+  }
+}
+```
 
 ## Original Engineering Problem
 

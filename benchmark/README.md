@@ -9,9 +9,16 @@ failure behavior instead of imagined behavior.
 - `real_world/`: transcript-backed LLM failures from actual engineering work.
 - `synthetic/`: clearly labeled artificial cases for targeted coverage.
 
-Do not place a case in `real_world/` unless the original prompt, LLM response,
-and trusted correction are available. Anonymize coursework, names, dates, or
+Real-run capture slots may live in `real_world/` with `status:
+pending_capture`, but they must not be described as completed real LLM failures
+until the raw model output is present. Anonymize coursework, names, dates, or
 project details when needed, but do not fabricate provenance.
+
+## Case Format
+
+Each benchmark case is a Markdown file with a fenced `json` metadata block near
+the top. The JSON block follows `docs/schema_contract.md`; the surrounding
+Markdown explains the case for human reviewers.
 
 ## Case Requirements
 
@@ -24,12 +31,13 @@ Each benchmark case should include:
 - Classified failure mode labels from `docs/failure_taxonomy.md`.
 - Expected future verifier behavior.
 - Notes on assumptions, units, and limitations.
+- Tolerance policy reference.
 
 ## Naming
 
 Use stable lowercase identifiers:
 
-- `rw-0001.md`
+- `rw-pressure-vessel-gpt-0001.md`
 - `syn-fm01-0001.md`
 - `syn-fm07-0001.md`
 

@@ -6,48 +6,57 @@ implemented in this phase.
 
 ## Version
 
-Current draft schema version: `0.1.0`
+Current draft schema version: `0.2.0`
 
-Schema versions should use semantic versioning:
+Schema versions use semantic versioning:
 
-- Patch changes clarify wording or add examples without changing fields.
+- Patch changes clarify wording or examples without changing fields.
 - Minor changes add optional fields.
 - Major changes rename fields, remove fields, or change required semantics.
+
+## Benchmark File Format
+
+Benchmark cases are Markdown files with a fenced `json` metadata block near the
+top. The Markdown makes cases readable in GitHub; the JSON block gives the
+future verifier a stable parse target.
 
 ## Required Top-Level Fields
 
 | Field | Type | Required | Description |
 |---|---:|---:|---|
-| `case_id` | string | yes | Stable benchmark identifier, such as `rw-0001` or `syn-fm07-0001`. |
+| `case_id` | string | yes | Stable benchmark identifier. |
 | `schema_version` | string | yes | Schema version used by this case. |
-| `source_type` | string | yes | One of `real_world`, `synthetic`, or `reference_correct`. |
-| `problem_statement` | string | yes | Original engineering problem statement. |
-| `llm_response` | object | yes | Prompt and response being audited. |
-| `expected_result` | object | yes | Trusted answer or trusted method used for comparison. |
-| `failure_modes` | array | yes | Expected failure labels, such as `FM-01`, `FM-02`, `FM-07`, or `P-01`. |
+| `source_type` | string | yes | One of `synthetic`, `real_world`, or `reference_correct`. |
+| `status` | string | yes | One of `complete`, `pending_capture`, or `needs_review`. |
+| `source` | object | yes | Provenance and capture source. |
+| `model_name` | string or null | yes | Model product name, or `null` for synthetic cases. |
+| `model_version` | string or null | yes | Model version or release identifier when known. |
+| `run_date` | string or null | yes | ISO date when the model run was captured. |
+| `prompt_id` | string | yes | Stable prompt identifier. |
+| `temperature` | number or null | yes | Sampling temperature when known. |
+| `run_settings` | object | yes | Provider-specific run settings. |
+| `problem_statement` | string | yes | Original engineering problem. |
+| `llm_response` | object | yes | Prompt and raw model response being audited. |
+| `expected_result` | object | yes | Trusted answer or trusted method. |
+| `failure_modes` | array | yes | Expected labels from the taxonomy. |
 | `formulas_used` | array | yes | Formula records stated by the LLM or expected solution. |
 | `inputs` | array | yes | Named numerical inputs with units. |
 | `outputs` | array | yes | Named numerical outputs with units. |
-| `units` | object | yes | Unit system and canonical units for the case. |
-| `notes` | object | yes | Provenance, assumptions, limitations, and reviewer notes. |
+| `units` | object | yes | Unit system and canonical units. |
+| `tolerance` | object | yes | Numeric tolerance policy for the case. |
+| `notes` | object | yes | Assumptions, limitations, and reviewer notes. |
 
 ## Field Details
 
-### `case_id`
+### `source`
 
-Use lowercase identifiers with a source prefix:
+Required fields:
 
-- `rw-0001` for real-world cases.
-- `syn-fm07-0001` for synthetic targeted cases.
-- `ref-0001` for correct reference cases.
-
-### `source_type`
-
-Allowed values:
-
-- `real_world`: transcript-backed failure from actual engineering work.
-- `synthetic`: artificial case designed to exercise a specific failure mode.
-- `reference_correct`: correct case used to check false positives.
+| Field | Type | Description |
+|---|---:|---|
+| `kind` | string | `synthetic`, `manual_model_run`, `api_model_run`, or `coursework_transcript`. |
+| `description` | string | Human-readable provenance. |
+| `raw_output_available` | boolean | Whether raw LLM output is present in the file. |
 
 ### `llm_response`
 
@@ -55,10 +64,11 @@ Required fields:
 
 | Field | Type | Description |
 |---|---:|---|
-| `model` | string | Model name if known. Use `unknown` if unavailable. |
-| `date` | string | ISO date of the interaction if known. |
-| `prompt` | string | Prompt sent to the LLM. |
-| `response` | string | Raw LLM response. |
+| `prompt` | string | Prompt text or pointer to the canonical prompt file. |
+| `response` | string | Raw LLM response, or empty string for pending captures. |
+
+Legacy `llm_response.model` and `llm_response.date` are replaced by
+top-level `model_name`, `model_version`, and `run_date`.
 
 ### `expected_result`
 
@@ -66,94 +76,50 @@ Required fields:
 
 | Field | Type | Description |
 |---|---:|---|
-| `value` | number or null | Expected final numerical value, if a single scalar is appropriate. |
+| `value` | number or null | Expected final numerical value, if scalar. |
 | `unit` | string or null | Expected final unit. |
 | `method` | string | Trusted calculation method. |
-| `required_assumptions` | array | Assumptions required for the expected method. |
-| `tolerance_relative` | number | Relative tolerance for numerical comparison. |
+| `required_assumptions` | array | Assumptions required for the method. |
 
-Use `null` for `value` and `unit` when the benchmark checks parsing or formula
-selection rather than a single numerical result.
-
-### `failure_modes`
-
-The array must contain expected labels from `docs/failure_taxonomy.md`. Use an
-empty array only for reference-correct cases.
-
-### `formulas_used`
-
-Each formula record requires:
-
-| Field | Type | Description |
-|---|---:|---|
-| `id` | string | Stable identifier within the case, such as `eq1`. |
-| `equation` | string | Parseable equation when possible. |
-| `purpose` | string | What the formula is intended to compute. |
-| `variables` | object | Mapping from symbols to input or output names. |
-
-### `inputs`
-
-Each input requires:
-
-| Field | Type | Description |
-|---|---:|---|
-| `name` | string | Human-readable variable name. |
-| `symbol` | string | Symbol used in formulas. |
-| `value` | number | Numerical value. |
-| `unit` | string | Unit exactly as used in the case. |
-
-### `outputs`
-
-Each output requires:
-
-| Field | Type | Description |
-|---|---:|---|
-| `name` | string | Human-readable output name. |
-| `symbol` | string | Symbol used in formulas. |
-| `value` | number | Numerical value stated by the LLM or expected result. |
-| `unit` | string | Output unit. |
-| `source` | string | One of `llm`, `expected`, or `recomputed`. |
-
-### `units`
+### `tolerance`
 
 Required fields:
 
 | Field | Type | Description |
 |---|---:|---|
-| `system` | string | Unit system, such as `SI`, `USCS`, or `mixed`. |
-| `canonical_outputs` | object | Preferred output units by quantity. |
-
-### `notes`
-
-Required fields:
-
-| Field | Type | Description |
-|---|---:|---|
-| `provenance` | string | Source of the benchmark case. |
-| `assumptions_stated` | array | Assumptions explicitly stated by the LLM. |
-| `limitations` | array | Known issues or scope limits for the case. |
-| `reviewer_notes` | string | Human review notes. |
+| `relative` | number or null | Relative tolerance as a fraction. Default is `0.005`. |
+| `absolute` | number or null | Absolute tolerance in output units when needed. |
+| `policy` | string | Link or short name for the tolerance policy used. |
 
 ## Valid Example
 
 ```json
 {
   "case_id": "syn-fm07-0001",
-  "schema_version": "0.1.0",
+  "schema_version": "0.2.0",
   "source_type": "synthetic",
+  "status": "complete",
+  "source": {
+    "kind": "synthetic",
+    "description": "Synthetic case for reasoning consistency.",
+    "raw_output_available": true
+  },
+  "model_name": null,
+  "model_version": null,
+  "run_date": null,
+  "prompt_id": "synthetic_pressure_vessel_fm07",
+  "temperature": null,
+  "run_settings": {},
   "problem_statement": "Find hoop stress for a thin-walled cylindrical pressure vessel with p = 1.2 MPa, r = 50 mm, and t = 3 mm.",
   "llm_response": {
-    "model": "synthetic",
-    "date": "2026-05-29",
     "prompt": "Solve the pressure vessel problem and show your work.",
     "response": "sigma_h = p r / t. Substituting gives 25 MPa. Therefore the hoop stress is 20 MPa."
   },
   "expected_result": {
     "value": 20,
     "unit": "MPa",
-    "method": "Trusted worked solution supplied by benchmark author.",
-    "required_assumptions": ["thin-walled cylinder", "internal pressure", "hoop stress requested"],
-    "tolerance_relative": 0.005
+    "method": "sigma_h = p r / t",
+    "required_assumptions": ["thin-walled cylinder", "internal pressure", "hoop stress requested"]
   },
   "failure_modes": ["FM-07"],
   "formulas_used": [
@@ -176,7 +142,8 @@ Required fields:
   ],
   "outputs": [
     {"name": "hoop_stress_substitution", "symbol": "sigma_h", "value": 25, "unit": "MPa", "source": "llm"},
-    {"name": "hoop_stress_final", "symbol": "sigma_h", "value": 20, "unit": "MPa", "source": "llm"}
+    {"name": "hoop_stress_final", "symbol": "sigma_h", "value": 20, "unit": "MPa", "source": "llm"},
+    {"name": "hoop_stress", "symbol": "sigma_h", "value": 20, "unit": "MPa", "source": "expected"}
   ],
   "units": {
     "system": "SI",
@@ -184,11 +151,16 @@ Required fields:
       "stress": "MPa"
     }
   },
+  "tolerance": {
+    "relative": 0.005,
+    "absolute": null,
+    "policy": "docs/tolerance_policy.md"
+  },
   "notes": {
-    "provenance": "Synthetic example for schema documentation.",
     "assumptions_stated": ["thin-walled cylinder"],
-    "limitations": ["Synthetic example for reasoning consistency, not a real-world transcript."],
-    "reviewer_notes": "The final answer is correct, but the stated substitution says 25 MPa even though the formula and inputs recompute to 20 MPa."
+    "limitations": ["Synthetic example, not a transcript-backed real run."],
+    "reviewer_notes": "Final answer is correct, but the substitution line is inconsistent.",
+    "expected_verifier_behavior": "Flag FM-07 because recomputation yields 20 MPa while the stated substitution says 25 MPa."
   }
 }
 ```
@@ -204,18 +176,12 @@ Required fields:
 }
 ```
 
-This is invalid because it omits `schema_version`, `llm_response`,
-`expected_result`, `failure_modes`, `formulas_used`, `inputs`, `outputs`,
-`units`, and `notes`. It also uses `answer`, which is not a recognized
-top-level field.
+This is invalid because it omits required metadata, model/run fields,
+`llm_response`, `expected_result`, `failure_modes`, `formulas_used`, `inputs`,
+`outputs`, `units`, `tolerance`, and `notes`.
 
 ## Parsing Failure Category
 
-Malformed LLM output should be reported as `P-01: Schema Noncompliance`.
-
-Future verifier behavior:
-
-1. Parse the response into this schema.
-2. Validate required fields and types.
-3. Emit a diagnostic report for missing or malformed fields.
-4. Stop before engineering checks if the schema is invalid.
+Malformed benchmark data should be reported as `P-01: Schema Noncompliance`.
+Future verifier behavior is to emit a diagnostic report and skip engineering
+checks when the metadata block is missing or invalid.

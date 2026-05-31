@@ -1,130 +1,79 @@
 # Failure Taxonomy
 
 This document defines the first failure modes MechAudit should detect in
-LLM-generated mechanical engineering calculations. The taxonomy is written before
-verifier code so benchmark cases can define the expected behavior.
+LLM-generated mechanical engineering calculations. The taxonomy is benchmark-led:
+case files define expected future verifier behavior before verifier code exists.
 
 ## Failure Mode Format
 
-Each failure mode includes:
-
-- Definition: what counts as the failure.
-- Detection method: how a verifier could identify it from structured output.
-- Required schema fields: data needed to make the check possible.
-- Tolerance: numerical threshold for flagging when relevant.
-- Positive example: should be flagged.
-- Negative example: should pass.
-- Known limitations: cases the first verifier should not claim to solve.
+Each failure mode includes a definition, detection method, required schema
+fields, tolerance behavior, examples, and known limitations.
 
 ## FM-01: Unit Conversion or Dimensional Inconsistency
 
 ### Definition
 
-The LLM combines values with incompatible units, converts units incorrectly, or
-reports an output whose dimensions do not match the quantity being calculated.
-This includes using millimeters as meters, mixing gauge and absolute pressure
-without stating the basis, or producing stress in units that are dimensionally
-incompatible with force per area.
+The LLM combines incompatible units, converts units incorrectly, or reports an
+output whose dimensions do not match the requested engineering quantity.
 
 ### Detection Method
 
-1. Parse each stated input value and unit from `inputs`.
-2. Parse the stated formula from `formulas_used`.
-3. Check that substituted units reduce to the declared output dimension.
-4. Convert all compatible units to the canonical unit system for the case.
-5. Recompute the output and compare it with the stated output.
-6. Flag `FM-01` when unit dimensions are incompatible or when a unit conversion
-   changes the result beyond tolerance.
+1. Parse input and output values with units.
+2. Parse the stated formula and variable mapping.
+3. Check dimensional compatibility.
+4. Convert compatible units to the case canonical unit system.
+5. Recompute the stated output.
+6. Flag `FM-01` when dimensions are incompatible or unit conversion changes the
+   result beyond the case tolerance.
 
 ### Required Schema Fields
 
-- `inputs[].name`
 - `inputs[].value`
 - `inputs[].unit`
-- `formulas_used[].equation`
-- `outputs[].name`
 - `outputs[].value`
 - `outputs[].unit`
+- `formulas_used[].equation`
 - `units.system`
+- `tolerance`
 
 ### Tolerance
 
-Use a default relative tolerance of `0.5%` for unit-converted recomputation.
-Dimensional incompatibility has no tolerance and should always flag.
+Numerical unit-conversion checks use the tolerance policy in
+`docs/tolerance_policy.md`. Dimensional incompatibility always fails and has no
+tolerance.
 
 ### Positive Example
 
-Stated formula:
-
-```text
-sigma = F / A
-```
-
-Stated inputs:
-
-```text
-F = 10 kN
-A = 50 mm^2
-```
-
-Stated output:
-
-```text
-sigma = 0.2 MPa
-```
-
-Recomputed result:
-
-```text
-10 kN / 50 mm^2 = 200 MPa
-```
-
-The stated output is off by a factor of 1000, so the verifier should flag
-`FM-01`.
+`F = 10 kN`, `A = 50 mm^2`, and `sigma = F / A`. If the LLM reports
+`sigma = 0.2 MPa`, the verifier should recompute `200 MPa` and flag `FM-01`.
 
 ### Negative Example
 
-Stated inputs:
-
-```text
-F = 10 kN
-A = 50 mm^2
-```
-
-Stated output:
-
-```text
-sigma = 200 MPa
-```
-
-The units and value are consistent, so the verifier should not flag `FM-01`.
+With the same inputs, `sigma = 200 MPa` is unit-consistent and should not flag
+`FM-01`.
 
 ### Known Limitations
 
-- Requires explicit units for inputs and outputs.
-- Does not infer missing units from surrounding prose in V1.
-- Does not decide whether an engineering assumption, such as gauge versus
-  absolute pressure, is appropriate unless that basis is stated.
+- Requires explicit units.
+- V1 should not infer omitted units from prose.
+- Gauge versus absolute pressure should be treated as an assumption issue unless
+  the response explicitly states the basis.
 
-## FM-02: Incorrect Formula Selection or Missing Assumption
+## FM-02A: Wrong Governing Formula
 
 ### Definition
 
-The LLM uses a formula that does not apply to the problem conditions, omits a
-necessary assumption, or applies a simplified relation outside its valid range.
-The arithmetic may be internally consistent, but the engineering model is wrong
-or under-specified.
+The LLM uses a formula that does not govern the requested quantity or physical
+case. The arithmetic may be internally consistent, but the selected engineering
+model is wrong.
 
 ### Detection Method
 
-1. Parse the problem type and stated assumptions from the case metadata.
-2. Parse each formula in `formulas_used`.
-3. Compare the formula against the expected formula family for the benchmark
-   case.
-4. Check whether required assumptions are present, such as thin-wall criteria,
-   static loading, linear elasticity, or small deflection.
-5. Flag `FM-02` when the formula family is incompatible with the case or when a
-   required assumption is missing from the LLM response.
+1. Parse the requested quantity and problem class from the benchmark case.
+2. Parse the formula purpose and equation from `formulas_used`.
+3. Compare the formula family against `expected_result.method`.
+4. Flag `FM-02A` when the formula computes the wrong quantity or applies the
+   wrong governing relation.
 
 ### Required Schema Fields
 
@@ -133,202 +82,147 @@ or under-specified.
 - `expected_result.required_assumptions`
 - `formulas_used[].equation`
 - `formulas_used[].purpose`
-- `notes.assumptions_stated`
+- `failure_modes`
 
 ### Tolerance
 
-Formula selection is categorical. Numerical tolerance does not apply unless the
-wrong formula also produces a recomputation mismatch covered by another failure
-mode.
+Formula selection is categorical. Numeric tolerance does not apply.
 
 ### Positive Example
 
-Problem:
-
-```text
-Find hoop stress in a thin-walled cylindrical pressure vessel.
-```
-
-LLM formula:
-
-```text
-sigma = p r / (2 t)
-```
-
-Expected formula:
-
-```text
-sigma_hoop = p r / t
-```
-
-The LLM used the longitudinal stress formula for hoop stress. The verifier should
-flag `FM-02`.
+For hoop stress in a thin-walled cylindrical pressure vessel, using
+`sigma = p r / (2 t)` should flag `FM-02A` because that is the longitudinal
+stress relation, not the hoop stress relation.
 
 ### Negative Example
 
-Problem:
-
-```text
-Find longitudinal stress in a closed-end thin-walled cylindrical pressure vessel.
-```
-
-LLM formula:
-
-```text
-sigma_longitudinal = p r / (2 t)
-```
-
-The formula matches the requested quantity, so the verifier should not flag
-`FM-02`.
+For longitudinal stress in a closed-end thin-walled cylindrical pressure vessel,
+`sigma = p r / (2 t)` should not flag `FM-02A`.
 
 ### Known Limitations
 
-- Requires benchmark cases to declare the expected formula family.
-- Does not prove that a formula is universally correct; it checks against the
-  expected method for the case.
-- Ambiguous problem statements should be marked as benchmark quality issues
-  rather than verifier failures.
+- Requires the benchmark case to declare the expected method.
+- V1 checks against the expected formula for the benchmark, not universal
+  formula correctness.
+
+## FM-02B: Missing or Invalid Assumption
+
+### Definition
+
+The LLM relies on a formula or simplification without stating the assumptions
+needed for that method, or states an assumption that is invalid for the problem
+conditions.
+
+### Detection Method
+
+1. Parse required assumptions from `expected_result.required_assumptions`.
+2. Parse assumptions stated by the LLM from `notes.assumptions_stated`.
+3. Compare stated assumptions against required assumptions.
+4. Flag `FM-02B` when required assumptions are missing, contradicted, or invalid
+   for the stated inputs.
+
+### Required Schema Fields
+
+- `problem_statement`
+- `expected_result.required_assumptions`
+- `notes.assumptions_stated`
+- `inputs`
+- `formulas_used[].purpose`
+
+### Tolerance
+
+Assumption validity is categorical. Numeric tolerance does not apply, except
+when an assumption is tied to a numerical threshold such as thin-wall ratio.
+
+### Positive Example
+
+For a pressure vessel with radius `r = 50 mm` and wall thickness `t = 20 mm`, an
+LLM that applies thin-wall formulas and states "thin-walled because t is small"
+should flag `FM-02B`, because `r / t = 2.5` is outside the typical thin-wall
+range.
+
+### Negative Example
+
+For `r = 50 mm` and `t = 3 mm`, stating the thin-wall assumption is acceptable
+for this benchmark and should not flag `FM-02B`.
+
+### Known Limitations
+
+- V1 should use benchmark-declared assumptions rather than trying to infer all
+  valid engineering models.
+- Ambiguous problem statements should be marked as benchmark-quality issues.
 
 ## FM-07: Correct Answer, Incorrect Reasoning
 
 ### Definition
 
 The LLM produces a final answer that is numerically correct within tolerance, but
-the stated chain of reasoning contains formulas, substitutions, or intermediate
-calculations that would produce a different result if executed faithfully.
-
-This is a high-priority failure mode because it can make an answer look reliable
-even when the reasoning is not reproducible.
+the stated formulas, substitutions, or intermediate calculations would produce a
+different value if executed faithfully.
 
 ### Detection Method
 
-1. Parse stated formulas from `formulas_used`.
-2. Parse stated input values and units from `inputs`.
-3. Substitute the stated inputs into each relevant equation.
-4. Recompute intermediate and final outputs.
-5. Compare recomputed values against the LLM-stated values in `outputs`.
-6. Separately compare the final answer against `expected_result`.
-7. Flag `FM-07` when the final answer is correct but the recomputed reasoning
-   does not match the stated intermediate or final values.
+1. Parse formulas from `formulas_used`.
+2. Parse input values and units from `inputs`.
+3. Recompute intermediate and final outputs.
+4. Compare recomputed values against LLM-stated outputs.
+5. Separately compare the final answer against `expected_result`.
+6. Flag `FM-07` when the final answer is correct but the stated reasoning is not
+   reproducible.
 
 ### Required Schema Fields
 
 - `formulas_used[].equation`
 - `formulas_used[].variables`
-- `inputs[].name`
-- `inputs[].value`
-- `inputs[].unit`
-- `outputs[].name`
-- `outputs[].value`
-- `outputs[].unit`
-- `expected_result.value`
-- `expected_result.unit`
+- `inputs`
+- `outputs`
+- `expected_result`
+- `tolerance`
 
 ### Tolerance
 
-Use a default relative tolerance of `0.5%` for recomputation. The tolerance
-should eventually be configurable per case because some engineering problems
-depend on rounded tabular values.
+Use the numeric tolerance policy in `docs/tolerance_policy.md`. The default
+relative tolerance is `0.5%`.
 
 ### Positive Example
 
-Stated formula:
-
-```text
-sigma_h = p r / t
-```
-
-Stated inputs:
-
-```text
-p = 1.2 MPa
-r = 50 mm
-t = 3 mm
-```
-
-Stated output:
-
-```text
-sigma_h = 25 MPa
-```
-
-Expected final answer:
-
-```text
-25 MPa
-```
-
-Recomputed from stated reasoning:
-
-```text
-1.2 * 50 / 3 = 20 MPa
-```
-
-The final answer matches the expected result, but it does not follow from the
-stated formula and inputs. The verifier should flag `FM-07`.
+If an LLM states `sigma_h = p r / t`, gives `p = 1.2 MPa`, `r = 50 mm`,
+`t = 3 mm`, writes an intermediate value of `25 MPa`, but concludes with the
+correct final answer `20 MPa`, the verifier should flag `FM-07`.
 
 ### Negative Example
 
-Stated formula:
-
-```text
-sigma_h = p r / t
-```
-
-Stated inputs:
-
-```text
-p = 1.2 MPa
-r = 50 mm
-t = 3 mm
-```
-
-Stated output:
-
-```text
-sigma_h = 20 MPa
-```
-
-Expected final answer:
-
-```text
-20 MPa
-```
-
-The reasoning and final answer agree, so the verifier should not flag `FM-07`.
+If the same formula and inputs produce stated intermediate and final values of
+`20 MPa`, the verifier should not flag `FM-07`.
 
 ### Known Limitations
 
-- Requires the LLM to state formulas explicitly.
-- Requires parseable equations and named variables.
-- Does not detect hidden reasoning that is not represented in the structured
-  output.
-- V1 should focus on algebraic expressions and basic engineering formulas before
-  supporting piecewise, iterative, or table-based methods.
+- Requires explicit, parseable formulas.
+- Does not inspect hidden reasoning absent from the structured case data.
+- V1 should focus on algebraic expressions before table-based or iterative
+  methods.
 
 ## P-01: Schema Noncompliance
 
 ### Definition
 
-The LLM response cannot be parsed into the required benchmark or verifier schema.
-This is a parsing-layer failure, not an engineering failure mode.
+The response or benchmark case cannot be parsed into the required schema. This
+is a parsing-layer failure, not an engineering failure mode.
 
 ### Detection Method
 
-1. Attempt to parse the structured response.
-2. Validate required top-level fields.
-3. Validate required nested fields and primitive types.
-4. Reject hallucinated schema extensions unless the schema version explicitly
-   allows them.
-5. Report missing, malformed, or unparseable fields as `P-01`.
+1. Parse the embedded metadata block or model output schema.
+2. Validate required fields and primitive types.
+3. Validate required nested structures.
+4. Report missing or malformed fields as `P-01`.
 
 ### Expected Behavior
 
-V1 should fail gracefully with a diagnostic report instead of attempting an
-engineering audit on malformed data.
+The future verifier should fail gracefully with a diagnostic report and skip
+engineering checks when schema data is invalid.
 
-### Known Limitations
+## Compatibility Note
 
-- A schema-compliant response can still contain incorrect engineering.
-- A schema-noncompliant response may contain useful prose, but V1 should not rely
-  on ad hoc prose extraction.
+The legacy label `FM-02` has been split into `FM-02A` for wrong governing formula
+and `FM-02B` for missing or invalid assumption. New benchmark cases should not
+use unsuffixed `FM-02`.
