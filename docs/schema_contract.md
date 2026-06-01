@@ -40,7 +40,7 @@ future verifier a stable parse target.
 | `expected_result` | object | yes | Trusted answer or trusted method. |
 | `failure_modes` | array | yes | Expected labels from the taxonomy. |
 | `formulas_used` | array | yes | Formula records stated by the LLM or expected solution. |
-| `inputs` | array | yes | Named numerical inputs with units. |
+| `inputs` | object or array | yes | Named numerical inputs with units. Completed synthetic cases use object form. |
 | `outputs` | array | yes | Named numerical outputs with units. |
 | `units` | object | yes | Unit system and canonical units. |
 | `tolerance` | object | yes | Numeric tolerance policy for the case. |
@@ -91,6 +91,13 @@ Required fields:
 | `absolute` | number or null | Absolute tolerance in output units when needed. |
 | `policy` | string | Link or short name for the tolerance policy used. |
 
+### `formulas_used`
+
+Each formula record should include `formula_id` so the first verifier can use
+canonical formula identities instead of brittle string parsing. Initial formula
+IDs include `hoop_stress_thin_wall`, `longitudinal_stress_thin_wall`,
+`yield_safety_factor`, and `axial_stress`.
+
 ## Valid Example
 
 ```json
@@ -125,6 +132,7 @@ Required fields:
   "formulas_used": [
     {
       "id": "eq1",
+      "formula_id": "hoop_stress_thin_wall",
       "equation": "sigma_h = p * r / t",
       "purpose": "Compute hoop stress",
       "variables": {
@@ -135,11 +143,12 @@ Required fields:
       }
     }
   ],
-  "inputs": [
-    {"name": "pressure", "symbol": "p", "value": 1.2, "unit": "MPa"},
-    {"name": "radius", "symbol": "r", "value": 50, "unit": "mm"},
-    {"name": "wall_thickness", "symbol": "t", "value": 3, "unit": "mm"}
-  ],
+  "inputs": {
+    "pressure": {"value": 1.2, "unit": "MPa"},
+    "radius": {"value": 50, "unit": "mm"},
+    "thickness": {"value": 3, "unit": "mm"},
+    "yield_strength": {"value": 120, "unit": "MPa"}
+  },
   "outputs": [
     {"name": "hoop_stress_substitution", "symbol": "sigma_h", "value": 25, "unit": "MPa", "source": "llm"},
     {"name": "hoop_stress_final", "symbol": "sigma_h", "value": 20, "unit": "MPa", "source": "llm"},

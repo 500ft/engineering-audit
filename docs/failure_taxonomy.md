@@ -202,6 +202,44 @@ If the same formula and inputs produce stated intermediate and final values of
 - V1 should focus on algebraic expressions before table-based or iterative
   methods.
 
+## FM-03: Arithmetic or Substitution Error
+
+### Definition
+
+The LLM selects the correct governing formula and states the relevant inputs, but
+performs arithmetic or substitution incorrectly. Unlike `FM-07`, the incorrect
+arithmetic propagates to the final reported answer.
+
+### Detection Method
+
+1. Identify the canonical `formula_id` for the stated calculation.
+2. Recompute the quantity from the stated inputs.
+3. Compare the recomputed value with the LLM-reported final output.
+4. Flag `FM-03` when the formula is appropriate but the reported final value
+   differs beyond tolerance.
+
+### Required Schema Fields
+
+- `formulas_used[].formula_id`
+- `inputs`
+- `outputs`
+- `expected_result`
+- `tolerance`
+
+### Tolerance
+
+Use the numeric tolerance policy in `docs/tolerance_policy.md`. The default
+relative tolerance is `0.5%`.
+
+### Positive Example
+
+For `sigma_h = p r / t`, `p = 1.2 MPa`, `r = 50 mm`, and `t = 3 mm`, reporting
+`25 MPa` should flag `FM-03` because the recomputed value is `20 MPa`.
+
+### Negative Example
+
+Reporting `20 MPa` for the same formula and inputs should not flag `FM-03`.
+
 ## P-01: Schema Noncompliance
 
 ### Definition

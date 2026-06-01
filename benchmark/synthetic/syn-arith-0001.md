@@ -13,19 +13,20 @@
   "prompt_id": "synthetic_pressure_vessel_arithmetic",
   "temperature": null,
   "run_settings": {},
-  "problem_statement": "Find hoop stress for a thin-walled cylindrical pressure vessel with p = 1.2 MPa, r = 50 mm, and t = 3 mm.",
+  "problem_statement": "Find hoop stress in a thin-walled cylindrical pressure vessel with p = 1.2 MPa, r = 50 mm, t = 3 mm, and yield strength S_y = 120 MPa.",
   "llm_response": {
     "prompt": "Find hoop stress and show arithmetic.",
     "response": "sigma_h = p r / t = 1.2 * 50 / 3 = 25 MPa. The hoop stress is 25 MPa."
   },
   "expected_result": {"value": 20, "unit": "MPa", "method": "sigma_h = p r / t = 1.2 * 50 / 3 = 20 MPa.", "required_assumptions": ["thin-walled cylinder", "internal pressure", "hoop stress requested"]},
-  "failure_modes": ["FM-07"],
-  "formulas_used": [{"id": "eq1", "equation": "sigma_h = p * r / t", "purpose": "Compute hoop stress", "variables": {"sigma_h": "hoop_stress", "p": "pressure", "r": "radius", "t": "wall_thickness"}}],
-  "inputs": [
-    {"name": "pressure", "symbol": "p", "value": 1.2, "unit": "MPa"},
-    {"name": "radius", "symbol": "r", "value": 50, "unit": "mm"},
-    {"name": "wall_thickness", "symbol": "t", "value": 3, "unit": "mm"}
-  ],
+  "failure_modes": ["FM-03"],
+  "formulas_used": [{"id": "eq1", "formula_id": "hoop_stress_thin_wall", "equation": "sigma_h = p * r / t", "purpose": "Compute hoop stress", "variables": {"sigma_h": "hoop_stress", "p": "pressure", "r": "radius", "t": "thickness"}}],
+  "inputs": {
+    "pressure": {"value": 1.2, "unit": "MPa"},
+    "radius": {"value": 50, "unit": "mm"},
+    "thickness": {"value": 3, "unit": "mm"},
+    "yield_strength": {"value": 120, "unit": "MPa"}
+  },
   "outputs": [
     {"name": "hoop_stress", "symbol": "sigma_h", "value": 25, "unit": "MPa", "source": "llm"},
     {"name": "hoop_stress", "symbol": "sigma_h", "value": 20, "unit": "MPa", "source": "expected"}
@@ -34,14 +35,13 @@
   "tolerance": {"relative": 0.005, "absolute": null, "policy": "docs/tolerance_policy.md"},
   "notes": {
     "assumptions_stated": ["thin-walled cylinder"],
-    "limitations": ["Synthetic case.", "Arithmetic errors may deserve a future FM-03 label; for this milestone they are grouped under reasoning/recomputation behavior."],
+    "limitations": ["Synthetic case."],
     "reviewer_notes": "Formula choice is correct, but substitution arithmetic is wrong.",
-    "expected_verifier_behavior": "Flag the numeric recomputation mismatch; this is currently classified under FM-07-style reasoning consistency until a dedicated arithmetic label exists."
+    "expected_verifier_behavior": "Flag FM-03 because the correct formula recomputes to 20 MPa, not the reported final 25 MPa."
   }
 }
 ```
 
 ## Expected Future Verifier Behavior
 
-Recompute the formula and flag the arithmetic mismatch. This file explicitly
-notes that a future `FM-03` may be useful for pure arithmetic errors.
+Recompute the formula and flag `FM-03` for the arithmetic mismatch.
