@@ -155,9 +155,13 @@ def _audit_pressure_vessel(
 
     if "longitudinal_stress_thin_wall" in formula_ids:
         for formula in case.formulas_used:
+            targets_hoop_stress = (
+                "hoop" in formula.purpose.lower()
+                or "hoop_stress" in formula.variables.values()
+            )
             if (
                 formula.formula_id == "longitudinal_stress_thin_wall"
-                and formula.variables.get("sigma") == "hoop_stress"
+                and targets_hoop_stress
             ):
                 result.add_check(
                     "formula-id",

@@ -5,10 +5,21 @@ import re
 from pathlib import Path
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
 
 
 JSON_BLOCK_RE = re.compile(r"```json\s*(\{.*?\})\s*```", re.DOTALL)
+
+
+class CaseLoadError(ValueError):
+    """Controlled loader failure for malformed benchmark metadata."""
+
+    failure_mode = "P-01"
+
+    def __init__(self, path: Path, message: str):
+        super().__init__(f"{self.failure_mode}: {path}: {message}")
+        self.path = path
+        self.message = message
 
 
 class QuantityValue(BaseModel):
@@ -100,14 +111,20 @@ class BenchmarkCase(BaseModel):
 def parse_first_json_block(markdown: str, path: Path) -> dict[str, Any]:
     match = JSON_BLOCK_RE.search(markdown)
     if not match:
-        raise ValueError(f"No fenced JSON metadata block found in {path}")
-    return json.loads(match.group(1))
+        raise CaseLoadError(path, "No fenced JSON metadata block found.")
+    try:
+        return json.loads(match.group(1))
+    except json.JSONDecodeError as exc:
+        raise CaseLoadError(path, f"Malformed JSON metadata: {exc.msg}.") from exc
 
 
 def load_case_file(path: Path) -> BenchmarkCase:
     data = parse_first_json_block(path.read_text(encoding="utf-8"), path)
     data["source_path"] = path
-    return BenchmarkCase.model_validate(data)
+    try:
+        return BenchmarkCase.model_validate(data)
+    except ValidationError as exc:
+        raise CaseLoadError(path, f"Schema validation failed: {exc.errors()[0]['msg']}.") from exc
 
 
 def load_benchmark_cases(root: Path) -> list[BenchmarkCase]:

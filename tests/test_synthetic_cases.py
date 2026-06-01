@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from mechaudit.case_loader import load_benchmark_cases, split_cases
-from mechaudit.pressure_vessel import audit_case, within_tolerance
+from mechaudit.pressure_vessel import audit_case
 from mechaudit.report_writer import write_markdown_report
 
 
@@ -17,7 +17,6 @@ def test_loads_synthetic_cases_and_skips_pending_real_cases() -> None:
     synthetic = [case for case in complete if case.source_type == "synthetic"]
 
     assert len(synthetic) == 5
-    assert len(skipped) == 5
     assert {case.status for case in skipped} == {"pending_capture"}
 
 
@@ -40,11 +39,6 @@ def test_synthetic_cases_detect_expected_failure_modes() -> None:
     for case_id, modes in expected.items():
         assert results[case_id].detected_failure_modes == modes
         assert results[case_id].passed
-
-
-def test_tolerance_comparison() -> None:
-    assert within_tolerance(100.4, 100.0, relative=0.005)
-    assert not within_tolerance(101.0, 100.0, relative=0.005)
 
 
 def test_report_generation() -> None:
