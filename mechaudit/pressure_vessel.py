@@ -172,7 +172,9 @@ def _audit_pressure_vessel(
                 break
 
     assumptions = " ".join(case.notes.assumptions_stated).lower()
-    if "thin" in assumptions and ratio < 10:
+    thin_wall_assumed = "thin" in assumptions
+    thin_wall_invalid = thin_wall_assumed and ratio < 10
+    if thin_wall_invalid:
         result.add_check(
             "thin-wall-applicability",
             False,
@@ -217,7 +219,7 @@ def _audit_pressure_vessel(
                     )
                     break
 
-    if case.case_id == "syn-fm02b-0001":
+    if thin_wall_invalid:
         result.add_check(
             "nominal-stresses",
             True,
