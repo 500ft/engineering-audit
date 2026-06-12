@@ -13,6 +13,9 @@ test = [
   "pytest>=8.0,<9.0",
 ]
 
+[project.scripts]
+mechaudit = "mechaudit.cli:main"
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
