@@ -50,10 +50,28 @@ class ExpectedResult(BaseModel):
     required_assumptions: list[str] = Field(default_factory=list)
 
 
+ACCEPTED_CONVENTIONS = {
+    "inner_radius",
+    "mean_radius",
+    "effective_radius_0p6t",
+}
+
+
 class ToleranceSpec(BaseModel):
     relative: float | None = 0.005
     absolute: float | None = None
     policy: str | None = None
+    accepted_conventions: list[str] | None = None
+
+    @field_validator("accepted_conventions")
+    @classmethod
+    def validate_accepted_conventions(cls, value: list[str] | None) -> list[str] | None:
+        if value is None:
+            return value
+        unknown = sorted(set(value) - ACCEPTED_CONVENTIONS)
+        if unknown:
+            raise ValueError(f"Unsupported accepted_conventions: {unknown}")
+        return value
 
 
 class Notes(BaseModel):

@@ -166,9 +166,13 @@ different value if executed faithfully.
 2. Parse input values and units from `inputs`.
 3. Recompute intermediate and final outputs.
 4. Compare recomputed values against LLM-stated outputs.
-5. Separately compare the final answer against `expected_result`.
-6. Flag `FM-07` when the final answer is correct but the stated reasoning is not
-   reproducible.
+5. Separately compare the final answer against the case's accepted numeric
+   convention set.
+6. Flag `FM-07` when the final answer is accepted but the stated reasoning is
+   not reproducible. This includes both cases where the substitution matches no
+   accepted convention and cases where the substitution and final answer match
+   different accepted conventions whose recomputed values differ beyond the
+   case tolerance.
 
 ### Required Schema Fields
 
@@ -181,8 +185,9 @@ different value if executed faithfully.
 
 ### Tolerance
 
-Use the numeric tolerance policy in `docs/tolerance_policy.md`. The default
-relative tolerance is `0.5%`.
+Use the numeric tolerance policy in `docs/tolerance_policy.md`. Convention
+matching uses `tolerance.relative` with the same fallback as other numeric
+checks.
 
 ### Positive Example
 
@@ -214,9 +219,10 @@ arithmetic propagates to the final reported answer.
 
 1. Identify the canonical `formula_id` for the stated calculation.
 2. Recompute the quantity from the stated inputs.
-3. Compare the recomputed value with the LLM-reported final output.
+3. Compare the recomputed accepted-convention values with the LLM-reported final
+   output.
 4. Flag `FM-03` when the formula is appropriate but the reported final value
-   differs beyond tolerance.
+   matches none of the accepted conventions within tolerance.
 
 ### Required Schema Fields
 
@@ -228,8 +234,9 @@ arithmetic propagates to the final reported answer.
 
 ### Tolerance
 
-Use the numeric tolerance policy in `docs/tolerance_policy.md`. The default
-relative tolerance is `0.5%`.
+Use the numeric tolerance and convention policy in `docs/tolerance_policy.md`.
+The default pressure-vessel hoop convention is `inner_radius`; non-default
+conventions must be allowed by the case before they can prevent `FM-03`.
 
 ### Positive Example
 
@@ -239,6 +246,8 @@ For `sigma_h = p r / t`, `p = 1.2 MPa`, `r = 50 mm`, and `t = 3 mm`, reporting
 ### Negative Example
 
 Reporting `20 MPa` for the same formula and inputs should not flag `FM-03`.
+Reporting `20.6 MPa` only avoids `FM-03` when the case explicitly accepts the
+`mean_radius` convention.
 
 ## P-01: Schema Noncompliance
 

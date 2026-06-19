@@ -90,6 +90,13 @@ Required fields:
 | `relative` | number or null | Relative tolerance as a fraction. Default is `0.005`. |
 | `absolute` | number or null | Absolute tolerance in output units when needed. |
 | `policy` | string | Link or short name for the tolerance policy used. |
+| `accepted_conventions` | array or null | Optional convention names accepted for convention-sensitive recomputations. Defaults to `["inner_radius"]` when omitted. |
+
+Supported pressure-vessel hoop-stress conventions are `inner_radius`,
+`mean_radius`, and the quarantined `effective_radius_0p6t` heuristic.
+Non-default conventions must be justified in `notes.reviewer_notes`. This is a
+backward-compatible optional field, so existing `schema_version: "0.2.0"` cases
+remain valid.
 
 ### `formulas_used`
 
@@ -163,7 +170,8 @@ IDs include `hoop_stress_thin_wall`, `longitudinal_stress_thin_wall`,
   "tolerance": {
     "relative": 0.005,
     "absolute": null,
-    "policy": "docs/tolerance_policy.md"
+    "policy": "docs/tolerance_policy.md",
+    "accepted_conventions": ["inner_radius"]
   },
   "notes": {
     "assumptions_stated": ["thin-walled cylinder"],

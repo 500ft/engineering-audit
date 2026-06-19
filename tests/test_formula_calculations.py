@@ -41,6 +41,9 @@ def test_pressure_vessel_formula_calculations() -> None:
 
     assert values["thin_wall_ratio"] == pytest.approx(16.667, rel=1e-4)
     assert values["hoop_stress_MPa"] == pytest.approx(20.0)
+    assert values["hoop_stress_inner_radius_MPa"] == pytest.approx(20.0)
+    assert values["hoop_stress_mean_radius_MPa"] == pytest.approx(20.6)
+    assert values["hoop_stress_effective_radius_0p6t_MPa"] == pytest.approx(20.72)
     assert values["longitudinal_stress_MPa"] == pytest.approx(10.0)
     assert values["max_stress_MPa"] == pytest.approx(20.0)
     assert values["yield_safety_factor"] == pytest.approx(6.0)

@@ -11,6 +11,13 @@ from .case_loader import BenchmarkCase, OutputRecord, QuantityValue
 ureg = UnitRegistry()
 Q_ = ureg.Quantity
 
+DEFAULT_HOOP_CONVENTIONS = ["inner_radius"]
+HOOP_CONVENTION_RESULT_KEYS = {
+    "inner_radius": "hoop_stress_inner_radius_MPa",
+    "mean_radius": "hoop_stress_mean_radius_MPa",
+    "effective_radius_0p6t": "hoop_stress_effective_radius_0p6t_MPa",
+}
+
 
 def _unit(unit: str | None) -> str:
     if not unit:
@@ -47,13 +54,18 @@ def compute_pressure_vessel(case: BenchmarkCase) -> dict[str, float]:
     thickness = _input(case, "thickness").to("mm")
 
     thin_wall_ratio = (radius / thickness).to_base_units().magnitude
-    hoop = (pressure * radius / thickness).to("MPa")
+    hoop_inner = (pressure * radius / thickness).to("MPa")
+    hoop_mean = (pressure * (radius + 0.5 * thickness) / thickness).to("MPa")
+    hoop_effective = (pressure * (radius + 0.6 * thickness) / thickness).to("MPa")
     longitudinal = (pressure * radius / (2 * thickness)).to("MPa")
-    max_stress = max(hoop.magnitude, longitudinal.magnitude)
+    max_stress = max(hoop_inner.magnitude, longitudinal.magnitude)
 
     values: dict[str, float] = {
         "thin_wall_ratio": thin_wall_ratio,
-        "hoop_stress_MPa": hoop.magnitude,
+        "hoop_stress_MPa": hoop_inner.magnitude,
+        "hoop_stress_inner_radius_MPa": hoop_inner.magnitude,
+        "hoop_stress_mean_radius_MPa": hoop_mean.magnitude,
+        "hoop_stress_effective_radius_0p6t_MPa": hoop_effective.magnitude,
         "longitudinal_stress_MPa": longitudinal.magnitude,
         "max_stress_MPa": max_stress,
     }
@@ -98,6 +110,59 @@ def _same_value(
         expected,
         relative=case.tolerance.relative if case.tolerance.relative is not None else 0.005,
         absolute=case.tolerance.absolute,
+    )
+
+
+def _accepted_hoop_conventions(case: BenchmarkCase) -> list[str]:
+    return list(case.tolerance.accepted_conventions or DEFAULT_HOOP_CONVENTIONS)
+
+
+def _hoop_convention_values(pv: dict[str, float], case: BenchmarkCase) -> dict[str, float]:
+    return {
+        convention: pv[HOOP_CONVENTION_RESULT_KEYS[convention]]
+        for convention in _accepted_hoop_conventions(case)
+    }
+
+
+def _matching_hoop_conventions(
+    value: float,
+    case: BenchmarkCase,
+    pv: dict[str, float],
+) -> dict[str, float]:
+    return {
+        convention: convention_value
+        for convention, convention_value in _hoop_convention_values(pv, case).items()
+        if _same_value(value, convention_value, case)
+    }
+
+
+def _format_accepted_hoop_values(case: BenchmarkCase, pv: dict[str, float]) -> str:
+    return ", ".join(
+        f"{convention}={value:.6g} MPa"
+        for convention, value in _hoop_convention_values(pv, case).items()
+    )
+
+
+def _record_hoop_match(
+    result: AuditResult,
+    output_kind: str,
+    matches: dict[str, float],
+) -> None:
+    if not matches:
+        result.recomputed_values[f"hoop_stress_{output_kind}_matched_convention"] = "none"
+        return
+    result.recomputed_values[f"hoop_stress_{output_kind}_matched_convention"] = ",".join(matches)
+
+
+def _matches_differ_beyond_tolerance(
+    left: dict[str, float],
+    right: dict[str, float],
+    case: BenchmarkCase,
+) -> bool:
+    return all(
+        not _same_value(left_value, right_value, case)
+        for left_value in left.values()
+        for right_value in right.values()
     )
 
 
@@ -195,26 +260,56 @@ def _audit_pressure_vessel(
             if not output.name.endswith("_final")
             and not output.name.endswith("_substitution")
         ]
+        final_output = (
+            ordinary_outputs[0]
+            if ordinary_outputs
+            else (final_outputs[0] if final_outputs else None)
+        )
+        final_matches = (
+            _matching_hoop_conventions(final_output.value, case, pv)
+            if final_output is not None
+            else {}
+        )
+        if final_output is not None:
+            _record_hoop_match(result, "final", final_matches)
 
         if (
             "hoop_stress_thin_wall" in formula_ids
-            and ordinary_outputs
-            and not _same_value(ordinary_outputs[0].value, hoop, case)
+            and final_output is not None
+            and not final_matches
         ):
             result.add_check(
                 "hoop-arithmetic",
                 False,
-                f"Hoop stress recomputes to {hoop:.6g} MPa, not {ordinary_outputs[0].value:g} {ordinary_outputs[0].unit}.",
+                f"Hoop stress does not match any accepted convention ({_format_accepted_hoop_values(case, pv)}); reported {final_output.value:g} {final_output.unit}.",
                 "FM-03",
             )
 
-        if final_outputs and _same_value(final_outputs[0].value, expected.value, case):
+        if final_outputs:
+            final_named_matches = _matching_hoop_conventions(final_outputs[0].value, case, pv)
+        else:
+            final_named_matches = {}
+        if final_named_matches:
+            _record_hoop_match(result, "final", final_named_matches)
             for output in substitution_outputs:
-                if not _same_value(output.value, hoop, case):
+                substitution_matches = _matching_hoop_conventions(output.value, case, pv)
+                _record_hoop_match(result, "substitution", substitution_matches)
+                if not substitution_matches:
                     result.add_check(
                         "reasoning-consistency",
                         False,
-                        f"Final answer is correct, but substitution says {output.value:g} {output.unit}; recomputed hoop stress is {hoop:.6g} MPa.",
+                        f"Final answer matches an accepted convention, but substitution says {output.value:g} {output.unit}; accepted values are {_format_accepted_hoop_values(case, pv)}.",
+                        "FM-07",
+                    )
+                    break
+                if (
+                    set(substitution_matches) != set(final_named_matches)
+                    and _matches_differ_beyond_tolerance(substitution_matches, final_named_matches, case)
+                ):
+                    result.add_check(
+                        "reasoning-consistency",
+                        False,
+                        f"Substitution convention {','.join(substitution_matches)} differs from final convention {','.join(final_named_matches)}.",
                         "FM-07",
                     )
                     break

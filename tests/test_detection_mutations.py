@@ -43,5 +43,78 @@ def test_fm03_detection_uses_recomputed_final_value() -> None:
     assert "FM-03" in _detected(_case("syn-arith-0001"))
 
 
+def test_fm03_allows_explicit_mean_radius_convention() -> None:
+    case = _case("syn-fm07-0001").model_copy(deep=True)
+    case.failure_modes = []
+    case.tolerance.accepted_conventions = ["inner_radius", "mean_radius"]
+    case.outputs = [
+        output.model_copy(update={"value": 20.6})
+        if output.source == "llm" and output.name == "hoop_stress_final"
+        else output
+        for output in case.outputs
+        if output.name != "hoop_stress_substitution"
+    ]
+
+    assert "FM-03" not in set(audit_case(case).detected_failure_modes)
+
+
+def test_fm03_still_flags_wrong_value_with_multiple_conventions() -> None:
+    case = _case("syn-fm07-0001").model_copy(deep=True)
+    case.failure_modes = []
+    case.tolerance.accepted_conventions = ["inner_radius", "mean_radius"]
+    case.outputs = [
+        output.model_copy(update={"value": 22.0})
+        if output.source == "llm" and output.name == "hoop_stress_final"
+        else output
+        for output in case.outputs
+        if output.name != "hoop_stress_substitution"
+    ]
+
+    assert "FM-03" in set(audit_case(case).detected_failure_modes)
+
+
+def test_fm03_default_convention_rejects_mean_radius() -> None:
+    case = _case("syn-fm07-0001").model_copy(deep=True)
+    case.failure_modes = []
+    case.outputs = [
+        output.model_copy(update={"value": 20.6})
+        if output.source == "llm" and output.name == "hoop_stress_final"
+        else output
+        for output in case.outputs
+        if output.name != "hoop_stress_substitution"
+    ]
+
+    assert "FM-03" in set(audit_case(case).detected_failure_modes)
+
+
+def test_fm03_allows_effective_radius_heuristic_only_when_explicit() -> None:
+    case = _case("syn-fm07-0001").model_copy(deep=True)
+    case.failure_modes = []
+    case.tolerance.accepted_conventions = ["effective_radius_0p6t"]
+    case.outputs = [
+        output.model_copy(update={"value": 20.72})
+        if output.source == "llm" and output.name == "hoop_stress_final"
+        else output
+        for output in case.outputs
+        if output.name != "hoop_stress_substitution"
+    ]
+
+    assert "FM-03" not in set(audit_case(case).detected_failure_modes)
+
+
 def test_fm07_detection_uses_intermediate_reasoning_mismatch() -> None:
     assert "FM-07" in _detected(_case("syn-fm07-0001"))
+
+
+def test_fm07_flags_cross_convention_reasoning_mismatch() -> None:
+    case = _case("syn-fm07-0001").model_copy(deep=True)
+    case.failure_modes = []
+    case.tolerance.accepted_conventions = ["inner_radius", "mean_radius"]
+    case.outputs = [
+        output.model_copy(update={"value": 20.6})
+        if output.source == "llm" and output.name == "hoop_stress_substitution"
+        else output
+        for output in case.outputs
+    ]
+
+    assert "FM-07" in set(audit_case(case).detected_failure_modes)
