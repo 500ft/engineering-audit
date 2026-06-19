@@ -14,6 +14,17 @@ pending_capture`, but they must not be described as completed real LLM failures
 until the raw model output is present. Anonymize coursework, names, dates, or
 project details when needed, but do not fabricate provenance.
 
+Current pressure-vessel real-run status:
+
+- Complete no-failure controls: `rw-pressure-vessel-gemini-0001`,
+  `rw-pressure-vessel-claude-0001`, and `rw-pressure-vessel-claude-0002`.
+- Pending captures: `rw-pressure-vessel-gpt-0001` and
+  `rw-pressure-vessel-gpt-0002`.
+
+The completed controls are populated from reviewer-provided capture synthesis
+because the raw transcripts are not present in the repository. Their metadata
+must keep that limitation explicit.
+
 ## Case Format
 
 Each benchmark case is a Markdown file with a fenced `json` metadata block near
@@ -48,3 +59,6 @@ Use stable lowercase identifiers:
 - The expected result is traceable to a trusted calculation.
 - The failure mode is documented in the taxonomy.
 - The expected verifier behavior is stated in plain language.
+- Correct real captures with `failure_modes: []` remain useful: they protect
+  against false positives such as treating accepted radius conventions as
+  arithmetic errors.

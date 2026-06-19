@@ -1,8 +1,9 @@
 # Schema Contract
 
-This document defines the structured data contract future MechAudit verifier
-code should consume. It is a documentation contract only; no validator is
-implemented in this phase.
+This document defines the structured data contract MechAudit benchmark files
+and verifier code consume. The current code validates a core subset with
+Pydantic and allows additional provenance fields while the schema is still
+evolving.
 
 ## Version
 
@@ -81,6 +82,24 @@ Required fields:
 | `method` | string | Trusted calculation method. |
 | `required_assumptions` | array | Assumptions required for the method. |
 
+### `outputs`
+
+Required fields:
+
+| Field | Type | Description |
+|---|---:|---|
+| `name` | string | Stable output identifier, such as `hoop_stress`. |
+| `symbol` | string | Engineering symbol used by the response. |
+| `value` | number | Reported numerical value. |
+| `unit` | string or null | Reported unit. |
+| `source` | string | `llm` or `expected`. |
+| `convention` | string or null | Optional convention tag for convention-sensitive values. |
+
+For pressure-vessel hoop and longitudinal stresses, multiple values for the same
+quantity are allowed when they represent explicit conventions such as
+`inner_radius` and `mean_radius`. The convention should be represented by the
+`convention` field rather than only by a name suffix.
+
 ### `tolerance`
 
 Required fields:
@@ -97,6 +116,13 @@ Supported pressure-vessel hoop-stress conventions are `inner_radius`,
 Non-default conventions must be justified in `notes.reviewer_notes`. This is a
 backward-compatible optional field, so existing `schema_version: "0.2.0"` cases
 remain valid.
+
+### provenance extras
+
+Real captures may include additional provenance fields such as
+`metadata_source`, `capture_source`, `reasoning_effort`, and `model_self_review`.
+These fields record how model/version/date/settings were obtained. Self-reported
+model metadata and model self-grades are evidence, not verifier ground truth.
 
 ### `formulas_used`
 
@@ -157,9 +183,9 @@ IDs include `hoop_stress_thin_wall`, `longitudinal_stress_thin_wall`,
     "yield_strength": {"value": 120, "unit": "MPa"}
   },
   "outputs": [
-    {"name": "hoop_stress_substitution", "symbol": "sigma_h", "value": 25, "unit": "MPa", "source": "llm"},
-    {"name": "hoop_stress_final", "symbol": "sigma_h", "value": 20, "unit": "MPa", "source": "llm"},
-    {"name": "hoop_stress", "symbol": "sigma_h", "value": 20, "unit": "MPa", "source": "expected"}
+    {"name": "hoop_stress_substitution", "symbol": "sigma_h", "value": 25, "unit": "MPa", "source": "llm", "convention": "inner_radius"},
+    {"name": "hoop_stress_final", "symbol": "sigma_h", "value": 20, "unit": "MPa", "source": "llm", "convention": "inner_radius"},
+    {"name": "hoop_stress", "symbol": "sigma_h", "value": 20, "unit": "MPa", "source": "expected", "convention": "inner_radius"}
   ],
   "units": {
     "system": "SI",

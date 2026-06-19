@@ -25,6 +25,8 @@ summarize it as a substitute for the original output.
 - No detected failure: Use when the response states valid assumptions, uses the
   correct formulas, performs arithmetic within tolerance, and reports clear
   units.
+- `FM-10`: Do not assign this to an LLM response. It is a benchmark-accounting
+  label for verifier false positives on correct controls.
 
 ## `P-01` Boundary
 
@@ -37,3 +39,7 @@ or the verifier cannot parse required case data.
 For each completed real case, record the model name, model version if visible,
 run date, temperature/settings if known, raw prompt, raw response, assigned
 failure modes, and expected verifier behavior.
+
+If a fixture is completed from reviewer synthesis because the raw transcript is
+not available in the repository, record that limitation explicitly in
+`source.description`, `source.raw_output_available`, and `notes.limitations`.

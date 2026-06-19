@@ -268,6 +268,38 @@ is a parsing-layer failure, not an engineering failure mode.
 The future verifier should fail gracefully with a diagnostic report and skip
 engineering checks when schema data is invalid.
 
+## FM-10: False-Positive Control Regression
+
+### Definition
+
+`FM-10` is a benchmark-accounting label for verifier regressions, not an
+LLM-output failure mode. Use it when MechAudit flags a correct case as a
+failure, especially when the reported value follows an explicitly accepted
+engineering convention.
+
+### Detection Method
+
+1. Run the verifier against reference-correct or no-failure real cases.
+2. Compare detected failure modes against the expected empty failure-mode set.
+3. Count any unexpected emitted failure as a false positive in benchmark
+   reporting.
+4. Do not emit `FM-10` in ordinary audit output; the emitted mode that caused
+   the false positive remains the debugging target.
+
+### Canonical Example
+
+The completed Claude pressure-vessel captures report the inner-radius hoop
+stress `20.0 MPa` and a defensible mean-radius refinement near `20.6 MPa`. When
+the case explicitly accepts both `inner_radius` and `mean_radius`, MechAudit
+must not flag the mean-radius value as `FM-03`.
+
+### Known Limitations
+
+- `FM-10` belongs to benchmark summaries and tests, not to engineering audit
+  reports.
+- A false positive should trigger verifier or case-authoring review, not an
+  assertion that the LLM was wrong.
+
 ## Compatibility Note
 
 The legacy label `FM-02` has been split into `FM-02A` for wrong governing formula

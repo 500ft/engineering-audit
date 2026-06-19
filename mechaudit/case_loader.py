@@ -35,12 +35,27 @@ class FormulaRecord(BaseModel):
     variables: dict[str, str] = Field(default_factory=dict)
 
 
+ACCEPTED_CONVENTIONS = {
+    "inner_radius",
+    "mean_radius",
+    "effective_radius_0p6t",
+}
+
+
 class OutputRecord(BaseModel):
     name: str
     symbol: str
     value: float
     unit: str | None = None
     source: str
+    convention: str | None = None
+
+    @field_validator("convention")
+    @classmethod
+    def validate_convention(cls, value: str | None) -> str | None:
+        if value is not None and value not in ACCEPTED_CONVENTIONS:
+            raise ValueError(f"Unsupported convention: {value}")
+        return value
 
 
 class ExpectedResult(BaseModel):
@@ -48,13 +63,6 @@ class ExpectedResult(BaseModel):
     unit: str | None = None
     method: str
     required_assumptions: list[str] = Field(default_factory=list)
-
-
-ACCEPTED_CONVENTIONS = {
-    "inner_radius",
-    "mean_radius",
-    "effective_radius_0p6t",
-}
 
 
 class ToleranceSpec(BaseModel):

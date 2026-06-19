@@ -19,3 +19,18 @@ Instructions:
 5. Give the final answers with units.
 6. Do not skip intermediate arithmetic.
 ```
+
+## Prompt v2 Hardening Notes
+
+The first real-run batch was clean on this standard SI problem. Future
+failure-eliciting prompts should add difficulty deliberately rather than
+changing domains too early:
+
+- mixed or imperial units, such as psi and inches;
+- borderline thin-wall ratios around `r / t = 8` to `12`;
+- implicit or missing data that forces the model to state assumptions;
+- multi-step chains that require a safety decision after recomputation;
+- explicit decision language such as "is this safe for material X?".
+
+Do not replace the v1 prompt for comparable GPT/Claude/Gemini capture slots.
+Use a new prompt ID for hardened variants.
