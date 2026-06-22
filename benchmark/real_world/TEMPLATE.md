@@ -7,34 +7,45 @@ correction are available.
 ## Metadata
 
 - Case ID:
-- Schema version: `0.2.0`
+- Schema version: `0.3.0`
 - Source type: `real_world`
 - Status: `pending_capture` or `complete`
+- Provenance tier: `gold` (API) or `silver` (UI transcript). See
+  `docs/capture_provenance.md`.
 - Course or project context:
 - Date of LLM interaction:
-- Model name:
-- Model version:
+- Model name / version:
 - Prompt ID:
-- Temperature:
+- Temperature / run settings:
 - Anonymization notes:
+
+A `complete` real_world case must store the verbatim model output under
+`benchmark/real_world/raw/` and reference it from `source.artifacts` with a
+matching SHA-256, or the loader rejects it as `P-01`. Compute a hash with
+`shasum -a 256 <file>`.
 
 ```json
 {
   "case_id": "",
-  "schema_version": "0.2.0",
+  "schema_version": "0.3.0",
   "source_type": "real_world",
   "status": "pending_capture",
   "source": {
     "kind": "manual_model_run",
     "description": "",
-    "raw_output_available": false
+    "provenance_tier": null,
+    "raw_output_available": false,
+    "capture_protocol": "standard",
+    "artifacts": [],
+    "provider": null,
+    "model_name": null,
+    "model_version": null,
+    "run_date": null,
+    "temperature": null,
+    "run_settings": {},
+    "metadata_source": null
   },
-  "model_name": null,
-  "model_version": null,
-  "run_date": null,
   "prompt_id": "pressure_vessel_prompt_v1",
-  "temperature": null,
-  "run_settings": {},
   "problem_statement": "",
   "llm_response": {
     "prompt": "prompts/pressure_vessel_prompt_v1.md",
@@ -66,6 +77,17 @@ correction are available.
     "expected_verifier_behavior": "Pending classification after raw output is captured."
   }
 }
+```
+
+When the case is `complete`, set `status: "complete"`,
+`source.provenance_tier` to `gold` or `silver`,
+`source.raw_output_available: true`, and add at least one artifact, e.g.:
+
+```json
+"artifacts": [
+  {"kind": "raw_response", "path": "benchmark/real_world/raw/<case_id>.txt", "sha256": "<hex>", "media_type": "text/plain"},
+  {"kind": "screenshot", "path": "benchmark/real_world/raw/<case_id>.png", "sha256": "<hex>", "media_type": "image/png"}
+]
 ```
 
 ## Original Engineering Problem

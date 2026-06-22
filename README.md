@@ -22,32 +22,36 @@ remain independently recomputable.
 
 ## Real-Capture Status
 
-The first real-run batch is partially complete:
+The repository does **not** yet contain a verbatim model capture. Provenance is
+enforced by the loader as of schema `0.3.0`; see `docs/capture_provenance.md`.
 
-- Completed no-failure controls: Gemini 3.5 Thinking (`gemini-0001`), Claude
-  Opus 4.8 High plain solve (`claude-0001`), and Claude Opus 4.8 High
-  design-review prompt (`claude-0002`).
-- Pending captures: `gpt-0001` and `gpt-0002`.
+- Reviewer-synthesized controls (not real captures): Gemini 3.5 Thinking
+  (`gemini-0001`), Claude Opus 4.8 High plain solve (`claude-0001`), and Claude
+  Opus 4.8 High design-review prompt (`claude-0002`). These are `source_type:
+  reference_correct`, `provenance_tier: deprecated`. They were written by a
+  reviewer to describe a model run, carry no raw transcript, and are retained
+  only as no-failure false-positive controls — most usefully the `20.0 MPa`
+  inner-radius result versus the defensible `20.6 MPa` mean-radius refinement.
+- Pending real captures: `gpt-0001` and `gpt-0002` (`status: pending_capture`).
 
-All three completed captures recompute correctly for the canonical SI
-pressure-vessel prompt. They are useful because they now test the verifier's
-false-positive behavior, especially the `20.0 MPa` inner-radius result versus
-the defensible `20.6 MPa` mean-radius refinement. The raw transcripts are not
-present in this repository; the completed fixtures are populated from reviewer
-capture synthesis and say so in their metadata.
+Genuine `gold`/`silver` captures with verbatim raw artifacts are the next
+milestone; the loader rejects any `complete` `real_world` case that lacks a
+hash-verified artifact.
 
 ## Repository Layout
 
 ```text
 docs/
   failure_taxonomy.md   Failure modes the verifier should eventually detect.
-  schema_contract.md    Structured output contract for benchmark and verifier data.
+  schema_contract.md    Structured output contract (schema 0.3.0) for benchmark data.
+  capture_provenance.md Provenance tiers and raw-artifact rules.
   tolerance_policy.md   Numeric comparison defaults for benchmark checks.
 prompts/
   pressure_vessel_prompt_v1.md  Canonical prompt for real-run benchmark capture.
 benchmark/
   README.md             Benchmark case format and contribution rules.
-  real_world/           Transcript-backed failures from real engineering work.
+  real_world/           Transcript-backed cases from real model runs.
+  real_world/raw/       Verbatim raw artifacts referenced by complete cases.
   synthetic/            Clearly labeled artificial cases for targeted coverage.
 ```
 

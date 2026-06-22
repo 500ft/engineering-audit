@@ -1,19 +1,27 @@
 # Schema Contract
 
 This document defines the structured data contract MechAudit benchmark files
-and verifier code consume. The current code validates a core subset with
-Pydantic and allows additional provenance fields while the schema is still
-evolving.
+and verifier code consume. As of `0.3.0` the loader validates the **full**
+contract with Pydantic and rejects unknown keys (`extra = "forbid"`). There is
+no permissive provenance area: every field below is modeled, and any field not
+listed here causes a `P-01` load failure.
 
 ## Version
 
-Current draft schema version: `0.2.0`
+Current schema version: `0.3.0`. The loader accepts **only** `0.3.0`; any other
+`schema_version` is reported as `P-01`. There is no backward-compatible reader
+for `0.2.0`.
 
 Schema versions use semantic versioning:
 
 - Patch changes clarify wording or examples without changing fields.
 - Minor changes add optional fields.
 - Major changes rename fields, remove fields, or change required semantics.
+
+The `0.2.0` to `0.3.0` change is major: provider/run provenance moved from
+top-level keys into the `source` object, `source` gained `provenance_tier` and a
+typed `artifacts` list, `source_type` gained `reference_correct`, and unknown
+keys are now rejected.
 
 ## Benchmark File Format
 
@@ -26,50 +34,74 @@ future verifier a stable parse target.
 | Field | Type | Required | Description |
 |---|---:|---:|---|
 | `case_id` | string | yes | Stable benchmark identifier. |
-| `schema_version` | string | yes | Schema version used by this case. |
+| `schema_version` | string | yes | Must be `0.3.0`. |
 | `source_type` | string | yes | One of `synthetic`, `real_world`, or `reference_correct`. |
 | `status` | string | yes | One of `complete`, `pending_capture`, or `needs_review`. |
-| `source` | object | yes | Provenance and capture source. |
-| `model_name` | string or null | yes | Model product name, or `null` for synthetic cases. |
-| `model_version` | string or null | yes | Model version or release identifier when known. |
-| `run_date` | string or null | yes | ISO date when the model run was captured. |
+| `source` | object | yes | Provenance, capture source, and raw artifacts. |
 | `prompt_id` | string | yes | Stable prompt identifier. |
-| `temperature` | number or null | yes | Sampling temperature when known. |
-| `run_settings` | object | yes | Provider-specific run settings. |
 | `problem_statement` | string | yes | Original engineering problem. |
 | `llm_response` | object | yes | Prompt and raw model response being audited. |
 | `expected_result` | object | yes | Trusted answer or trusted method. |
 | `failure_modes` | array | yes | Expected labels from the taxonomy. |
 | `formulas_used` | array | yes | Formula records stated by the LLM or expected solution. |
-| `inputs` | object or array | yes | Named numerical inputs with units. Completed synthetic cases use object form. |
+| `inputs` | object or array | yes | Named numerical inputs with units. Array form is normalized to object form on load. |
 | `outputs` | array | yes | Named numerical outputs with units. |
 | `units` | object | yes | Unit system and canonical units. |
 | `tolerance` | object | yes | Numeric tolerance policy for the case. |
 | `notes` | object | yes | Assumptions, limitations, and reviewer notes. |
 
+Model and run provenance (`model_name`, `model_version`, `run_date`,
+`temperature`, `run_settings`, `metadata_source`, `reasoning_effort`) are no
+longer top-level fields; they live inside `source`.
+
 ## Field Details
 
 ### `source`
 
-Required fields:
+| Field | Type | Required | Description |
+|---|---:|---:|---|
+| `kind` | string | yes | `synthetic`, `manual_model_run`, `api_model_run`, `reviewer_synthesis`, or `coursework_transcript`. |
+| `description` | string | yes | Human-readable provenance. |
+| `provenance_tier` | string or null | yes | `gold`, `silver`, `deprecated`, `synthetic`, or `null` for pending captures. See `docs/capture_provenance.md`. |
+| `raw_output_available` | boolean | yes | Whether a verbatim artifact is present. |
+| `capture_protocol` | string or null | no | `standard`, `challenge`, or `organic`. |
+| `artifacts` | array | no | Typed raw artifacts (see below). Required to be non-empty for `complete` `real_world` cases. |
+| `provider` | string or null | no | Provider/vendor. |
+| `model_name` | string or null | no | Model product name; `null` for synthetic cases. |
+| `model_version` | string or null | no | Model version or release identifier. |
+| `run_date` | string or null | no | ISO date of the model run. |
+| `temperature` | number or null | no | Sampling temperature when known. |
+| `reasoning_effort` | string or null | no | Reasoning-effort setting when applicable. |
+| `run_settings` | object | no | Provider-specific run settings. |
+| `metadata_source` | string or null | no | `api` or `self_report` — how model/version/date were obtained. |
+
+#### `source.artifacts[]`
 
 | Field | Type | Description |
 |---|---:|---|
-| `kind` | string | `synthetic`, `manual_model_run`, `api_model_run`, or `coursework_transcript`. |
-| `description` | string | Human-readable provenance. |
-| `raw_output_available` | boolean | Whether raw LLM output is present in the file. |
+| `kind` | string | `raw_response`, `api_response`, `screenshot`, or `prompt`. |
+| `path` | string | Repository-relative path to the stored file. |
+| `sha256` | string | Lowercase hex SHA-256 of the file's bytes; verified on load. |
+| `media_type` | string or null | Optional MIME type. |
+
+### Provenance coherence rules
+
+The loader enforces, and reports violations as `P-01`:
+
+- `synthetic` cases: `provenance_tier` `synthetic`, `source.kind` `synthetic`,
+  `source.model_name` null.
+- `reference_correct` cases: `provenance_tier` `deprecated`, `source.kind`
+  `reviewer_synthesis`.
+- `complete` `real_world` cases: `provenance_tier` `gold` or `silver`,
+  `raw_output_available` true, and at least one `raw_response` or `api_response`
+  artifact whose file exists and matches its hash.
 
 ### `llm_response`
-
-Required fields:
 
 | Field | Type | Description |
 |---|---:|---|
 | `prompt` | string | Prompt text or pointer to the canonical prompt file. |
 | `response` | string | Raw LLM response, or empty string for pending captures. |
-
-Legacy `llm_response.model` and `llm_response.date` are replaced by
-top-level `model_name`, `model_version`, and `run_date`.
 
 ### `expected_result`
 
@@ -113,16 +145,15 @@ Required fields:
 
 Supported pressure-vessel hoop-stress conventions are `inner_radius`,
 `mean_radius`, and the quarantined `effective_radius_0p6t` heuristic.
-Non-default conventions must be justified in `notes.reviewer_notes`. This is a
-backward-compatible optional field, so existing `schema_version: "0.2.0"` cases
-remain valid.
+Non-default conventions must be justified in `notes.reviewer_notes`.
+`accepted_conventions` is optional and defaults to `["inner_radius"]`.
 
-### provenance extras
+### Model self-review and self-grades
 
-Real captures may include additional provenance fields such as
-`metadata_source`, `capture_source`, `reasoning_effort`, and `model_self_review`.
-These fields record how model/version/date/settings were obtained. Self-reported
-model metadata and model self-grades are evidence, not verifier ground truth.
+Model self-reviews, self-scores, and self-selected material properties are not
+represented as structured fields. They are evidence, not verifier ground truth,
+and belong in the stored raw artifact and `llm_response.response`, not in
+`expected_result`. The verifier never ingests a model's self-grade.
 
 ### `formulas_used`
 
@@ -136,20 +167,21 @@ IDs include `hoop_stress_thin_wall`, `longitudinal_stress_thin_wall`,
 ```json
 {
   "case_id": "syn-fm07-0001",
-  "schema_version": "0.2.0",
+  "schema_version": "0.3.0",
   "source_type": "synthetic",
   "status": "complete",
   "source": {
     "kind": "synthetic",
     "description": "Synthetic case for reasoning consistency.",
-    "raw_output_available": true
+    "provenance_tier": "synthetic",
+    "raw_output_available": true,
+    "model_name": null,
+    "model_version": null,
+    "run_date": null,
+    "temperature": null,
+    "run_settings": {}
   },
-  "model_name": null,
-  "model_version": null,
-  "run_date": null,
   "prompt_id": "synthetic_pressure_vessel_fm07",
-  "temperature": null,
-  "run_settings": {},
   "problem_statement": "Find hoop stress for a thin-walled cylindrical pressure vessel with p = 1.2 MPa, r = 50 mm, and t = 3 mm.",
   "llm_response": {
     "prompt": "Solve the pressure vessel problem and show your work.",

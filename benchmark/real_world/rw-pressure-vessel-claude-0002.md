@@ -3,31 +3,27 @@
 ```json
 {
   "case_id": "rw-pressure-vessel-claude-0002",
-  "schema_version": "0.2.0",
-  "source_type": "real_world",
+  "schema_version": "0.3.0",
+  "source_type": "reference_correct",
   "status": "complete",
   "source": {
-    "kind": "manual_model_run",
-    "description": "Completed Claude design-review pressure-vessel run classified from reviewer-provided capture synthesis.",
-    "raw_output_available": false
+    "kind": "reviewer_synthesis",
+    "description": "Reviewer-synthesized description of a Claude design-review pressure-vessel run. Not a verbatim capture.",
+    "provenance_tier": "deprecated",
+    "raw_output_available": false,
+    "model_name": "Claude",
+    "model_version": "claude-opus-4-8",
+    "run_date": "2026-06-05",
+    "temperature": null,
+    "reasoning_effort": "High",
+    "run_settings": {"reasoning_effort": "High", "prompt_condition": "design_review_persona"},
+    "metadata_source": "self_report"
   },
-  "model_name": "Claude",
-  "model_version": "claude-opus-4-8",
-  "run_date": "2026-06-05",
-  "metadata_source": "self_report",
-  "capture_source": "reviewer_synthesis",
-  "reasoning_effort": "High",
-  "temperature": null,
-  "run_settings": {"reasoning_effort": "High", "prompt_condition": "design_review_persona"},
   "prompt_id": "pressure_vessel_review_v1",
   "problem_statement": "Canonical pressure-vessel problem with design-review persona added to the prompt condition.",
   "llm_response": {
     "prompt": "prompts/pressure_vessel_prompt_v1.md plus design-review persona instruction.",
     "response": "Reviewer-provided capture synthesis: Claude Opus 4.8 High solved the pressure-vessel prompt cleanly under a design-review persona. It reported hoop stress = 20.0 MPa, longitudinal stress = 10.0 MPa, and the same mean-radius refinement as the plain Claude run: hoop = 20.6 MPa and longitudinal = 10.3 MPa. It additionally produced a self-review that included von Mises stress sqrt(20^2 - 20*10 + 10^2) = 17.3 MPa, a safety factor near 14 using a model-selected 250 MPa yield strength, radial-to-hoop stress ratio 1.2/20 = 6%, ASME-oriented notes, and a self-score of 88/100. Reviewer recomputation found the pressure-vessel solve correct and found no unit, formula, arithmetic, assumption, or reasoning failure. The model self-review is stored as capture evidence only, not verifier ground truth."
-  },
-  "model_self_review": {
-    "summary": "The model graded its own design-review response and included von Mises, safety-factor, ASME-oriented notes, and an 88/100 self-score.",
-    "ground_truth_status": "not_ground_truth"
   },
   "expected_result": {
     "value": null,
@@ -66,6 +62,7 @@
 
 ## Classification
 
-This completed real capture is a no-failure control for the design-review prompt
-condition. The self-review content is preserved as evidence only; MechAudit does
-not use model self-grading as an expected result.
+This is a reviewer-synthesized control (`provenance_tier: deprecated`), not a
+verbatim capture. It is a no-failure control for the design-review prompt
+condition. The self-review narrative is preserved in `llm_response.response` as
+evidence only; MechAudit does not use model self-grading as an expected result.

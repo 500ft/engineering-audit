@@ -10,7 +10,10 @@ from mechaudit.report_writer import write_markdown_report
 
 
 ROOT = Path(__file__).resolve().parents[1]
-COMPLETED_REAL_CASE_IDS = {
+# The completed Claude/Gemini fixtures are reviewer-synthesized controls, not
+# verbatim captures, so under schema 0.3.0 they are source_type
+# "reference_correct" (provenance_tier "deprecated"), no longer "real_world".
+REFERENCE_CONTROL_CASE_IDS = {
     "rw-pressure-vessel-gemini-0001",
     "rw-pressure-vessel-claude-0001",
     "rw-pressure-vessel-claude-0002",
@@ -33,13 +36,14 @@ def test_pending_real_world_cases_skip_without_count_assumption() -> None:
         assert result.skip_reason == "pending_capture"
 
 
-def test_completed_real_world_cases_are_no_failure_controls() -> None:
+def test_reference_control_cases_are_no_failure_controls() -> None:
     cases = load_benchmark_cases(ROOT)
     complete, _ = split_cases(cases)
-    complete_real = [case for case in complete if case.source_type == "real_world"]
+    controls = [case for case in complete if case.source_type == "reference_correct"]
 
-    assert {case.case_id for case in complete_real} == COMPLETED_REAL_CASE_IDS
-    for case in complete_real:
+    assert {case.case_id for case in controls} == REFERENCE_CONTROL_CASE_IDS
+    for case in controls:
+        assert case.source.provenance_tier == "deprecated"
         result = audit_case(case)
         assert not result.skipped
         assert result.expected_failure_modes == []
@@ -74,12 +78,12 @@ def test_fm10_is_not_emitted_for_real_world_controls() -> None:
     assert "FM-10" not in detected_modes
 
 
-def test_completed_real_world_cases_load_and_can_report(tmp_path: Path) -> None:
+def test_reference_control_cases_load_and_can_report(tmp_path: Path) -> None:
     cases = load_benchmark_cases(ROOT)
     complete, _ = split_cases(cases)
-    complete_real = [case for case in complete if case.source_type == "real_world"]
+    controls = [case for case in complete if case.source_type == "reference_correct"]
 
-    for case in complete_real:
+    for case in controls:
         result = audit_case(case)
         report_path = write_markdown_report(result, tmp_path)
         assert report_path.exists()

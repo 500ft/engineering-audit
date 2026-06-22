@@ -3,21 +3,21 @@
 ```json
 {
   "case_id": "rw-pressure-vessel-gemini-0001",
-  "schema_version": "0.2.0",
-  "source_type": "real_world",
+  "schema_version": "0.3.0",
+  "source_type": "reference_correct",
   "status": "complete",
   "source": {
-    "kind": "manual_model_run",
-    "description": "Completed Gemini pressure-vessel run classified from reviewer-provided capture synthesis.",
-    "raw_output_available": false
+    "kind": "reviewer_synthesis",
+    "description": "Reviewer-synthesized description of a Gemini pressure-vessel run. Not a verbatim capture.",
+    "provenance_tier": "deprecated",
+    "raw_output_available": false,
+    "model_name": "Gemini",
+    "model_version": "gemini-3.5-thinking",
+    "run_date": "2026-06-05",
+    "temperature": null,
+    "run_settings": {},
+    "metadata_source": "self_report"
   },
-  "model_name": "Gemini",
-  "model_version": "gemini-3.5-thinking",
-  "run_date": "2026-06-05",
-  "metadata_source": "self_report",
-  "capture_source": "reviewer_synthesis",
-  "temperature": null,
-  "run_settings": {},
   "prompt_id": "pressure_vessel_prompt_v1",
   "problem_statement": "See prompts/pressure_vessel_prompt_v1.md.",
   "llm_response": {
@@ -59,6 +59,6 @@
 
 ## Classification
 
-This completed real capture is a no-failure control. It exists to prove that the
-verifier does not produce false positives on a correct standard SI
-pressure-vessel solve.
+This is a reviewer-synthesized control (`provenance_tier: deprecated`), not a
+verbatim capture. It exists to prove that the verifier does not produce false
+positives on a correct standard SI pressure-vessel solve.

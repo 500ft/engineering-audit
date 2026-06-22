@@ -10,10 +10,18 @@ def _pressure_vessel_case() -> BenchmarkCase:
     return BenchmarkCase.model_validate(
         {
             "case_id": "formula-check",
-            "schema_version": "0.2.0",
+            "schema_version": "0.3.0",
             "source_type": "synthetic",
             "status": "complete",
+            "source": {
+                "kind": "synthetic",
+                "description": "Formula-level calculation test.",
+                "provenance_tier": "synthetic",
+                "raw_output_available": True,
+            },
             "prompt_id": "formula_check",
+            "problem_statement": "Formula-level pressure-vessel calculation test.",
+            "llm_response": {"prompt": "n/a", "response": "n/a"},
             "failure_modes": [],
             "formulas_used": [],
             "inputs": {
@@ -23,6 +31,7 @@ def _pressure_vessel_case() -> BenchmarkCase:
                 "yield_strength": {"value": 120, "unit": "MPa"},
             },
             "outputs": [],
+            "units": {"system": "SI", "canonical_outputs": {"stress": "MPa"}},
             "expected_result": {
                 "value": 20,
                 "unit": "MPa",

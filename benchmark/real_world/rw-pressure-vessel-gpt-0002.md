@@ -3,16 +3,11 @@
 ```json
 {
   "case_id": "rw-pressure-vessel-gpt-0002",
-  "schema_version": "0.2.0",
+  "schema_version": "0.3.0",
   "source_type": "real_world",
   "status": "pending_capture",
-  "source": {"kind": "manual_model_run", "description": "Second pending GPT run using pressure_vessel_prompt_v1.", "raw_output_available": false},
-  "model_name": "GPT",
-  "model_version": null,
-  "run_date": null,
+  "source": {"kind": "manual_model_run", "description": "Second pending GPT run using pressure_vessel_prompt_v1.", "provenance_tier": null, "raw_output_available": false, "model_name": "GPT", "model_version": null, "run_date": null, "temperature": null, "run_settings": {}},
   "prompt_id": "pressure_vessel_prompt_v1",
-  "temperature": null,
-  "run_settings": {},
   "problem_statement": "See prompts/pressure_vessel_prompt_v1.md.",
   "llm_response": {"prompt": "prompts/pressure_vessel_prompt_v1.md", "response": ""},
   "expected_result": {"value": null, "unit": null, "method": "Manual classification after raw output capture.", "required_assumptions": ["thin-walled cylinder", "closed-end vessel", "internal pressure"]},
