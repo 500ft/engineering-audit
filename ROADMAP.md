@@ -43,6 +43,23 @@ gated outcomes:
       on regressions.
 - [ ] **Wk 6:** independent recompute review + `LIMITATIONS.md`; tag **v1.0.0**.
 
+## CAD/FEA-validated ground truth (additive)
+
+This does **not** change the make-or-break priority — capturing >=2 genuine wild
+model failures with provenance-tracked, hashed raw artifacts is still the whole
+game. It only strengthens the ground truth those failures are judged against.
+The author can do CAD and FEA, which is used to:
+
+- **Harden the Wk-3 mode-structured benchmark.** Author harder ground-truth
+  cases whose correct answer is confirmed by an FEA model — stress
+  concentration, beam/plate bending, buckling, contact — beyond the closed-form
+  thin-wall/axial family. Lets the benchmark claim that positives and controls
+  are validated against FEA, not only hand analytics.
+- **Seed a future verifier-coverage expansion.** Scope checks for FEA-class
+  problems where no closed-form oracle exists: mesh-independence sanity,
+  boundary-condition plausibility, and load-path/unit consistency. Tracked as a
+  later coverage item, gated behind the core capture work above.
+
 ## Portfolio statement
 
 > Built a reproducible, CI-gated verifier that detects errors in LLM-generated

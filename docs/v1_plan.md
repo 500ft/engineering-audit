@@ -235,6 +235,10 @@ metrics, explicit limitations, and a reproducible CI evaluation.
 3. A second engineering domain selected from observed demand.
 4. Historical benchmark comparisons and richer regression reporting.
 5. Packaging and installation improvements.
+6. FEA-class verifier coverage (no closed-form oracle): mesh-independence
+   sanity, boundary-condition plausibility, and load-path/unit consistency,
+   backed by author-built CAD/FEA ground-truth cases. See ROADMAP.md,
+   "CAD/FEA-validated ground truth".
 
 ## Trigger-gated work
 
