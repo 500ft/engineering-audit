@@ -1,0 +1,1 @@
+A flat steel plate of width W = 60 mm and thickness t = 6 mm has a central transverse circular hole of diameter d = 12 mm and carries an axial tensile force P = 18 kN. Find the maximum tensile stress at the edge of the hole. State the formula and your final numeric answer concisely. No calculator, no tools.

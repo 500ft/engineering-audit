@@ -1,0 +1,18 @@
+Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdin explicitly: < /dev/null to skip, or wait longer.
+**Formula:**
+$$\sigma_{\max} = K_t \cdot \frac{P}{(W-d) \cdot t}$$
+
+where $K_t$ is the stress concentration factor for a circular hole in a rectangular plate.
+
+**Calculation:**
+
+Net area: $A_{net} = (40 - 8) \times 4 = 128 \text{ mm}^2$
+
+Nominal stress (net section): $\sigma_{nom} = \frac{6000}{128} = 46.875 \text{ MPa}$
+
+For $d/W = 8/40 = 0.2$, the stress concentration factor is approximately $K_t \approx 2.4$ to $2.5$ (standard reference values for a hole in a plate).
+
+Using $K_t = 2.5$:
+$$\sigma_{\max} = 2.5 \times 46.875 \approx \boxed{117 \text{ MPa}}$$
+
+The maximum tensile stress occurs at the edge of the hole due to the non-uniform stress distribution created by the stress concentration. A conservative estimate using the lower bound of $K_t$ would give ~113 MPa.

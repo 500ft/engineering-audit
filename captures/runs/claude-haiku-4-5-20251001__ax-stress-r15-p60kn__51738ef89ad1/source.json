@@ -1,0 +1,43 @@
+{
+  "artifacts": [
+    {
+      "kind": "raw_response",
+      "media_type": "text/plain",
+      "path": "captures/runs/claude-haiku-4-5-20251001__ax-stress-r15-p60kn__51738ef89ad1/output.txt",
+      "sha256": "51738ef89ad120eef27db567e4a888b73b31ea7ad4131d37cbd1483837b03651"
+    },
+    {
+      "kind": "prompt",
+      "media_type": "text/plain",
+      "path": "captures/prompts/ax-stress-r15-p60kn.txt",
+      "sha256": "4e375f92cae16db6af49ebbb3f2c323639091e906ae9c9d64b22490e1b5b0285"
+    }
+  ],
+  "capture_protocol": "challenge",
+  "capture_schema_version": "capture-0.1.0",
+  "captured_at": "2026-06-25T13:44:30Z",
+  "metadata_source": "self_report",
+  "model_name": "claude-haiku-4-5-20251001",
+  "model_version": null,
+  "notes": "",
+  "prompt_id": "ax_stress_r15_P60kN",
+  "prompt_sha256": "4e375f92cae16db6af49ebbb3f2c323639091e906ae9c9d64b22490e1b5b0285",
+  "provenance_tier": "gold",
+  "provider": "anthropic",
+  "raw_output_available": true,
+  "reasoning_effort": null,
+  "run_date": "2026-06-25",
+  "run_settings": {
+    "cli": "claude -p --model haiku",
+    "disallowed_tools": [
+      "Bash",
+      "Edit",
+      "Write",
+      "Read",
+      "WebSearch",
+      "WebFetch"
+    ],
+    "temperature": null
+  },
+  "temperature": null
+}

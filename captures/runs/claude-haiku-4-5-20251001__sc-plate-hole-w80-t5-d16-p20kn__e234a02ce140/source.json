@@ -1,0 +1,43 @@
+{
+  "artifacts": [
+    {
+      "kind": "raw_response",
+      "media_type": "text/plain",
+      "path": "captures/runs/claude-haiku-4-5-20251001__sc-plate-hole-w80-t5-d16-p20kn__e234a02ce140/output.txt",
+      "sha256": "e234a02ce140f0e97dcd6c054a74f1d7375a02def2b600df6eb330ab07c6fb94"
+    },
+    {
+      "kind": "prompt",
+      "media_type": "text/plain",
+      "path": "captures/prompts/sc-plate-hole-w80-t5-d16-p20kn.txt",
+      "sha256": "8e1422463df75e7ebe70121b2596df335c81762fd1ad0a65e679da608cf0928a"
+    }
+  ],
+  "capture_protocol": "challenge",
+  "capture_schema_version": "capture-0.1.0",
+  "captured_at": "2026-06-25T13:44:30Z",
+  "metadata_source": "self_report",
+  "model_name": "claude-haiku-4-5-20251001",
+  "model_version": null,
+  "notes": "",
+  "prompt_id": "sc_plate_hole_W80_t5_d16_P20kN",
+  "prompt_sha256": "8e1422463df75e7ebe70121b2596df335c81762fd1ad0a65e679da608cf0928a",
+  "provenance_tier": "gold",
+  "provider": "anthropic",
+  "raw_output_available": true,
+  "reasoning_effort": null,
+  "run_date": "2026-06-25",
+  "run_settings": {
+    "cli": "claude -p --model haiku",
+    "disallowed_tools": [
+      "Bash",
+      "Edit",
+      "Write",
+      "Read",
+      "WebSearch",
+      "WebFetch"
+    ],
+    "temperature": null
+  },
+  "temperature": null
+}

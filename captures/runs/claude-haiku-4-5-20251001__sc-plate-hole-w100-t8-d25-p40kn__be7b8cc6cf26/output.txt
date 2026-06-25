@@ -1,0 +1,22 @@
+Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdin explicitly: < /dev/null to skip, or wait longer.
+**Formula:**
+
+$$\sigma_{max} = K_t \times \frac{F}{A_{net}}$$
+
+where $A_{net} = bt - \pi\left(\frac{d}{2}\right)^2$ and $K_t$ is the stress concentration factor.
+
+**Solution:**
+
+1. **Net cross-sectional area:**
+   - $A_{net} = (100)(8) - \pi(12.5)^2 = 800 - 491 \approx 309 \text{ mm}^2$
+
+2. **Nominal stress (on net area):**
+   - $\sigma_{nom} = \frac{40,000}{309} \approx 129 \text{ MPa}$
+
+3. **Stress concentration factor:**
+   - For hole ratio $d/b = 25/100 = 0.25$, from standard tables: $K_t \approx 2.44$
+
+4. **Maximum stress:**
+   - $\sigma_{max} = 2.44 \times 129 \approx \boxed{315 \text{ MPa}}$
+
+The stress concentration at the hole edge produces ~2.4× amplification over the nominal stress.

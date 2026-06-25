@@ -1,0 +1,15 @@
+**Formula:**
+
+For a thin-walled cylindrical pressure vessel, the hoop stress is:
+
+$$\sigma_h = \frac{P \cdot d}{2t}$$
+
+where P is internal pressure, d is inner diameter, and t is wall thickness.
+
+**Solution:**
+
+Convert pressure: 25 bar = 2.5 MPa
+
+$$\sigma_h = \frac{2.5 \text{ MPa} \times 600 \text{ mm}}{2 \times 8 \text{ mm}} = \frac{1500}{16} = 93.75 \text{ MPa}$$
+
+**Answer: 93.75 MPa**

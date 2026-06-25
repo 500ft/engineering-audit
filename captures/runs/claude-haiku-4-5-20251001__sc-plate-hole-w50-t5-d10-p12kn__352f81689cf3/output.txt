@@ -1,0 +1,21 @@
+Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdin explicitly: < /dev/null to skip, or wait longer.
+**Formula:**
+$$\sigma_{max} = K_t \times \frac{P}{A_{net}}$$
+
+where:
+- $K_t$ = stress concentration factor (function of hole diameter ratio d/W)
+- $A_{net}$ = (W – d) × t = net cross-sectional area
+
+**Calculation:**
+
+Nominal stress at minimum section:
+$$\sigma_{nominal} = \frac{12,000 \text{ N}}{(50-10) \text{ mm} \times 5 \text{ mm}} = \frac{12,000}{200} = 60 \text{ MPa}$$
+
+Hole diameter ratio:
+$$\frac{d}{W} = \frac{10}{50} = 0.2$$
+
+From standard stress concentration charts for a circular hole in axial tension, at d/W = 0.2:
+$$K_t \approx 2.4$$
+
+Maximum stress:
+$$\sigma_{max} = 2.4 \times 60 = \boxed{144 \text{ MPa}}$$

@@ -1,0 +1,12 @@
+**Formula:**
+σ = F / A, where A = πr²
+
+**Calculation:**
+
+Area: A = π(20 mm)² = 400π mm²
+
+Stress: σ = 90,000 N / (400π mm²) = 225/π N/mm² = **225/π MPa**
+
+**Numeric answer:** ≈ **71.6 MPa**
+
+(Using π ≈ 3.14159, we get 225 ÷ 3.14159 ≈ 71.6)

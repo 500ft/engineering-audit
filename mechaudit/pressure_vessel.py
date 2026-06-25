@@ -6,6 +6,7 @@ from pint import UnitRegistry
 
 from .audit_result import AuditResult
 from .case_loader import BenchmarkCase, OutputRecord, QuantityValue
+from .stress_concentration import plate_with_hole
 
 
 ureg = UnitRegistry()
@@ -79,6 +80,40 @@ def compute_axial_stress(case: BenchmarkCase) -> float:
     force = _input(case, "force")
     area = _input(case, "area")
     return (force / area).to("MPa").magnitude
+
+
+# Inputs that mark a finite-width holed-plate stress-concentration case, and the
+# formula_ids the verifier recognises for it. Either signal is enough to attempt
+# the Kt-aware recomputation; both are present in well-formed cases.
+PLATE_HOLE_INPUTS = ("plate_width", "hole_diameter", "thickness", "axial_force")
+STRESS_CONCENTRATION_FORMULA_IDS = {"net_section_stress", "stress_concentration_peak"}
+
+
+def compute_plate_with_hole(case: BenchmarkCase) -> dict[str, float]:
+    """Recompute net stress, Kt, and peak stress for a holed-plate case in MPa.
+
+    Independent of any LLM output: pulls the geometry/load from ``inputs`` and
+    defers to :func:`mechaudit.stress_concentration.plate_with_hole`, the in-repo
+    analytically/FEA-validated oracle (Peterson/Heywood Kt). All lengths are
+    converted to mm and the force to N so the result is in MPa.
+    """
+    width = _input(case, "plate_width").to("mm").magnitude
+    diameter = _input(case, "hole_diameter").to("mm").magnitude
+    thickness = _input(case, "thickness").to("mm").magnitude
+    force = _input(case, "axial_force").to("N").magnitude
+    res = plate_with_hole(
+        width_mm=width,
+        hole_diameter_mm=diameter,
+        thickness_mm=thickness,
+        axial_force_N=force,
+    )
+    return {
+        "kt_net": res.Kt_net,
+        "d_over_W": res.d_over_W,
+        "net_section_stress_MPa": res.sigma_net_MPa,
+        "gross_section_stress_MPa": res.sigma_gross_MPa,
+        "peak_stress_MPa": res.sigma_max_MPa,
+    }
 
 
 CANONICAL_STRESS_UNIT = "MPa"
@@ -298,9 +333,25 @@ def audit_case(case: BenchmarkCase) -> AuditResult:
         result.recomputed_values.update(pv)
         _audit_pressure_vessel(case, result, formula_ids, pv)
 
+    if _is_plate_hole_case(case, formula_ids):
+        _audit_stress_concentration(case, result)
+
     audit_output_unit_consistency(case, result)
 
     return result
+
+
+def _is_plate_hole_case(case: BenchmarkCase, formula_ids: list[str]) -> bool:
+    """True for a finite-width holed-plate stress-concentration case.
+
+    Requires the geometry/load inputs to be present (so the oracle can run) and
+    at least one recognised stress-concentration ``formula_id``. Cases without
+    the holed-plate signature (e.g. pressure-vessel or axial cases) are ignored,
+    keeping the check from false-positiving on unrelated problem classes.
+    """
+    if not all(name in case.inputs for name in PLATE_HOLE_INPUTS):
+        return False
+    return bool(STRESS_CONCENTRATION_FORMULA_IDS.intersection(formula_ids))
 
 
 def _audit_axial_stress(case: BenchmarkCase, result: AuditResult) -> None:
@@ -443,3 +494,87 @@ def _audit_pressure_vessel(
             True,
             f"Nominal thin-wall values only: hoop={hoop:.6g} MPa, longitudinal={longitudinal:.6g} MPa.",
         )
+
+
+def _llm_peak_stress(case: BenchmarkCase) -> OutputRecord | None:
+    """The LLM's reported peak/maximum hole-edge stress for a holed-plate case.
+
+    Accepts the canonical ``peak_stress`` name or common aliases, preferring a
+    value carried in a stress unit. Net-section nominal outputs are excluded so
+    the reported peak is compared, not the intermediate.
+    """
+    candidates = [
+        output
+        for output in case.outputs
+        if output.source == "llm"
+        and not output.name.startswith("net_section")
+        and (
+            output.name.startswith("peak_stress")
+            or output.name.startswith("max_stress")
+            or output.name.startswith("maximum_stress")
+            or output.symbol in {"sigma_max", "σ_max"}
+        )
+    ]
+    if not candidates:
+        return None
+    with_stress_unit = [o for o in candidates if _is_stress_unit(o.unit)]
+    return (with_stress_unit or candidates)[0]
+
+
+def _audit_stress_concentration(case: BenchmarkCase, result: AuditResult) -> None:
+    """Kt-aware check for a finite-width holed plate in axial tension (FM-04).
+
+    Recomputes ``Kt_net``, ``sigma_net`` and ``sigma_max`` from the inputs via the
+    in-repo oracle, records them, and compares the LLM's reported peak stress to
+    the validated ``sigma_max``. Beyond tolerance it flags ``FM-04`` and names the
+    sub-case: peak == net-section nominal => stress concentration omitted;
+    otherwise wrong Kt or wrong nominal. A peak within tolerance (the
+    ``syn-kt-hole-0001`` control, or any correctly solved case) does not flag.
+    """
+    sc = compute_plate_with_hole(case)
+    result.recomputed_values["stress_concentration_kt_net"] = sc["kt_net"]
+    result.recomputed_values["net_section_stress_MPa"] = sc["net_section_stress_MPa"]
+    result.recomputed_values["peak_stress_MPa"] = sc["peak_stress_MPa"]
+
+    peak_output = _llm_peak_stress(case)
+    if peak_output is None:
+        result.add_check(
+            "stress-concentration-peak",
+            True,
+            f"No LLM peak-stress output to check; recomputed sigma_max = {sc['peak_stress_MPa']:.6g} MPa "
+            f"(Kt_net = {sc['kt_net']:.4g}, sigma_net = {sc['net_section_stress_MPa']:.6g} MPa).",
+        )
+        return
+
+    reported = _canonical_output_value(peak_output)
+    expected_peak = sc["peak_stress_MPa"]
+
+    if _same_value(reported, expected_peak, case):
+        result.add_check(
+            "stress-concentration-peak",
+            True,
+            f"Peak stress {reported:.6g} MPa matches Kt_net*sigma_net = {expected_peak:.6g} MPa "
+            f"(Kt_net = {sc['kt_net']:.4g}).",
+        )
+        return
+
+    if _same_value(reported, sc["net_section_stress_MPa"], case):
+        detail = (
+            f"reported {reported:.6g} MPa equals the net-section nominal "
+            f"sigma_net = {sc['net_section_stress_MPa']:.6g} MPa, so the stress "
+            f"concentration (Kt_net = {sc['kt_net']:.4g}) was omitted"
+        )
+    else:
+        detail = (
+            f"reported {reported:.6g} MPa matches neither the validated peak "
+            f"sigma_max = {expected_peak:.6g} MPa nor the net-section nominal "
+            f"sigma_net = {sc['net_section_stress_MPa']:.6g} MPa, indicating a wrong Kt "
+            f"or wrong nominal (correct Kt_net = {sc['kt_net']:.4g})"
+        )
+
+    result.add_check(
+        "stress-concentration-peak",
+        False,
+        f"Peak hole-edge stress should be Kt_net*sigma_net = {expected_peak:.6g} MPa; {detail}.",
+        "FM-04",
+    )

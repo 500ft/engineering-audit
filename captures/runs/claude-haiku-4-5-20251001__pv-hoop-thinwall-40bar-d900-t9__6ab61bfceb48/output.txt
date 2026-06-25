@@ -1,0 +1,11 @@
+**Formula for hoop stress in a thin-walled cylinder:**
+
+$$\sigma_h = \frac{pd}{2t}$$
+
+where p = pressure, d = diameter, t = wall thickness.
+
+**Calculation:**
+
+- Convert pressure: 40 bar = 4 MPa
+- Apply formula: σ_h = (4 MPa × 900 mm) / (2 × 9 mm)
+- σ_h = 3600 / 18 = **200 MPa**

@@ -1,0 +1,43 @@
+{
+  "artifacts": [
+    {
+      "kind": "raw_response",
+      "media_type": "text/plain",
+      "path": "captures/runs/claude-haiku-4-5-20251001__pv-hoop-thinwall-25bar-d600-t8__f10c58461a27/output.txt",
+      "sha256": "f10c58461a270a78524a7b5d7357d3d638c5d2ad0011d362d41d1ecd73cfca6b"
+    },
+    {
+      "kind": "prompt",
+      "media_type": "text/plain",
+      "path": "captures/prompts/pv-hoop-thinwall-25bar-d600-t8.txt",
+      "sha256": "eb8cff2a1f9f6d4910afba7dccd36b900d5ecbbed61d687874ca4d772a4adcf6"
+    }
+  ],
+  "capture_protocol": "challenge",
+  "capture_schema_version": "capture-0.1.0",
+  "captured_at": "2026-06-25T13:44:30Z",
+  "metadata_source": "self_report",
+  "model_name": "claude-haiku-4-5-20251001",
+  "model_version": null,
+  "notes": "",
+  "prompt_id": "pv_hoop_thinwall_25bar_d600_t8",
+  "prompt_sha256": "eb8cff2a1f9f6d4910afba7dccd36b900d5ecbbed61d687874ca4d772a4adcf6",
+  "provenance_tier": "gold",
+  "provider": "anthropic",
+  "raw_output_available": true,
+  "reasoning_effort": null,
+  "run_date": "2026-06-25",
+  "run_settings": {
+    "cli": "claude -p --model haiku",
+    "disallowed_tools": [
+      "Bash",
+      "Edit",
+      "Write",
+      "Read",
+      "WebSearch",
+      "WebFetch"
+    ],
+    "temperature": null
+  },
+  "temperature": null
+}

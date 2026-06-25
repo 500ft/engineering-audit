@@ -1,0 +1,24 @@
+Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdin explicitly: < /dev/null to skip, or wait longer.
+**Formula:**
+
+Maximum tensile stress at the net section (stress concentration, nominal approach):
+
+$$\sigma = \frac{P}{A_{net}} = \frac{P}{(W \times t) - \pi(d/2)^2}$$
+
+Where:
+- P = 18,000 N (load)
+- W = 60 mm (width)
+- t = 6 mm (thickness)  
+- d = 12 mm (hole diameter)
+
+**Calculation:**
+
+Net area:
+- Gross area = 60 × 6 = 360 mm²
+- Hole area = π(6)² = 36π ≈ 113.1 mm²
+- A_net = 360 − 113.1 = 246.9 mm²
+
+Stress:
+$$\sigma = \frac{18,000}{246.9} \approx 72.9 \text{ MPa}$$
+
+**Answer: σ_max ≈ 73 MPa** (or 72.9 MPa for more precision)

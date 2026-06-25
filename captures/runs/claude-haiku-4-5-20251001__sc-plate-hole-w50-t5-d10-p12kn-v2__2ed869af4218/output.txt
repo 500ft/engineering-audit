@@ -1,0 +1,20 @@
+Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdin explicitly: < /dev/null to skip, or wait longer.
+# Maximum Tensile Stress at Hole
+
+**Formula:**
+$$\sigma_{\max} = K_t \cdot \frac{P}{A_{\text{net}}}$$
+
+where:
+- $K_t$ = stress concentration factor ≈ **3** (for circular hole in plate under axial tension)
+- $P$ = applied load
+- $A_{\text{net}}$ = net cross-sectional area = $(W - d) \times t$
+
+**Calculation:**
+
+$$A_{\text{net}} = (50 - 10) \times 5 = 200 \text{ mm}^2$$
+
+$$\sigma_{\text{nom}} = \frac{12,000 \text{ N}}{200 \text{ mm}^2} = 60 \text{ MPa}$$
+
+$$\sigma_{\max} = 3 \times 60 = \boxed{180 \text{ MPa}}$$
+
+The stress concentration factor of 3 is the classical result for a circular hole in a plate—stress is highest at the edge of the hole where the net area is minimum.

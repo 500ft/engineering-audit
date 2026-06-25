@@ -1,0 +1,15 @@
+**Formula:**
+$$\sigma = \frac{P}{A} = \frac{P}{\pi r^2}$$
+
+where σ is normal stress, P is applied load, and A is cross-sectional area.
+
+**Calculation:**
+
+- Area: A = π(15)² = 225π mm²
+- Stress: σ = 60,000 N / (225π mm²) = 60,000/(225π) MPa
+
+Simplifying:
+- 60,000 ÷ 225 = 800/3 ≈ 266.67
+- 266.67 ÷ π ≈ 266.67 ÷ 3.14159 ≈ 84.9
+
+**Answer: σ ≈ 84.9 MPa** (or exactly 800/(3π) MPa ≈ 85 MPa)

@@ -1,0 +1,13 @@
+Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdin explicitly: < /dev/null to skip, or wait longer.
+**Formula:**
+$$\sigma_{max} = K_t \cdot \frac{P}{A_{net}}$$
+
+where K_t is the stress concentration factor (≈ 3.0 for a circular hole in tension) and A_net is the net cross-sectional area.
+
+**Calculation:**
+
+Net area: A_net = (W − d) × t = (80 − 16) × 5 = 64 × 5 = **320 mm²**
+
+Nominal stress: σ_nom = P / A_net = 20,000 N / 320 mm² = **62.5 MPa**
+
+Maximum stress: σ_max = 3.0 × 62.5 = **187.5 MPa**

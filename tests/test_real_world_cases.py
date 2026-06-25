@@ -22,6 +22,13 @@ PENDING_REAL_CASE_IDS = {
     "rw-pressure-vessel-gpt-0001",
     "rw-pressure-vessel-gpt-0002",
 }
+# Genuine verbatim gold captures of claude-haiku-4-5-20251001 promoted to
+# complete real_world cases (holed-plate stress-concentration failures, FM-04).
+GOLD_REAL_WORLD_CASE_IDS = {
+    "rw-stress-concentration-claude-haiku-0001",
+    "rw-stress-concentration-claude-haiku-0002",
+    "rw-stress-concentration-claude-haiku-0003",
+}
 
 
 def test_pending_real_world_cases_skip_without_count_assumption() -> None:
@@ -48,6 +55,25 @@ def test_reference_control_cases_are_no_failure_controls() -> None:
         assert not result.skipped
         assert result.expected_failure_modes == []
         assert result.detected_failure_modes == []
+        assert result.passed
+
+
+def test_gold_real_world_captures_are_complete_fm04_cases() -> None:
+    cases = load_benchmark_cases(ROOT)
+    complete, _ = split_cases(cases)
+    gold = [case for case in complete if case.source_type == "real_world"]
+
+    assert {case.case_id for case in gold} == GOLD_REAL_WORLD_CASE_IDS
+    for case in gold:
+        assert case.source.provenance_tier == "gold"
+        assert case.source.raw_output_available is True
+        assert any(
+            artifact.kind in {"raw_response", "api_response"}
+            for artifact in case.source.artifacts
+        )
+        result = audit_case(case)
+        assert not result.skipped
+        assert result.detected_failure_modes == ["FM-04"]
         assert result.passed
 
 

@@ -1,0 +1,1 @@
+A solid circular rod of radius r = 15 mm carries an axial tensile load P = 60 kN. Find the axial (normal) stress in the rod. State the formula and your final numeric answer concisely. No calculator, no tools.

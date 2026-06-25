@@ -249,6 +249,73 @@ Reporting `20 MPa` for the same formula and inputs should not flag `FM-03`.
 Reporting `20.6 MPa` only avoids `FM-03` when the case explicitly accepts the
 `mean_radius` convention.
 
+## FM-04: Stress-Concentration Error
+
+### Definition
+
+For a notched member (V1: a finite-width flat plate with a central transverse
+circular hole in uniaxial tension), the LLM reports a peak stress that does not
+equal `sigma_max = Kt_net * sigma_net` within tolerance. Two distinct mistakes
+fall under this mode:
+
+1. **Stress concentration omitted.** The reported peak equals the net-section
+   nominal stress `sigma_net = P / ((W - d) t)` — the model forgot to apply
+   `Kt`, under-predicting the true peak by the factor `Kt` (~2.4-3x).
+2. **Wrong `Kt` or wrong nominal.** A concentration factor was applied, but the
+   reported peak still misses the validated `sigma_max`. Common causes are using
+   the Kirsch infinite-plate `Kt = 3.0` instead of the finite-width factor, or
+   computing the nominal on a wrong net area (e.g. subtracting the circular hole
+   *area* `pi (d/2)^2` instead of the transverse strip `d t`).
+
+### Detection Method
+
+1. Identify a holed-plate case from its `formula_id`s (`net_section_stress`,
+   `stress_concentration_peak`) and its inputs (`plate_width`, `hole_diameter`,
+   `thickness`, `axial_force`).
+2. Recompute `Kt_net`, `sigma_net`, and `sigma_max` independently via
+   `mechaudit.stress_concentration.plate_with_hole`.
+3. Compare the LLM's reported peak stress (`peak_stress`) against the recomputed
+   `sigma_max`.
+4. Flag `FM-04` when it deviates beyond tolerance. Distinguish the two sub-cases
+   in the message by testing whether the reported peak matches `sigma_net`
+   (omitted concentration) or neither `sigma_net` nor `sigma_max` (wrong `Kt` or
+   wrong nominal).
+
+### Required Schema Fields
+
+- `inputs.plate_width`, `inputs.hole_diameter`, `inputs.thickness`,
+  `inputs.axial_force`
+- `formulas_used[].formula_id`
+- `outputs` (an `llm` `peak_stress`/`sigma_max` output)
+- `tolerance`
+
+### Tolerance
+
+Use the numeric tolerance policy in `docs/tolerance_policy.md`. `Kt_net` is the
+Heywood/Howland fit to Peterson's chart (Pilkey Chart 4.1; Roark Table 17.1),
+validated against the Kirsch `d/W -> 0` limit. A reported peak within the case
+tolerance of the validated `sigma_max` does not flag `FM-04`.
+
+### Positive Example
+
+`W = 60 mm`, `t = 6 mm`, `d = 12 mm`, `P = 18 kN`. The validated peak is
+`sigma_max = 157.44 MPa` (`Kt_net = 2.519`, `sigma_net = 62.5 MPa`). Reporting
+`72.9 MPa` (concentration omitted, and net area taken as `W t - pi(d/2)^2`)
+should flag `FM-04`.
+
+### Negative Example
+
+For the same geometry, reporting a value within tolerance of `157.44 MPa` —
+e.g. the `syn-kt-hole-0001` control's `145.9 MPa` for its own `W=80,d=20`
+geometry — should not flag `FM-04`.
+
+### Known Limitations
+
+- V1 covers only the central-hole flat-plate case; other notch geometries
+  (fillets, shoulders, multiple holes) are future work.
+- Requires the holed-plate inputs to be present and a peak-stress output to
+  parse; a response that omits the peak entirely is a benchmark-quality issue.
+
 ## P-01: Schema Noncompliance
 
 ### Definition

@@ -1,0 +1,1 @@
+A thin-walled cylindrical pressure vessel has an inner diameter of 900 mm and a wall thickness of 9 mm and carries an internal pressure of 40 bar. Find the hoop (circumferential) stress in the wall. State the formula and your final numeric answer concisely. No calculator, no tools.
