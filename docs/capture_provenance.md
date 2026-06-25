@@ -58,6 +58,34 @@ The loader enforces, for `0.3.0`:
 - A `synthetic` case must use `source_type: synthetic` and have
   `source.model_name: null`.
 
+## Capture harness (the rail for real captures)
+
+`mechaudit.capture` (CLI: `mechaudit capture`) is the provenance-first tool that
+real `gold`/`silver` captures run on. It is deliberately offline: it never calls
+a model or the network. The operator performs the model run with their own
+credentials, then hands the **verbatim** raw output to the harness via a file or
+stdin. The harness:
+
+- computes the SHA-256 of the verbatim bytes;
+- writes the bytes as an immutable artifact under `captures/runs/<run_id>/`,
+  with a pre-registered `captures/prompts/`, `captures/models/`, `captures/runs/`
+  structure;
+- writes a `source.json` provenance record whose field names match the benchmark
+  `source` object (`provenance_tier`, provider/model/version/date, run settings,
+  typed `artifacts` with hashes), so a captured run can be promoted into a
+  `complete` `real_world` case by copying its artifact into
+  `benchmark/real_world/raw/` and referencing the recorded hash;
+- refuses the `synthetic`/`deprecated` tiers, refuses an empty output, refuses to
+  silently rewrite a `prompt_id`, and re-captures identical bytes idempotently.
+
+`verify_capture()` re-hashes every stored artifact, making "the raw output is
+present and unmodified" a checked property — the capture-layer analogue of the
+loader's `P-01` artifact check.
+
+This harness builds the rail only. It introduces **no** real or fabricated
+captures; the `captures/` tree is created the first time a genuine run is
+recorded.
+
 ## Why reviewer synthesis is quarantined
 
 The first MechAudit "real" fixtures were reviewer-written descriptions of model

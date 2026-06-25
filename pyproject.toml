@@ -11,6 +11,10 @@ dependencies = [
 [project.optional-dependencies]
 test = [
   "pytest>=8.0,<9.0",
+  # numpy is used only by tests, as an independent oracle that validates the
+  # analytically/FEA-grade ground-truth reference cases (e.g. numerical
+  # double-integration of beam curvature). It is not a runtime dependency.
+  "numpy>=1.26",
 ]
 
 [project.scripts]

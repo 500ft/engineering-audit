@@ -81,8 +81,116 @@ def compute_axial_stress(case: BenchmarkCase) -> float:
     return (force / area).to("MPa").magnitude
 
 
+CANONICAL_STRESS_UNIT = "MPa"
+
+# Maps an LLM output name prefix to the recomputed reference key it should be
+# compared against, in canonical (MPa) units. Used by the unit-consistency check.
+STRESS_REFERENCE_KEYS = {
+    "axial_stress": "axial_stress_MPa",
+    "hoop_stress": "hoop_stress_MPa",
+    "longitudinal_stress": "longitudinal_stress_MPa",
+}
+
+
 def _formula_ids(case: BenchmarkCase) -> list[str]:
     return [formula.formula_id or "" for formula in case.formulas_used]
+
+
+def _is_stress_unit(unit: str | None) -> bool:
+    """True if ``unit`` is dimensionally a stress/pressure (convertible to MPa)."""
+    if not unit:
+        return False
+    try:
+        return Q_(1.0, _unit(unit)).check("[pressure]")
+    except Exception:
+        return False
+
+
+def _to_canonical_stress(value: float, unit: str | None) -> float | None:
+    """Convert a stress value to MPa, or ``None`` if the unit is unusable."""
+    if not unit:
+        return None
+    try:
+        return Q_(value, _unit(unit)).to(CANONICAL_STRESS_UNIT).magnitude
+    except Exception:
+        return None
+
+
+def _canonical_output_value(output: OutputRecord) -> float:
+    """Magnitude of a stress output in canonical MPa.
+
+    Converts when the unit is a stress unit; otherwise returns the raw value so
+    that missing/non-stress units stay the responsibility of the dedicated
+    unit-consistency check. For MPa outputs this is a no-op, so existing
+    behavior is unchanged.
+    """
+    if _is_stress_unit(output.unit):
+        converted = _to_canonical_stress(output.value, output.unit)
+        if converted is not None:
+            return converted
+    return output.value
+
+
+def _reference_for_output(name: str, recomputed: dict[str, float | str]) -> float | None:
+    """Recomputed reference value (MPa) for an LLM output name, if available."""
+    for prefix, key in STRESS_REFERENCE_KEYS.items():
+        if name.startswith(prefix):
+            value = recomputed.get(key)
+            return value if isinstance(value, (int, float)) else None
+    return None
+
+
+def audit_output_unit_consistency(case: BenchmarkCase, result: AuditResult) -> None:
+    """Convert reported output units before comparing, and flag mismatched units.
+
+    Implements the FM-01 "unit conversion before comparison" gap: the verifier
+    must not treat an output magnitude as MPa regardless of ``output.unit``. For
+    each LLM stress output it (1) converts the reported value into canonical MPa
+    and (2) compares against the recomputed reference. The signature of a
+    mismatched-unit error is a value whose *bare magnitude* matches the reference
+    but whose *unit-converted* value does not — i.e. the right number under the
+    wrong unit label (e.g. ``200 psi`` when the answer is ``200 MPa``), or a
+    safety comparison made across mismatched units.
+    """
+    for output in case.outputs:
+        if output.source != "llm":
+            continue
+        reference = _reference_for_output(output.name, result.recomputed_values)
+        if reference is None:
+            continue
+
+        unit = output.unit
+        if not _is_stress_unit(unit):
+            # A stress reported with a non-stress (or missing) unit is a
+            # dimensional inconsistency with no tolerance.
+            if unit is not None:
+                result.add_check(
+                    "unit-dimensionality",
+                    False,
+                    f"Output '{output.name}' is a stress but its unit {unit!r} is not a pressure/stress unit.",
+                    "FM-01",
+                )
+            continue
+
+        converted = _to_canonical_stress(output.value, unit)
+        if converted is None:
+            continue
+
+        converted_matches = _same_value(converted, reference, case)
+        bare_matches = _same_value(output.value, reference, case)
+
+        if not converted_matches and bare_matches and unit != CANONICAL_STRESS_UNIT:
+            result.add_check(
+                "unit-conversion-before-comparison",
+                False,
+                (
+                    f"Output '{output.name}' reads {output.value:g} {unit}, but the "
+                    f"recomputed value is {reference:.6g} {CANONICAL_STRESS_UNIT}. "
+                    f"The number matches only if units are ignored: {output.value:g} {unit} "
+                    f"= {converted:.6g} {CANONICAL_STRESS_UNIT}."
+                ),
+                "FM-01",
+            )
 
 
 def _llm_outputs(case: BenchmarkCase, name: str) -> list[OutputRecord]:
@@ -190,6 +298,8 @@ def audit_case(case: BenchmarkCase) -> AuditResult:
         result.recomputed_values.update(pv)
         _audit_pressure_vessel(case, result, formula_ids, pv)
 
+    audit_output_unit_consistency(case, result)
+
     return result
 
 
@@ -266,17 +376,26 @@ def _audit_pressure_vessel(
             else (final_outputs[0] if final_outputs else None)
         )
         final_matches = (
-            _matching_hoop_conventions(final_output.value, case, pv)
+            _matching_hoop_conventions(_canonical_output_value(final_output), case, pv)
             if final_output is not None
             else {}
         )
         if final_output is not None:
             _record_hoop_match(result, "final", final_matches)
 
+        # A value that matches a convention only when the unit label is ignored
+        # is a unit error (FM-01), not arithmetic (FM-03); the unit-consistency
+        # check owns it, so suppress the redundant FM-03 here.
+        bare_matches_convention = (
+            bool(_matching_hoop_conventions(final_output.value, case, pv))
+            if final_output is not None
+            else False
+        )
         if (
             "hoop_stress_thin_wall" in formula_ids
             and final_output is not None
             and not final_matches
+            and not bare_matches_convention
         ):
             result.add_check(
                 "hoop-arithmetic",
@@ -286,13 +405,17 @@ def _audit_pressure_vessel(
             )
 
         if final_outputs:
-            final_named_matches = _matching_hoop_conventions(final_outputs[0].value, case, pv)
+            final_named_matches = _matching_hoop_conventions(
+                _canonical_output_value(final_outputs[0]), case, pv
+            )
         else:
             final_named_matches = {}
         if final_named_matches:
             _record_hoop_match(result, "final", final_named_matches)
             for output in substitution_outputs:
-                substitution_matches = _matching_hoop_conventions(output.value, case, pv)
+                substitution_matches = _matching_hoop_conventions(
+                    _canonical_output_value(output), case, pv
+                )
                 _record_hoop_match(result, "substitution", substitution_matches)
                 if not substitution_matches:
                     result.add_check(

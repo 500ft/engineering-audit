@@ -7,7 +7,14 @@ failure behavior instead of imagined behavior.
 ## Folders
 
 - `real_world/`: transcript-backed LLM failures from actual engineering work.
-- `synthetic/`: clearly labeled artificial cases for targeted coverage.
+- `synthetic/`: clearly labeled artificial cases for targeted coverage. This
+  includes both single-mode failure cases (`syn-fm*`, `syn-arith-*`) and
+  analytically/FEA-grade-validated **ground-truth controls** (`syn-kt-hole-*`,
+  `syn-cantilever-*`) whose correct answer is computed independently in-repo by
+  `mechaudit.stress_concentration` and asserted in
+  `tests/test_ground_truth_references.py`. The ground-truth controls are
+  no-failure positives (`failure_modes: []`), `provenance_tier: synthetic`; they
+  are not model runs and must never be described as wild captures.
 
 Real-run capture slots may live in `real_world/` with `status:
 pending_capture`, but they must not be described as completed real LLM failures
