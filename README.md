@@ -17,13 +17,16 @@ remain independently recomputable.
 - Detect documented synthetic failure modes without echoing metadata labels.
 - Treat completed real pressure-vessel captures as false-positive controls when
   the model output is correct.
+- Treat completed gold stress-concentration captures as real-world FM-04 cases
+  when the model output omits or misuses stress-concentration factors.
 - Keep broad engineering-domain coverage, raw-response extraction, and
   code-specific compliance checks out of scope for v1.
 
 ## Real-Capture Status
 
-The repository does **not** yet contain a verbatim model capture. Provenance is
-enforced by the loader as of schema `0.3.0`; see `docs/capture_provenance.md`.
+The repository now contains verbatim `gold` captures from a Claude Haiku
+stress-concentration challenge session. Provenance is enforced by the loader as
+of schema `0.3.0`; see `docs/capture_provenance.md`.
 
 - Reviewer-synthesized controls (not real captures): Gemini 3.5 Thinking
   (`gemini-0001`), Claude Opus 4.8 High plain solve (`claude-0001`), and Claude
@@ -32,10 +35,14 @@ enforced by the loader as of schema `0.3.0`; see `docs/capture_provenance.md`.
   reviewer to describe a model run, carry no raw transcript, and are retained
   only as no-failure false-positive controls — most usefully the `20.0 MPa`
   inner-radius result versus the defensible `20.6 MPa` mean-radius refinement.
+- Gold captures: 10 verbatim `claude-haiku-4-5-20251001` challenge runs are
+  stored under `captures/runs/`, with prompt/output SHA-256 hashes and
+  `source.json` provenance records. Three of those are promoted into complete
+  `real_world` FM-04 stress-concentration benchmark cases.
 - Pending real captures: `gpt-0001` and `gpt-0002` (`status: pending_capture`).
 
-Genuine `gold`/`silver` captures with verbatim raw artifacts are the next
-milestone; the loader rejects any `complete` `real_world` case that lacks a
+Additional cross-model `gold`/`silver` captures remain useful, especially from
+GPT and Gemini. The loader rejects any `complete` `real_world` case that lacks a
 hash-verified artifact.
 
 ## Repository Layout
