@@ -1,0 +1,31 @@
+Use
+
+\[
+\sigma_{\max}=K_t\frac{P}{Wt}
+\]
+
+For a central circular hole in a finite-width plate,
+
+\[
+K_t \approx 3-3.14\left(\frac dW\right)+3.667\left(\frac dW\right)^2-1.527\left(\frac dW\right)^3
+\]
+
+With \(d/W=8/40=0.2\),
+
+\[
+K_t \approx 2.51
+\]
+
+Nominal stress:
+
+\[
+\frac{P}{Wt}=\frac{6000}{40\times 4}=37.5\ \text{MPa}
+\]
+
+So,
+
+\[
+\sigma_{\max}\approx 2.51(37.5)\approx 94\ \text{MPa}
+\]
+
+Final answer: \(\boxed{\sigma_{\max}\approx 94\ \text{MPa}}\)

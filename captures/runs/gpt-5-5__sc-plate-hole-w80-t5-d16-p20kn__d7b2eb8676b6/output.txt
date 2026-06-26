@@ -1,0 +1,27 @@
+Formula:
+
+\[
+\sigma_{\max}=K_t \sigma_{\text{nom}}, \qquad 
+\sigma_{\text{nom}}=\frac{P}{(W-d)t}
+\]
+
+For a central circular hole in a finite-width plate:
+
+\[
+K_t=3-3.14\frac dW+3.667\left(\frac dW\right)^2-1.527\left(\frac dW\right)^3
+\]
+
+\[
+\frac dW=\frac{16}{80}=0.2,\qquad K_t \approx 2.51
+\]
+
+\[
+\sigma_{\text{nom}}=\frac{20{,}000}{(80-16)(5)}
+=\frac{20{,}000}{320}=62.5\text{ MPa}
+\]
+
+\[
+\sigma_{\max}\approx 2.51(62.5)\approx 157\text{ MPa}
+\]
+
+Final answer: **\(\boxed{\sigma_{\max}\approx 157\text{ MPa}}\)**.

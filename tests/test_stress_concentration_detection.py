@@ -26,6 +26,10 @@ PROMOTED_FM04_CASES = (
     "rw-stress-concentration-claude-haiku-0001",  # concentration omitted + wrong area
     "rw-stress-concentration-claude-haiku-0002",  # wrong nominal (net area)
     "rw-stress-concentration-claude-haiku-0003",  # wrong Kt (infinite-plate 3.0)
+    "rw-stress-concentration-codex-gpt54mini-0001",  # gross nominal with finite-width Kt
+    "rw-stress-concentration-codex-gpt54mini-0002",  # gross-reference convention mismatch
+    "rw-stress-concentration-codex-gpt55-0001",  # gross nominal with finite-width Kt
+    "rw-stress-concentration-codex-gpt55-0002",  # gross-reference convention mismatch
 )
 
 

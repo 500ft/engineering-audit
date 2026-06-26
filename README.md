@@ -24,9 +24,10 @@ remain independently recomputable.
 
 ## Real-Capture Status
 
-The repository now contains verbatim `gold` captures from a Claude Haiku
-stress-concentration challenge session. Provenance is enforced by the loader as
-of schema `0.3.0`; see `docs/capture_provenance.md`.
+The repository now contains verbatim `gold` captures from Claude Haiku and
+OpenAI Codex explicit-effort stress-concentration challenge sessions.
+Provenance is enforced by the loader as of schema `0.3.0`; see
+`docs/capture_provenance.md`.
 
 - Reviewer-synthesized controls (not real captures): Gemini 3.5 Thinking
   (`gemini-0001`), Claude Opus 4.8 High plain solve (`claude-0001`), and Claude
@@ -39,10 +40,17 @@ of schema `0.3.0`; see `docs/capture_provenance.md`.
   stored under `captures/runs/`, with prompt/output SHA-256 hashes and
   `source.json` provenance records. Three of those are promoted into complete
   `real_world` FM-04 stress-concentration benchmark cases.
+- Codex comparison captures: 20 verbatim OpenAI Codex runs are stored under
+  `captures/runs/`: 10 `gpt-5.4-mini` and 10 `gpt-5.5`, all with explicit
+  `reasoning_effort: low`. The run intentionally used `--ignore-user-config` to
+  avoid the local `gpt-5.5` / `high` default confound. Four representative
+  finite-width holed-plate failures are promoted into complete `real_world`
+  FM-04 cases. See `captures/SESSION_2026-06-26_CODEX.md`.
 - Pending real captures: `gpt-0001` and `gpt-0002` (`status: pending_capture`).
 
 Additional cross-model `gold`/`silver` captures remain useful, especially from
-GPT and Gemini. The loader rejects any `complete` `real_world` case that lacks a
+Gemini or from OpenAI models at other explicitly recorded reasoning-effort
+settings. The loader rejects any `complete` `real_world` case that lacks a
 hash-verified artifact.
 
 ## Repository Layout

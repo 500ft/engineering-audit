@@ -1,0 +1,21 @@
+Use the finite-width plate stress-concentration formula for a central hole:
+
+\[
+K_t = 3 - 3.14\left(\frac{d}{W}\right) + 3.667\left(\frac{d}{W}\right)^2 - 1.527\left(\frac{d}{W}\right)^3
+\]
+
+\[
+\sigma_{\text{nom}}=\frac{P}{Wt}=\frac{40\,000}{100\times 8}=50\ \text{MPa}
+\]
+
+With \(d/W=25/100=0.25\),
+
+\[
+K_t \approx 2.42
+\]
+
+\[
+\sigma_{\max}=K_t\,\sigma_{\text{nom}}\approx 2.42(50)=121\ \text{MPa}
+\]
+
+**Final answer: \(\boxed{\sigma_{\max}\approx 121\ \text{MPa}}\)**

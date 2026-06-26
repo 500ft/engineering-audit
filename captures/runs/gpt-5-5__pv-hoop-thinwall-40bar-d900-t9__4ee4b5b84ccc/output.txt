@@ -1,0 +1,18 @@
+Hoop stress for a thin-walled cylinder:
+
+\[
+\sigma_h = \frac{p d}{2t}
+\]
+
+Given:
+\[
+p = 40 \text{ bar} = 4 \text{ N/mm}^2,\quad d = 900 \text{ mm},\quad t = 9 \text{ mm}
+\]
+
+\[
+\sigma_h = \frac{4 \times 900}{2 \times 9}
+= \frac{3600}{18}
+= 200 \text{ N/mm}^2
+\]
+
+Final answer: **200 MPa**.

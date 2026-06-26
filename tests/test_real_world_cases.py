@@ -28,6 +28,10 @@ GOLD_REAL_WORLD_CASE_IDS = {
     "rw-stress-concentration-claude-haiku-0001",
     "rw-stress-concentration-claude-haiku-0002",
     "rw-stress-concentration-claude-haiku-0003",
+    "rw-stress-concentration-codex-gpt54mini-0001",
+    "rw-stress-concentration-codex-gpt54mini-0002",
+    "rw-stress-concentration-codex-gpt55-0001",
+    "rw-stress-concentration-codex-gpt55-0002",
 }
 
 

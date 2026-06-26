@@ -1,0 +1,7 @@
+Formula: `σ = P / A = P / (πr²)`
+
+With `P = 60 kN = 60,000 N` and `r = 15 mm`:
+
+`σ = 60,000 / (π × 15²) = 60,000 / 225π ≈ 85 MPa`
+
+Final answer: `σ ≈ 85 MPa`

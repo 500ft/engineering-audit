@@ -1,0 +1,25 @@
+Formula:
+
+\[
+\sigma_{\max}=K_t \frac{P}{Wt}
+\]
+
+For a finite-width plate with a central circular hole:
+
+\[
+K_t=3-3.14\frac dW+3.667\left(\frac dW\right)^2-1.527\left(\frac dW\right)^3
+\]
+
+\[
+\frac dW=\frac{12}{60}=0.2,\qquad \frac{P}{Wt}=\frac{18000}{60\cdot6}=50\text{ MPa}
+\]
+
+\[
+K_t \approx 2.51
+\]
+
+\[
+\sigma_{\max}\approx 2.51(50)=125\text{ MPa}
+\]
+
+Final answer: **\(\sigma_{\max}\approx 125\text{ MPa}\)**.

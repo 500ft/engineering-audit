@@ -1,0 +1,66 @@
+{
+  "artifacts": [
+    {
+      "kind": "raw_response",
+      "media_type": "text/plain",
+      "path": "captures/runs/gpt-5-4-mini__sc-plate-hole-w80-t5-d16-p20kn__970a31645e3b/output.txt",
+      "sha256": "970a31645e3b787bcdd04379273b81ddb64bdd2e0b1cd750af6dd8a67de3ed30"
+    },
+    {
+      "kind": "prompt",
+      "media_type": "text/plain",
+      "path": "captures/prompts/sc-plate-hole-w80-t5-d16-p20kn.txt",
+      "sha256": "8e1422463df75e7ebe70121b2596df335c81762fd1ad0a65e679da608cf0928a"
+    },
+    {
+      "kind": "api_response",
+      "media_type": "application/jsonl",
+      "path": "captures/runs/gpt-5-4-mini__sc-plate-hole-w80-t5-d16-p20kn__970a31645e3b/codex-events.jsonl",
+      "sha256": "f2cf90d8ef3ed73afadee57663930f735d67feef91baf2524e34381812b350b2"
+    }
+  ],
+  "capture_protocol": "challenge",
+  "capture_schema_version": "capture-0.1.0",
+  "captured_at": "2026-06-26T09:47:59Z",
+  "metadata_source": "self_report",
+  "model_name": "gpt-5.4-mini",
+  "model_version": "gpt-5.4-mini",
+  "notes": "Codex explicit-effort comparison run. Prompt requested no calculator/no tools; JSON event stream retained to audit actual tool behavior.",
+  "prompt_id": "sc_plate_hole_W80_t5_d16_P20kN",
+  "prompt_sha256": "8e1422463df75e7ebe70121b2596df335c81762fd1ad0a65e679da608cf0928a",
+  "provenance_tier": "gold",
+  "provider": "openai",
+  "raw_output_available": true,
+  "reasoning_effort": "low",
+  "run_date": "2026-06-26",
+  "run_settings": {
+    "cli": "codex exec -C /Users/redhose/Documents/Codex/MechAudit -m gpt-5.4-mini -s read-only --json --ignore-rules --ignore-user-config -c model_reasoning_effort=\"low\" -o <last-message-file> <prompt>",
+    "codex_exec_thread_id": "019f0350-0033-7d52-b1f0-381c4b43580d",
+    "ignore_rules": true,
+    "ignore_user_config": true,
+    "json_events_captured": true,
+    "local_user_config_model": "gpt-5.5",
+    "local_user_config_model_reasoning_effort": "high",
+    "local_user_config_was_ignored": true,
+    "model_reasoning_effort_requested": "low",
+    "model_requested": "gpt-5.4-mini",
+    "operator_chain": "Primary coding agent invoked nested codex exec as model-under-test; pass/fail classification is deterministic in-repo ground truth, not operator judgment.",
+    "sandbox": "read-only",
+    "stderr_path": "captures/runs/gpt-5-4-mini__sc-plate-hole-w80-t5-d16-p20kn__970a31645e3b/codex-stderr.txt",
+    "stderr_sha256": "1aa26269eb1cc57f86b235a03cda53c004edb5b1e9fc99d4da4f00843293d721",
+    "tool_control_limitation": "Codex tools were not hard-disabled by CLI; prompt instructed no tools, sandbox was read-only, and JSON event stream was inspected.",
+    "tool_event_counts": {
+      "command_execution": 0,
+      "file_change": 0,
+      "mcp_tool_call": 0,
+      "web_search": 0
+    },
+    "usage": {
+      "cached_input_tokens": 8064,
+      "input_tokens": 14373,
+      "output_tokens": 662,
+      "reasoning_output_tokens": 516
+    }
+  },
+  "temperature": null
+}

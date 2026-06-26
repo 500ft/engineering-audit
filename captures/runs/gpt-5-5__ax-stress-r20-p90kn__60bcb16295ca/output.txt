@@ -1,0 +1,21 @@
+Formula:
+
+\[
+\sigma = \frac{P}{A} = \frac{P}{\pi r^2}
+\]
+
+With \(P = 90\,\text{kN} = 90{,}000\,\text{N}\) and \(r = 20\,\text{mm}\):
+
+\[
+A = \pi(20)^2 = 400\pi \,\text{mm}^2
+\]
+
+\[
+\sigma = \frac{90{,}000}{400\pi} = \frac{225}{\pi}\,\text{N/mm}^2 \approx 72\,\text{MPa}
+\]
+
+Final answer:
+
+\[
+\boxed{\sigma \approx 72\,\text{MPa}}
+\]

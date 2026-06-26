@@ -1,0 +1,16 @@
+Use the thin-cylinder hoop stress formula:
+
+\[
+\sigma_h = \frac{p d}{2t}
+\]
+
+Given:
+- \(p = 25\ \text{bar} = 2.5\ \text{N/mm}^2\)
+- \(d = 600\ \text{mm}\)
+- \(t = 8\ \text{mm}\)
+
+\[
+\sigma_h = \frac{2.5 \times 600}{2 \times 8} = \frac{1500}{16} = 93.75\ \text{N/mm}^2
+\]
+
+Final answer: \(\boxed{93.75\ \text{MPa}}\)

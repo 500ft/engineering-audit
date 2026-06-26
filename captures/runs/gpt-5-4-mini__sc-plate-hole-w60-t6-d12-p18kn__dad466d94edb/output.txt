@@ -1,0 +1,25 @@
+Use the stress-concentration relation for a plate with a central hole:
+
+\[
+\sigma_{\max}=K_t\,\sigma_{\text{nom}}, \qquad \sigma_{\text{nom}}=\frac{P}{Wt}
+\]
+
+For a central hole with \(d/W=12/60=0.2\), the usual finite-width factor is about
+
+\[
+K_t \approx 2.5
+\]
+
+So:
+
+\[
+\sigma_{\text{nom}}=\frac{18\,000}{60\times 6}=\frac{18\,000}{360}=50\ \text{MPa}
+\]
+
+\[
+\sigma_{\max}\approx 2.5 \times 50 = 125\ \text{MPa}
+\]
+
+Final answer: \(\boxed{\sigma_{\max} \approx 125\ \text{MPa}}\)
+
+If your class uses the simpler infinite-plate approximation \(K_t=3\), then \(\sigma_{\max}=150\ \text{MPa}\).

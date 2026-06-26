@@ -1,0 +1,25 @@
+Formula, using gross-section nominal stress:
+
+\[
+\sigma_{\max}=K_t\frac{P}{Wt}
+\]
+
+For a finite-width plate with a central circular hole:
+
+\[
+K_t \approx 3-3.14\frac dW+3.667\left(\frac dW\right)^2-1.527\left(\frac dW\right)^3
+\]
+
+\[
+\frac dW=\frac{25}{100}=0.25,\quad K_t \approx 2.42
+\]
+
+\[
+\frac{P}{Wt}=\frac{40{,}000}{100\cdot 8}=50\ \text{MPa}
+\]
+
+\[
+\sigma_{\max}\approx 2.42(50)=121\ \text{MPa}
+\]
+
+Final answer: \(\boxed{\sigma_{\max}\approx 121\ \text{MPa}}\).

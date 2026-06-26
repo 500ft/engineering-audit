@@ -1,0 +1,11 @@
+Formula:  
+\[
+\sigma = \frac{P}{A} = \frac{P}{\pi r^2}
+\]
+
+With \(P = 60\,\text{kN}\) and \(r = 15\,\text{mm}\):  
+\[
+\sigma = \frac{60{,}000}{\pi (15)^2}\ \text{N/mm}^2 \approx 84.9\ \text{MPa}
+\]
+
+Final answer: **\(\sigma \approx 85\ \text{MPa}\)** in tension.

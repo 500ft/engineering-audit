@@ -1,0 +1,23 @@
+Using the finite-width plate stress concentration formula:
+
+\[
+\sigma_{\max}=K_t \sigma_0
+\]
+
+\[
+K_t=3-3.14\left(\frac dW\right)+3.667\left(\frac dW\right)^2-1.527\left(\frac dW\right)^3
+\]
+
+\[
+\frac dW=\frac{10}{50}=0.2,\qquad \sigma_0=\frac{P}{Wt}=\frac{12000}{50\cdot 5}=48\text{ MPa}
+\]
+
+\[
+K_t \approx 2.5
+\]
+
+\[
+\sigma_{\max}\approx 2.5(48)=120\text{ MPa}
+\]
+
+Final answer: \(\boxed{\sigma_{\max}\approx 120\text{ MPa}}\).

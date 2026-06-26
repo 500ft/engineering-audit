@@ -1,0 +1,29 @@
+For a finite-width plate with a central circular hole:
+
+\[
+\sigma_{\max}=K_t \sigma_{\text{nom}}
+\]
+
+where
+
+\[
+\sigma_{\text{nom}}=\frac{P}{(W-d)t}
+\]
+
+Given:
+
+\[
+\sigma_{\text{nom}}=\frac{6000}{(40-8)(4)}
+=\frac{6000}{128}
+=46.875\text{ MPa}
+\]
+
+For \(d/W=8/40=0.2\), use \(K_t \approx 2.5\).
+
+\[
+\sigma_{\max}\approx 2.5(46.875)=117.2\text{ MPa}
+\]
+
+\[
+\boxed{\sigma_{\max}\approx 117\text{ MPa}}
+\]

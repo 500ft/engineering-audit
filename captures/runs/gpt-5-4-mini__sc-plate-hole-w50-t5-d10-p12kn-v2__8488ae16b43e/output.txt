@@ -1,0 +1,25 @@
+Use the stress-concentration formula for a plate with a central circular hole:
+
+\[
+\sigma_{\max}=K_t \frac{P}{Wt}
+\]
+
+For \(d/W=10/50=0.2\),
+
+\[
+K_t \approx 3-3.13\left(\frac dW\right)+3.66\left(\frac dW\right)^2-1.53\left(\frac dW\right)^3 \approx 2.51
+\]
+
+Nominal stress:
+
+\[
+\frac{P}{Wt}=\frac{12\,000}{50 \times 5}=48\ \text{MPa}
+\]
+
+So,
+
+\[
+\sigma_{\max}\approx 2.51 \times 48 \approx 120\ \text{MPa}
+\]
+
+Final answer: \(\boxed{\sigma_{\max}\approx 120\ \text{MPa}}\)

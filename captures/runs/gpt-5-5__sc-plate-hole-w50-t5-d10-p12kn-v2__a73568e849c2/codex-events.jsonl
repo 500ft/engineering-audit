@@ -1,0 +1,5 @@
+{"type":"thread.started","thread_id":"019f0350-fff8-7070-bded-c94139058550"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"error","message":"Skill descriptions were shortened to fit the 2% skills context budget. Codex can still see every skill, but some descriptions are shorter. Disable unused skills or plugins to leave more room for the rest."}}
+{"type":"item.completed","item":{"id":"item_1","type":"agent_message","text":"Formula:\n\n\\[\n\\sigma_{\\max}=K_t \\sigma_0,\\qquad \\sigma_0=\\frac{P}{Wt}\n\\]\n\nFor a central circular hole in a finite-width plate:\n\n\\[\nK_t \\approx 3-3.14\\frac dW+3.667\\left(\\frac dW\\right)^2-1.527\\left(\\frac dW\\right)^3\n\\]\n\n\\[\n\\frac dW=\\frac{10}{50}=0.2,\\quad \\sigma_0=\\frac{12000}{50\\cdot5}=48\\text{ MPa}\n\\]\n\n\\[\nK_t \\approx 2.5\n\\]\n\n\\[\n\\boxed{\\sigma_{\\max}\\approx 2.5(48)=120\\text{ MPa}}\n\\]"}}
+{"type":"turn.completed","usage":{"input_tokens":16110,"cached_input_tokens":9600,"output_tokens":409,"reasoning_output_tokens":232}}

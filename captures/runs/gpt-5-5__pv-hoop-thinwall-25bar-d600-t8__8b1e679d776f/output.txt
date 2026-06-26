@@ -1,0 +1,7 @@
+Formula: `σ_h = p d / (2t)`
+
+Given: `p = 25 bar = 2.5 N/mm²`, `d = 600 mm`, `t = 8 mm`
+
+`σ_h = (2.5 × 600) / (2 × 8) = 1500 / 16 = 93.75 N/mm²`
+
+Final answer: **Hoop stress = 93.75 MPa**

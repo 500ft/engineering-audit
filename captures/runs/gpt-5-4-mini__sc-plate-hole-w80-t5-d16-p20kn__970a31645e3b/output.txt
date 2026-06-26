@@ -1,0 +1,17 @@
+Use
+
+\[
+\sigma_{\max}=K_t\frac{P}{Wt}
+\]
+
+For a centrally holed plate with \(d/W=16/80=0.2\), a standard finite-width correction gives \(K_t \approx 2.5\).
+
+\[
+\frac{P}{Wt}=\frac{20\,000}{80\times 5}=50\ \text{MPa}
+\]
+
+\[
+\sigma_{\max}\approx 2.5\times 50 = 125\ \text{MPa}
+\]
+
+Final answer: **\(\sigma_{\max} \approx 125\ \text{MPa}\)**.

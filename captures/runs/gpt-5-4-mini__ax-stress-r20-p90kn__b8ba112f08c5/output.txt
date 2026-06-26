@@ -1,0 +1,24 @@
+Use the axial stress formula:
+
+\[
+\sigma = \frac{P}{A}, \quad A = \pi r^2
+\]
+
+Given:
+- \(P = 90\,\text{kN} = 90{,}000\,\text{N}\)
+- \(r = 20\,\text{mm}\)
+
+Area:
+\[
+A = \pi (20)^2 = 400\pi \approx 1256.6\ \text{mm}^2
+\]
+
+Stress:
+\[
+\sigma = \frac{90{,}000}{1256.6} \approx 71.6\ \text{N/mm}^2
+\]
+
+Final answer:
+\[
+\boxed{\sigma \approx 71.6\ \text{MPa}}
+\]

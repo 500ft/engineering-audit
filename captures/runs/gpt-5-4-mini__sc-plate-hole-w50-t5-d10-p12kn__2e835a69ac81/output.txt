@@ -1,0 +1,19 @@
+Use the stress-concentration formula for a plate with a central hole:
+
+\[
+\sigma_{\max}=K_t\frac{P}{Wt}, \qquad K_t \approx 3
+\]
+
+Nominal stress:
+
+\[
+\frac{P}{Wt}=\frac{12\,000}{50\times 5}=48\ \text{MPa}
+\]
+
+So,
+
+\[
+\sigma_{\max}\approx 3(48)=144\ \text{MPa}
+\]
+
+Final answer: **\( \sigma_{\max} \approx 144\ \text{MPa} \)**
