@@ -1,9 +1,14 @@
 """Command-line entry point for MechAudit.
 
-Two subcommands:
+Three subcommands:
 
 - ``mechaudit audit <case_file> [-o OUT]`` — audit a benchmark case file and
   write a Markdown report (the original behavior).
+- ``mechaudit eval <dir> [...] [--report OUT]`` — audit every benchmark case
+  under one or more directories and print a pass/fail summary. A case passes
+  when the *computed* detected failure modes equal the case's expected modes
+  (so a no-failure control that triggers any check is a false positive and
+  fails). Exits nonzero on any failure — this is the CI regression gate.
 - ``mechaudit capture ...`` — record a verbatim model output as an immutable,
   hash-verified provenance artifact. This never calls a model or the network;
   the raw output is supplied via ``--output-file`` or stdin.
@@ -24,7 +29,7 @@ from .pressure_vessel import audit_case
 from .report_writer import write_markdown_report
 
 
-SUBCOMMANDS = {"audit", "capture"}
+SUBCOMMANDS = {"audit", "eval", "capture"}
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -49,6 +54,26 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=None,
         help="Path to write the markdown report to. Defaults to reports/<case_id>.md.",
+    )
+
+    eval_cmd = subparsers.add_parser(
+        "eval",
+        help=(
+            "Audit every benchmark case under the given directories and print a "
+            "pass/fail summary. Exits nonzero on any failed case (CI gate)."
+        ),
+    )
+    eval_cmd.add_argument(
+        "directories",
+        type=Path,
+        nargs="+",
+        help="Directories to scan recursively for case markdown files.",
+    )
+    eval_cmd.add_argument(
+        "--report",
+        type=Path,
+        default=None,
+        help="Optional path to write a markdown summary report to.",
     )
 
     capture = subparsers.add_parser(
@@ -147,6 +172,67 @@ def _run_audit(args: argparse.Namespace) -> int:
     return 0
 
 
+_NON_CASE_NAMES = {"readme.md", "template.md"}
+
+
+def _run_eval(args: argparse.Namespace) -> int:
+    case_files: list[Path] = []
+    for directory in args.directories:
+        if not directory.is_dir():
+            print(f"error: not a directory: {directory}", file=sys.stderr)
+            return 2
+        case_files.extend(
+            p for p in sorted(directory.rglob("*.md"))
+            if p.name.lower() not in _NON_CASE_NAMES
+        )
+    if not case_files:
+        print("error: no case files found", file=sys.stderr)
+        return 2
+
+    rows: list[tuple[str, str, str]] = []      # (case_id, verdict, detail)
+    n_pass = n_fail = n_skip = 0
+    for path in case_files:
+        try:
+            case = load_case_file(path)
+        except CaseLoadError as exc:
+            rows.append((path.name, "ERROR", str(exc)))
+            n_fail += 1
+            continue
+        result = audit_case(case)
+        if result.skipped:
+            n_skip += 1
+            rows.append((result.case_id, "SKIP", result.skip_reason or ""))
+        elif result.passed:
+            n_pass += 1
+            rows.append((result.case_id, "PASS",
+                         f"detected == expected: {result.detected_failure_modes or '[]'}"))
+        else:
+            n_fail += 1
+            rows.append((result.case_id, "FAIL",
+                         f"expected {sorted(set(result.expected_failure_modes))}, "
+                         f"detected {result.detected_failure_modes}"))
+
+    width = max(len(r[0]) for r in rows)
+    lines = [f"{'case':<{width}}  verdict  detail",
+             f"{'-' * width}  -------  ------"]
+    lines += [f"{cid:<{width}}  {verdict:<7}  {detail}" for cid, verdict, detail in rows]
+    summary = (f"{n_pass} passed, {n_fail} failed, {n_skip} skipped "
+               f"(pass = computed detected modes equal expected modes)")
+    lines.append(summary)
+    print("\n".join(lines))
+
+    if args.report is not None:
+        args.report.parent.mkdir(parents=True, exist_ok=True)
+        md = ["# MechAudit benchmark eval", "",
+              "| case | verdict | detail |", "| --- | --- | --- |"]
+        md += [f"| `{cid}` | {verdict} | {detail} |" for cid, verdict, detail in rows]
+        md += ["", summary, ""]
+        args.report.write_text("\n".join(md), encoding="utf-8")
+        print(f"Wrote report to {args.report}")
+
+    return 1 if n_fail else 0
+
+
 def _run_capture(args: argparse.Namespace) -> int:
     if args.prompt_file is not None:
         prompt_text = args.prompt_file.read_text(encoding="utf-8")
@@ -199,6 +285,8 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "capture":
         return _run_capture(args)
+    if args.command == "eval":
+        return _run_eval(args)
     return _run_audit(args)
 
 

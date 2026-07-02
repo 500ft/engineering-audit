@@ -24,6 +24,11 @@ remain independently recomputable.
 
 ## Real-Capture Status
 
+**Claim discipline:** the captures below are genuine, hash-verified model
+failures — **elicited** under a pre-registered challenge protocol, not found
+in the wild. `LIMITATIONS.md` states exactly which claims the evidence
+supports; summaries of this project should stay inside it.
+
 The repository now contains verbatim `gold` captures from Claude Haiku and
 OpenAI Codex explicit-effort stress-concentration challenge sessions.
 Provenance is enforced by the loader as of schema `0.3.0`; see
