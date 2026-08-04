@@ -4,19 +4,20 @@ MechAudit is a Python CLI and benchmark suite for auditing LLM-generated
 mechanical-engineering calculations.
 
 Engineering answers can look plausible while containing calculation, unit,
-formula, assumption, or reasoning errors. MechAudit uses independently
-recomputable benchmark cases and provenance-checked model captures to detect
-defined failure modes without trusting the model's own explanation.
+formula, assumption, or reasoning errors. MechAudit compares model outputs with
+independently recomputable benchmark cases and stores the prompt, response, and
+file hashes used for each captured run.
 
 ### Key capabilities
 
 - Audits individual benchmark cases and writes Markdown reports.
 - Runs batch evaluations as a pass/fail CI regression gate.
 - Captures verbatim model outputs with prompt and response hashes.
-- Separates synthetic tests, correct controls, and real elicited failures.
+- Groups synthetic tests, reference controls, and captured model outputs by
+  provenance tier.
 
-**For:** mechanical engineers, AI evaluators, and researchers testing the
-reliability of model-generated engineering work.
+**For:** mechanical engineers, AI evaluators, and researchers testing
+model-generated mechanical calculations.
 
 **Start here:** run `python -m pip install -e .`, then
 `mechaudit eval benchmark/`. Version 1 is intentionally limited to its committed
@@ -26,32 +27,32 @@ benchmark domains; see [`LIMITATIONS.md`](LIMITATIONS.md).
 
 - Audit the initial pressure-vessel and axial-stress benchmark cases.
 - Detect documented synthetic failure modes without echoing metadata labels.
-- Treat completed real pressure-vessel captures as false-positive controls when
+- Treat completed pressure-vessel challenge runs as false-positive controls when
   the model output is correct.
-- Treat completed gold stress-concentration captures as real-world FM-04 cases
+- Treat completed gold stress-concentration captures as FM-04 benchmark cases
   when the model output omits or misuses stress-concentration factors.
 - Keep broad engineering-domain coverage, raw-response extraction, and
   code-specific compliance checks out of scope for v1.
 
-## Real-Capture Status
+## Capture Status
 
-**Claim discipline:** the captures below are genuine, hash-verified model
-failures — **elicited** under a pre-registered challenge protocol, not found
-in the wild. `LIMITATIONS.md` states exactly which claims the evidence
-supports; summaries of this project should stay inside it.
+The captures below were collected under a preregistered challenge protocol;
+they are not samples from ordinary user sessions. Each run stores its prompt,
+response, and SHA-256 digests. The supported benchmark scope is listed in
+[`LIMITATIONS.md`](LIMITATIONS.md).
 
 The repository now contains verbatim `gold` captures from Claude Haiku and
 OpenAI Codex explicit-effort stress-concentration challenge sessions.
 Provenance is enforced by the loader as of schema `0.3.0`; see
 `docs/capture_provenance.md`.
 
-- Reviewer-synthesized controls (not real captures): Gemini 3.5 Thinking
+- Reviewer-authored controls: Gemini 3.5 Thinking
   (`gemini-0001`), Claude Opus 4.8 High plain solve (`claude-0001`), and Claude
   Opus 4.8 High design-review prompt (`claude-0002`). These are `source_type:
   reference_correct`, `provenance_tier: deprecated`. They were written by a
   reviewer to describe a model run, carry no raw transcript, and are retained
   only as no-failure false-positive controls — most usefully the `20.0 MPa`
-  inner-radius result versus the defensible `20.6 MPa` mean-radius refinement.
+  inner-radius result versus the `20.6 MPa` mean-radius refinement.
 - Gold captures: 10 verbatim `claude-haiku-4-5-20251001` challenge runs are
   stored under `captures/runs/`, with prompt/output SHA-256 hashes and
   `source.json` provenance records. Three of those are promoted into complete
@@ -62,12 +63,12 @@ Provenance is enforced by the loader as of schema `0.3.0`; see
   avoid the local `gpt-5.5` / `high` default confound. Four representative
   finite-width holed-plate failures are promoted into complete `real_world`
   FM-04 cases. See `captures/SESSION_2026-06-26_CODEX.md`.
-- Pending real captures: `gpt-0001` and `gpt-0002` (`status: pending_capture`).
+- Pending captures: `gpt-0001` and `gpt-0002` (`status: pending_capture`).
 
 Additional cross-model `gold`/`silver` captures remain useful, especially from
 Gemini or from OpenAI models at other explicitly recorded reasoning-effort
-settings. The loader rejects any `complete` `real_world` case that lacks a
-hash-verified artifact.
+settings. The loader rejects any `complete` `real_world` case that lacks a raw
+artifact whose stored digest matches the file.
 
 ## Repository Layout
 
@@ -78,17 +79,17 @@ docs/
   capture_provenance.md Provenance tiers and raw-artifact rules.
   tolerance_policy.md   Numeric comparison defaults for benchmark checks.
 prompts/
-  pressure_vessel_prompt_v1.md  Canonical prompt for real-run benchmark capture.
+  pressure_vessel_prompt_v1.md  Canonical prompt for benchmark capture.
 benchmark/
   README.md             Benchmark case format and contribution rules.
-  real_world/           Transcript-backed cases from real model runs.
+  real_world/           Transcript-backed cases from recorded model runs.
   real_world/raw/       Verbatim raw artifacts referenced by complete cases.
-  synthetic/            Clearly labeled artificial cases for targeted coverage.
+  synthetic/            Artificial cases for targeted coverage.
 ```
 
 ## V1 Exit Criteria
 
 V1 is complete when the verifier can process the benchmark schema, generate a
 Markdown audit report for each case, catch the documented failures in the initial
-benchmark set, avoid false positives on correct cases, and pass the project test
+benchmark set, avoid false positives on reference cases, and pass the project test
 suite.
