@@ -1,15 +1,26 @@
 # MechAudit
 
-MechAudit is a benchmark-driven project for verifying LLM-generated mechanical
-engineering calculations. The first version focuses on failures that are common
-when language models solve statics, mechanics of materials, machine design, and
-pressure-vessel-style problems: calculation mistakes, unit inconsistencies,
-incorrect formulas, missing assumptions, and reasoning that does not match the
-final answer.
+MechAudit is a Python CLI and benchmark suite for auditing LLM-generated
+mechanical-engineering calculations.
 
-The project is intentionally benchmark-led: benchmark cases define the behavior
-the verifier must catch, and the verifier is kept narrow enough that its checks
-remain independently recomputable.
+Engineering answers can look plausible while containing calculation, unit,
+formula, assumption, or reasoning errors. MechAudit uses independently
+recomputable benchmark cases and provenance-checked model captures to detect
+defined failure modes without trusting the model's own explanation.
+
+### Key capabilities
+
+- Audits individual benchmark cases and writes Markdown reports.
+- Runs batch evaluations as a pass/fail CI regression gate.
+- Captures verbatim model outputs with prompt and response hashes.
+- Separates synthetic tests, correct controls, and real elicited failures.
+
+**For:** mechanical engineers, AI evaluators, and researchers testing the
+reliability of model-generated engineering work.
+
+**Start here:** run `python -m pip install -e .`, then
+`mechaudit eval benchmark/`. Version 1 is intentionally limited to its committed
+benchmark domains; see [`LIMITATIONS.md`](LIMITATIONS.md).
 
 ## Current Scope
 
