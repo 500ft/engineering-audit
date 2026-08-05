@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "project": "MechAudit",
+  "figures": [
+    {
+      "id": "readme-audit-pipeline",
+      "evidence_type": "architecture diagram",
+      "generator": null,
+      "renderer": "GitHub Mermaid",
+      "command": null,
+      "inputs": ["README.md"],
+      "outputs": ["runtime:README audit-pipeline diagram"]
+    },
+    {
+      "id": "data-provenance-pipeline",
+      "evidence_type": "provenance diagram",
+      "generator": null,
+      "renderer": "GitHub Mermaid",
+      "command": null,
+      "inputs": ["docs/data-and-figures.md"],
+      "outputs": ["runtime:data-and-figures provenance diagram"]
+    }
+  ]
+}

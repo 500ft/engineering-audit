@@ -5,3 +5,4 @@ __pycache__/
 .venv/
 *.egg-info/
 reports/*.md
+!reports/benchmark-results.md
