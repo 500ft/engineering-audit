@@ -6,3 +6,7 @@ __pycache__/
 *.egg-info/
 reports/*.md
 !reports/benchmark-results.md
+cadloop/runs/
+*.sldprt
+*.step
+*.bmp

@@ -48,6 +48,21 @@ gated outcomes:
 This does **not** change the make-or-break priority — capturing >=2 genuine wild
 model failures with provenance-tracked, hashed raw artifacts is still the whole
 game. It only strengthens the ground truth those failures are judged against.
+
+**Status.** The build-and-measure half is implemented in [`cadloop/`](cadloop/README.md):
+a parametric plate template on a licensed SOLIDWORKS host, driven over COM,
+gated on a closed-form volume oracle, exporting STEP and a preview. Open items,
+in the order they block the rest:
+
+- [ ] Record a parametric re-drive: one template, a second parameter set,
+      measuring its own expected volume. This is the loop's first acceptance
+      test and is not yet recorded.
+- [ ] Anchor the profile sketch to the origin; `SketchAddConstraints` returns
+      false during authoring, leaving the sketch under-defined.
+- [ ] Add a gate that constrains feature position, not only volume.
+- [ ] Implement the FEA stage (STEP import, solve, measurements returned).
+- [ ] Explain or bound the unstable `OpenDoc6` latency.
+
 The author can do CAD and FEA, which is used to:
 
 - **Harden the Wk-3 mode-structured benchmark.** Author harder ground-truth

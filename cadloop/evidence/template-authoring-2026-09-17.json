@@ -1,0 +1,179 @@
+{
+  "prompted_spec": {
+    "length_mm": 100,
+    "width_mm": 60,
+    "thickness_mm": 5,
+    "hole_diameter_mm": 8,
+    "hole_centered": true
+  },
+  "steps": [
+    {
+      "step": "resolve_template",
+      "ok": true,
+      "detail": "C:\\ProgramData\\SolidWorks\\SOLIDWORKS 2024\\templates\\Part.prtdot"
+    },
+    {
+      "step": "new_document",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "step": "select_front_plane",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "step": "insert_sketch",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "step": "create_corner_rectangle",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "step": "select_bottom_edge",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "step": "dimension_length",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "step": "select_left_edge",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "step": "dimension_width",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "step": "origin_coincident_constraint",
+      "ok": false,
+      "detail": null
+    },
+    {
+      "step": "exit_sketch_1",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "step": "extrude_boss",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "step": "capture_thickness_dim",
+      "ok": true,
+      "detail": "D1@Boss-Extrude1"
+    },
+    {
+      "step": "select_top_face",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "step": "insert_sketch_2",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "step": "create_circle",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "step": "select_circle_edge",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "step": "dimension_hole_diameter",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "step": "exit_sketch_2",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "step": "cut_extrude",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "step": "equations",
+      "ok": true,
+      "detail": [
+        {
+          "eq": "\"Length\"= 100mm",
+          "result_index": 0
+        },
+        {
+          "eq": "\"Width\"= 60mm",
+          "result_index": 1
+        },
+        {
+          "eq": "\"PlateThickness\"= 5mm",
+          "result_index": 2
+        },
+        {
+          "eq": "\"HoleDiameter\"= 8mm",
+          "result_index": 3
+        },
+        {
+          "eq": "\"D1@Sketch1\"= \"Length\"",
+          "result_index": 4
+        },
+        {
+          "eq": "\"D2@Sketch1\"= \"Width\"",
+          "result_index": 5
+        },
+        {
+          "eq": "\"D1@Sketch2\"= \"HoleDiameter\"",
+          "result_index": 6
+        },
+        {
+          "eq": "\"D1@Boss-Extrude1\"= \"PlateThickness\"",
+          "result_index": 7
+        }
+      ]
+    },
+    {
+      "step": "rebuild",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "step": "geometry_check",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "step": "save_part",
+      "ok": true,
+      "detail": {
+        "path": "C:\\SWBuilder\\templates\\plate.sldprt",
+        "raw_result": "1",
+        "file_exists": true
+      }
+    },
+    {
+      "step": "screenshot",
+      "ok": true,
+      "detail": "C:\\Users\\admin\\template_build_screenshot.bmp"
+    }
+  ],
+  "status": "done",
+  "message": "Attempt finished; see steps for pass/fail detail.",
+  "actual_geometry": {
+    "body_count": 1,
+    "volume_mm3": 29748.672587712812
+  }
+}

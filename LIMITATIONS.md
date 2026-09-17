@@ -54,7 +54,30 @@ probabilities.
 unit system (SI). Per-model comparisons ("model X fails where model Y passes")
 are existence results, not statistics.
 
-## 6. The verifier is narrow by design
+## 6. The CAD loop builds and measures; it does not yet simulate
+
+`cadloop/` drives a parametric SOLIDWORKS template, gates the result against a
+closed-form volume oracle, and exports STEP. The FEA stage is not implemented:
+no committed run imports a STEP file into a solver, and no stress or
+displacement number in this repository came from that loop.
+
+- Supported claim: *"Parametric CAD builds are produced on a licensed host and
+  accepted only when measured mass properties match a closed-form oracle within
+  tolerance."*
+- Unsupported claim: *"The loop validates designs by FEA"* — and, for now,
+  *"the loop re-drives a template to new parameters"*: the oracle gate is in
+  place, but no recorded run shows a second parameter set measuring its own
+  expected volume. An earlier run reported success while returning the
+  template's original volume, which is why the gate exists.
+
+Coverage is one plate fixture in one configuration. The gate constrains volume
+only, so a correctly sized feature in the wrong location passes it. Host open
+latency is unstable and unexplained (seconds to over thirteen minutes for the
+same call), so throughput claims are not supportable. Details and the full
+finding list are in [`docs/cad_fea_loop.md`](docs/cad_fea_loop.md) and
+[`docs/solidworks_api_findings.md`](docs/solidworks_api_findings.md).
+
+## 7. The verifier is narrow by design
 
 Checks are limited to what is independently recomputable. MechAudit does not
 judge modeling choices, load-case selection, or safety-factor policy — the

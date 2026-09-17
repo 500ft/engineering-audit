@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "job_id": "plate-150x80x6",
+  "template_part": "C:\\CADLoop\\templates\\plate.sldprt",
+  "configuration": "Default",
+  "parameters": {
+    "Length": "150mm",
+    "Width": "80mm",
+    "PlateThickness": "6mm",
+    "HoleDiameter": "10mm"
+  },
+  "acceptance": {
+    "oracle": "plate_with_center_hole",
+    "tolerance_pct": 0.5
+  },
+  "output_name": "plate-150x80x6",
+  "timeout_seconds": 1200
+}

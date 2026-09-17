@@ -40,6 +40,24 @@ Use `mechaudit capture` so prompt, response, metadata, and digests are stored
 together. Do not edit a completed raw artifact in place. Create a new run when
 the prompt, response, model settings, or metadata change.
 
+## CAD loop
+
+`cadloop/` needs a Windows host with SOLIDWORKS licensed, so only its oracle
+tests run in CI. When changing it:
+
+1. State which stage of [`docs/cad_fea_loop.md`](docs/cad_fea_loop.md) the change
+   affects.
+2. Keep the acceptance gate honest. A build is accepted only when measured mass
+   properties match a declared oracle; a job without an oracle reports
+   `"accepted": null`, never a pass.
+3. Do not commit host configuration. Credentials live outside the repository;
+   `cadloop/config.example.json` documents the shape with placeholders.
+4. Do not commit retrieved run artifacts except as deliberate evidence. STEP
+   files, previews, and per-job directories under `cadloop/runs/` are ignored.
+5. Record newly observed host API behaviour in
+   [`docs/solidworks_api_findings.md`](docs/solidworks_api_findings.md) rather
+   than only working around it in code.
+
 ## Pull requests
 
 List the cases added or changed, the failure modes affected, and the output of

@@ -1,0 +1,10 @@
+{
+  "ssh_host": "cad-host.lan",
+  "ssh_user": "HOST_SSH_USER",
+  "ssh_key": "/absolute/path/to/private/key",
+  "windows_user": "HOSTNAME\\WindowsAccount",
+  "windows_password": "REPLACE_ME",
+  "session_id": 1,
+  "psexec_path": "C:\\CADLoop\\bin\\psexec.exe",
+  "python_path": "C:\\Users\\WindowsAccount\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+}

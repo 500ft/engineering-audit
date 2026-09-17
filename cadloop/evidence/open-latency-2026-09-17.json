@@ -1,0 +1,44 @@
+{
+  "events": [
+    {
+      "t": 1789681010.01,
+      "msg": "dispatched"
+    },
+    {
+      "t": 1789681010.01,
+      "msg": "visible set false"
+    },
+    {
+      "t": 1789681010.01,
+      "msg": "pid=err:SldWorks.Application.ProcessID"
+    },
+    {
+      "t": 1789681010.27,
+      "msg": "check 0: alive=True"
+    },
+    {
+      "t": 1789681013.44,
+      "msg": "check 1: alive=True"
+    },
+    {
+      "t": 1789681016.63,
+      "msg": "check 2: alive=True"
+    },
+    {
+      "t": 1789681019.81,
+      "msg": "check 3: alive=True"
+    },
+    {
+      "t": 1789681022.99,
+      "msg": "check 4: alive=True"
+    },
+    {
+      "t": 1789681026.16,
+      "msg": "check 5: alive=True"
+    },
+    {
+      "t": 1789681824.12,
+      "msg": "opendoc ok: True"
+    }
+  ]
+}

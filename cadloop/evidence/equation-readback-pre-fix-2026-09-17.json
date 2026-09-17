@@ -1,0 +1,18 @@
+{
+  "status": "ok",
+  "equations": [
+    {
+      "index": 0,
+      "text": "\"Length\"= 100mm"
+    },
+    {
+      "index": 1,
+      "text": "\"Width\"= 60mm"
+    },
+    {
+      "index": 2,
+      "text": "\"HoleDiameter\"= 8mm"
+    }
+  ],
+  "message": ""
+}
