@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from mechaudit.case_loader import load_benchmark_cases, split_cases
-from mechaudit.pressure_vessel import audit_case
-from mechaudit.report_writer import write_markdown_report
+from engineering_audit.case_loader import load_benchmark_cases, split_cases
+from engineering_audit.pressure_vessel import audit_case
+from engineering_audit.report_writer import write_markdown_report
 
 
 ROOT = Path(__file__).resolve().parents[1]

@@ -8,7 +8,7 @@ real-world failure: Haiku applied a stress-concentration factor but computed the
 nominal stress on the **wrong net area** (subtracting the circular hole area
 `pi(d/2)^2` instead of the strip `d t`), reporting `sigma_nom ~= 129 MPa` instead
 of `66.7 MPa` and a peak of `315 MPa` versus the validated `162.16 MPa` — a ~1.9x
-**over**-prediction. MechAudit flags `FM-04`.
+**over**-prediction. engineering-audit flags `FM-04`.
 
 ```json
 {
@@ -67,7 +67,7 @@ of `66.7 MPa` and a peak of `315 MPa` versus the validated `162.16 MPa` — a ~1
   "notes": {
     "assumptions_stated": ["net-section nominal approach", "central transverse circular hole", "uniaxial tension"],
     "limitations": ["Genuine verbatim gold capture; raw bytes under captures/runs/, referenced by SHA-256.", "Model run via claude -p with all tools disabled, so model/version/date are self-reported, not provider-API metadata.", "Kt_net is the Heywood/Howland fit to Peterson's chart, valid for 0 < d/W < 1."],
-    "reviewer_notes": "In-repo ground truth via mechaudit.stress_concentration.plate_with_hole: d/W = 0.25, Kt_net = 2.432375, sigma_net = 66.667 MPa, sigma_max = 162.158 MPa. Haiku picked a reasonable Kt (~2.44 vs 2.432) but computed the nominal on the wrong net area (bt - pi(d/2)^2 = 309 mm^2 instead of (W-d)t = 600 mm^2), so sigma_nom = 129 MPa instead of 66.7 MPa, and the peak came out 315 MPa, ~1.94x the true 162.16 MPa.",
+    "reviewer_notes": "In-repo ground truth via engineering_audit.stress_concentration.plate_with_hole: d/W = 0.25, Kt_net = 2.432375, sigma_net = 66.667 MPa, sigma_max = 162.158 MPa. Haiku picked a reasonable Kt (~2.44 vs 2.432) but computed the nominal on the wrong net area (bt - pi(d/2)^2 = 309 mm^2 instead of (W-d)t = 600 mm^2), so sigma_nom = 129 MPa instead of 66.7 MPa, and the peak came out 315 MPa, ~1.94x the true 162.16 MPa.",
     "expected_verifier_behavior": "Detect FM-04. The reported 315 MPa matches neither the net-section nominal (66.67 MPa) nor the validated peak (162.16 MPa), so the message should report a wrong Kt or wrong nominal."
   }
 }
@@ -85,5 +85,5 @@ sigma_max = 2.432375 * 66.667 = 162.158 MPa
 
 Haiku reported **315 MPa** — its `Kt` was fine (~2.44), but it computed the
 nominal on the wrong net area `(b t - pi(d/2)^2)`, inflating `sigma_nom` to
-129 MPa instead of 66.7 MPa. The peak is ~1.9x the true value. MechAudit flags
+129 MPa instead of 66.7 MPa. The peak is ~1.9x the true value. engineering-audit flags
 `FM-04`.

@@ -16,8 +16,8 @@ from pathlib import Path
 
 import pytest
 
-from mechaudit.case_loader import BenchmarkCase, load_benchmark_cases, load_case_file
-from mechaudit.pressure_vessel import audit_case, compute_plate_with_hole
+from engineering_audit.case_loader import BenchmarkCase, load_benchmark_cases, load_case_file
+from engineering_audit.pressure_vessel import audit_case, compute_plate_with_hole
 
 
 ROOT = Path(__file__).resolve().parents[1]

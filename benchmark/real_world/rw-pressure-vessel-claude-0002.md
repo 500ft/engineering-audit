@@ -65,4 +65,4 @@
 This is a reviewer-synthesized control (`provenance_tier: deprecated`), not a
 verbatim capture. It is a no-failure control for the design-review prompt
 condition. The self-review narrative is preserved in `llm_response.response` as
-evidence only; MechAudit does not use model self-grading as an expected result.
+evidence only; engineering-audit does not use model self-grading as an expected result.

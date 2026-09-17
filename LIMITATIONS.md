@@ -1,9 +1,9 @@
 # Limitations
 
-This file states what MechAudit's current evidence does and does not support.
-It exists so that no summary of this project has to guess. Wherever a claim
-about MechAudit is made (README, resume line, talk slide), it should be
-checkable against this list.
+This file states what engineering-audit's current evidence does and does not
+support. It exists so that no summary of this project has to guess. Wherever a
+claim about engineering-audit is made (README, resume line, talk slide), it
+should be checkable against this list.
 
 ## 1. The real-world failures are elicited, not found in the wild
 
@@ -12,10 +12,11 @@ but they were produced by **challenge-protocol prompts written by the operator
 and run deliberately** (`capture_protocol: challenge`). No committed case yet
 records a failure encountered during someone's real engineering workflow.
 
-- Supported claim: *"MechAudit detected genuine, reproducible calculation
-  failures in unmodified frontier-model outputs, captured under a
+- Supported claim: *"engineering-audit detected genuine, reproducible
+  calculation failures in unmodified frontier-model outputs, captured under a
   pre-registered protocol with cryptographic provenance."*
-- Unsupported claim: *"MechAudit has caught model failures in the wild."*
+- Unsupported claim: *"engineering-audit has caught model failures in the
+  wild."*
 
 The gap matters because elicited prompts are chosen where failure is likely;
 wild usage samples a different distribution.
@@ -79,7 +80,7 @@ finding list are in [`docs/cad_fea_loop.md`](docs/cad_fea_loop.md) and
 
 ## 7. The verifier is narrow by design
 
-Checks are limited to what is independently recomputable. MechAudit does not
-judge modeling choices, load-case selection, or safety-factor policy — the
+Checks are limited to what is independently recomputable. engineering-audit does
+not judge modeling choices, load-case selection, or safety-factor policy — the
 places where real engineering judgment lives. A calculation can pass every
-MechAudit check and still be the wrong calculation for the design.
+engineering-audit check and still be the wrong calculation for the design.

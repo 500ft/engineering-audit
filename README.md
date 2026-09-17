@@ -1,6 +1,6 @@
-# MechAudit
+# engineering-audit
 
-[![CI](https://github.com/500ft/MechAudit/actions/workflows/ci.yml/badge.svg)](https://github.com/500ft/MechAudit/actions/workflows/ci.yml)
+[![CI](https://github.com/500ft/engineering-audit/actions/workflows/ci.yml/badge.svg)](https://github.com/500ft/engineering-audit/actions/workflows/ci.yml)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-276c6b)](LICENSE)
 
@@ -11,10 +11,10 @@ arithmetic, and reasoning in LLM-generated mechanical-engineering calculations.
 
 ## Overview
 
-MechAudit loads a structured benchmark case, independently recomputes supported
-mechanics quantities, extracts the model's reported work, and returns detected
-failure modes. The evaluator compares that detected set with the case annotation
-so verifier regressions can fail CI.
+engineering-audit loads a structured benchmark case, independently recomputes
+supported mechanics quantities, extracts the model's reported work, and returns
+detected failure modes. The evaluator compares that detected set with the case
+annotation so verifier regressions can fail CI.
 
 ```mermaid
 flowchart LR
@@ -51,14 +51,14 @@ python -m pip install -e ".[test]"
 Audit one case:
 
 ```bash
-mechaudit audit benchmark/synthetic/syn-fm01-0001.md \
+engineering-audit audit benchmark/synthetic/syn-fm01-0001.md \
   --output reports/syn-fm01-0001.md
 ```
 
 Run the benchmark and test suite:
 
 ```bash
-mechaudit eval benchmark/ --report reports/benchmark-results.md
+engineering-audit eval benchmark/ --report reports/benchmark-results.md
 pytest
 ```
 
@@ -71,9 +71,9 @@ the counts, case provenance, and report generation path are documented in
 
 | Command | Purpose |
 | --- | --- |
-| `mechaudit audit CASE` | Audit one benchmark case and optionally write a Markdown report |
-| `mechaudit eval PATH` | Evaluate all cases under a directory and optionally write the aggregate table |
-| `mechaudit capture` | Store a prompt, raw response, metadata, and SHA-256 digests without contacting a model |
+| `engineering-audit audit CASE` | Audit one benchmark case and optionally write a Markdown report |
+| `engineering-audit eval PATH` | Evaluate all cases under a directory and optionally write the aggregate table |
+| `engineering-audit capture` | Store a prompt, raw response, metadata, and SHA-256 digests without contacting a model |
 
 ## Documentation
 
@@ -96,15 +96,15 @@ the counts, case provenance, and report generation path are documented in
 ## Repository map
 
 ```text
-mechaudit/          CLI, loader, calculations, checks, capture, and report writer
+engineering_audit/  CLI, loader, calculations, checks, capture, report writer
 cadloop/            parametric CAD builds, oracle gate, and STEP export
 benchmark/          synthetic, reference-control, captured, and pending cases
 captures/           prompts, raw responses, metadata, hashes, and session notes
 docs/               schema, taxonomy, tolerance, provenance, and data lineage
 reports/            aggregate and single-case audit outputs
-tests/              calculations, mutations, schema, provenance, CLI, and oracle tests
+tests/              calculations, mutations, schema, provenance, CLI, oracle
 ```
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) before adding a domain or failure mode.
-MechAudit uses the [MIT License](LICENSE); third-party notices are in
+engineering-audit uses the [MIT License](LICENSE); third-party notices are in
 [`NOTICE`](NOTICE).

@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "project": "MechAudit",
+  "project": "engineering-audit",
   "figures": [
     {
       "id": "readme-audit-pipeline",

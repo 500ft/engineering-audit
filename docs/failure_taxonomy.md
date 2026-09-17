@@ -1,8 +1,9 @@
 # Failure Taxonomy
 
-This document defines the first failure modes MechAudit should detect in
-LLM-generated mechanical engineering calculations. The taxonomy is benchmark-led:
-case files define expected future verifier behavior before verifier code exists.
+This document defines the first failure modes engineering-audit should detect in
+LLM-generated mechanical engineering calculations. The taxonomy is
+benchmark-led: case files define expected future verifier behavior before
+verifier code exists.
 
 ## Failure Mode Format
 
@@ -273,7 +274,7 @@ fall under this mode:
    `stress_concentration_peak`) and its inputs (`plate_width`, `hole_diameter`,
    `thickness`, `axial_force`).
 2. Recompute `Kt_net`, `sigma_net`, and `sigma_max` independently via
-   `mechaudit.stress_concentration.plate_with_hole`.
+   `engineering_audit.stress_concentration.plate_with_hole`.
 3. Compare the LLM's reported peak stress (`peak_stress`) against the recomputed
    `sigma_max`.
 4. Flag `FM-04` when it deviates beyond tolerance. Distinguish the two sub-cases
@@ -340,7 +341,7 @@ engineering checks when schema data is invalid.
 ### Definition
 
 `FM-10` is a benchmark-accounting label for verifier regressions, not an
-LLM-output failure mode. Use it when MechAudit flags a correct case as a
+LLM-output failure mode. Use it when engineering-audit flags a correct case as a
 failure, especially when the reported value follows an explicitly accepted
 engineering convention.
 
@@ -357,8 +358,8 @@ engineering convention.
 
 The completed Claude pressure-vessel captures report the inner-radius hoop
 stress `20.0 MPa` and a defensible mean-radius refinement near `20.6 MPa`. When
-the case explicitly accepts both `inner_radius` and `mean_radius`, MechAudit
-must not flag the mean-radius value as `FM-03`.
+the case explicitly accepts both `inner_radius` and `mean_radius`,
+engineering-audit must not flag the mean-radius value as `FM-03`.
 
 ### Known Limitations
 

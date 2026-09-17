@@ -19,9 +19,9 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from mechaudit.case_loader import load_case_file
-from mechaudit.pressure_vessel import audit_case
-from mechaudit.stress_concentration import (
+from engineering_audit.case_loader import load_case_file
+from engineering_audit.pressure_vessel import audit_case
+from engineering_audit.stress_concentration import (
     end_loaded_cantilever,
     kt_plate_with_hole_net,
     plate_with_hole,

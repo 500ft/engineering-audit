@@ -1,10 +1,10 @@
-"""Tests for the `mechaudit eval` batch command (the CI regression gate)."""
+"""Tests for the `engineering-audit eval` batch command (the CI regression gate)."""
 
 from __future__ import annotations
 
 from pathlib import Path
 
-from mechaudit.cli import main
+from engineering_audit.cli import main
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 BENCHMARK = REPO_ROOT / "benchmark"

@@ -1,20 +1,20 @@
-"""Command-line entry point for MechAudit.
+"""Command-line entry point for engineering-audit.
 
 Three subcommands:
 
-- ``mechaudit audit <case_file> [-o OUT]`` — audit a benchmark case file and
+- ``engineering-audit audit <case_file> [-o OUT]`` — audit a benchmark case file and
   write a Markdown report (the original behavior).
-- ``mechaudit eval <dir> [...] [--report OUT]`` — audit every benchmark case
+- ``engineering-audit eval <dir> [...] [--report OUT]`` — audit every benchmark case
   under one or more directories and print a pass/fail summary. A case passes
   when the *computed* detected failure modes equal the case's expected modes
   (so a no-failure control that triggers any check is a false positive and
   fails). Exits nonzero on any failure — this is the CI regression gate.
-- ``mechaudit capture ...`` — record a verbatim model output as an immutable,
+- ``engineering-audit capture ...`` — record a verbatim model output as an immutable,
   hash-verified provenance artifact. This never calls a model or the network;
   the raw output is supplied via ``--output-file`` or stdin.
 
 For backward compatibility, if the first argument is not a known subcommand the
-invocation is treated as ``audit`` (so ``mechaudit path/to/case.md`` still works).
+invocation is treated as ``audit`` (so ``engineering-audit path/to/case.md`` still works).
 """
 
 from __future__ import annotations
@@ -34,7 +34,7 @@ SUBCOMMANDS = {"audit", "eval", "capture"}
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="mechaudit",
+        prog="engineering-audit",
         description="Audit LLM-generated engineering calculations and capture model outputs.",
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -223,7 +223,7 @@ def _run_eval(args: argparse.Namespace) -> int:
 
     if args.report is not None:
         args.report.parent.mkdir(parents=True, exist_ok=True)
-        md = ["# MechAudit benchmark eval", "",
+        md = ["# engineering-audit benchmark eval", "",
               "| case | verdict | detail |", "| --- | --- | --- |"]
         md += [f"| `{cid}` | {verdict} | {detail} |" for cid, verdict, detail in rows]
         md += ["", summary, ""]
@@ -276,7 +276,7 @@ def _run_capture(args: argparse.Namespace) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     raw_args = list(sys.argv[1:] if argv is None else argv)
-    # Backward compatibility: bare `mechaudit <case_file>` still means audit.
+    # Backward compatibility: bare `engineering-audit <case_file>` still means audit.
     if raw_args and raw_args[0] not in SUBCOMMANDS and not raw_args[0].startswith("-"):
         raw_args = ["audit", *raw_args]
 
