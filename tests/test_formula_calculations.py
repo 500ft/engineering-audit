@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from mechaudit.case_loader import BenchmarkCase
-from mechaudit.pressure_vessel import compute_pressure_vessel, within_tolerance
+from engineering_audit.case_loader import BenchmarkCase
+from engineering_audit.pressure_vessel import compute_pressure_vessel, within_tolerance
 
 
 def _pressure_vessel_case() -> BenchmarkCase:

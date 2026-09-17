@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from mechaudit.case_loader import BenchmarkCase, QuantityValue, load_benchmark_cases
-from mechaudit.pressure_vessel import audit_case
+from engineering_audit.case_loader import BenchmarkCase, QuantityValue, load_benchmark_cases
+from engineering_audit.pressure_vessel import audit_case
 
 
 ROOT = Path(__file__).resolve().parents[1]

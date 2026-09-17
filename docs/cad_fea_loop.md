@@ -8,11 +8,11 @@ are not yet implemented are not read as working.
 ## Purpose in this repository
 
 `ROADMAP.md` scopes CAD/FEA capability as a way to harden ground truth: author
-benchmark cases whose correct answer is confirmed by a model rather than by
-hand analytics alone. The loop is that authoring path. It is deliberately
-separate from the verifier: `mechaudit` checks calculations that a language
-model produced, while `cadloop` produces geometry and measurements that a
-future case can cite as its reference.
+benchmark cases whose correct answer is confirmed by a model rather than by hand
+analytics alone. The loop is that authoring path. It is deliberately separate
+from the verifier: `engineering-audit` checks calculations that a language model
+produced, while `cadloop` produces geometry and measurements that a future case
+can cite as its reference.
 
 ## Stages
 

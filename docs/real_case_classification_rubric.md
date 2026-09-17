@@ -31,8 +31,8 @@ summarize it as a substitute for the original output.
 ## `P-01` Boundary
 
 Natural-language LLM output is not `P-01` by itself. Use `P-01` only when
-MechAudit benchmark metadata is malformed, required structured extraction fails,
-or the verifier cannot parse required case data.
+engineering-audit benchmark metadata is malformed, required structured
+extraction fails, or the verifier cannot parse required case data.
 
 ## Manual Review Notes
 

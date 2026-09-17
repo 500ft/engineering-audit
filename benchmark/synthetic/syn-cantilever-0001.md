@@ -2,7 +2,7 @@
 
 **This is a synthetic, analytically/FEA-grade-validated GROUND-TRUTH control —
 NOT a wild model capture.** The correct answer is computed independently in-repo
-by `mechaudit.stress_concentration.end_loaded_cantilever` (Euler-Bernoulli;
+by `engineering_audit.stress_concentration.end_loaded_cantilever` (Euler-Bernoulli;
 Roark Table 8.1 case 1; Gere & Goodno). The tip deflection is additionally
 cross-checked by numerical double-integration of the curvature in
 `tests/test_ground_truth_references.py` (relative error ~1e-12).
@@ -50,7 +50,7 @@ capture harness and gold/silver tiers are reserved for genuine model runs.
   "notes": {
     "assumptions_stated": ["linear-elastic isotropic material", "small deflections", "prismatic rectangular section", "end load"],
     "limitations": ["Synthetic analytically-validated GROUND TRUTH, not a transcript-backed model run.", "Euler-Bernoulli theory; shear deformation neglected (L/h = 30, so shear contribution is negligible).", "The current verifier has no cantilever-bending check; this case loads as a no-failure positive control."],
-    "reviewer_notes": "Reference solution computed in-repo by mechaudit.stress_concentration.end_loaded_cantilever and asserted in tests/test_ground_truth_references.py: I = 1666.667 mm^4, M_fixed = 150000 N*mm, sigma_max = 450.0 MPa, delta_tip = 13.5 mm. Tip deflection is independently cross-checked by numerical double-integration of curvature (rel err ~6e-12). The author can reproduce both quantities with an FEA beam/solid model.",
+    "reviewer_notes": "Reference solution computed in-repo by engineering_audit.stress_concentration.end_loaded_cantilever and asserted in tests/test_ground_truth_references.py: I = 1666.667 mm^4, M_fixed = 150000 N*mm, sigma_max = 450.0 MPa, delta_tip = 13.5 mm. Tip deflection is independently cross-checked by numerical double-integration of curvature (rel err ~6e-12). The author can reproduce both quantities with an FEA beam/solid model.",
     "expected_verifier_behavior": "Load the case under schema 0.3.0 and detect no failure modes. Reported sigma_max = 450 MPa and delta = 13.5 mm both match the validated reference within tolerance. This is a positive/control case, not an elicited failure."
   }
 }

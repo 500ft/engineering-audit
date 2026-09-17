@@ -24,4 +24,4 @@ jobs:
         run: pytest
 
       - name: Benchmark eval gate (regression on any case fails CI)
-        run: mechaudit eval benchmark/
+        run: engineering-audit eval benchmark/

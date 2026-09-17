@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from mechaudit.cli import main
+from engineering_audit.cli import main
 
 
 ROOT = Path(__file__).resolve().parents[1]

@@ -55,11 +55,12 @@ counts; not every capture becomes a case.
 
 ## Audit calculation path
 
-`mechaudit/case_loader.py` parses the fenced JSON case record, validates schema
-and provenance requirements, and converts declared units. Domain calculators
-under `mechaudit/` independently recompute supported reference quantities.
-Checks compare those quantities, formulas, assumptions, and extracted reasoning
-with the submitted answer using [`tolerance_policy.md`](tolerance_policy.md).
+`engineering_audit/case_loader.py` parses the fenced JSON case record, validates
+schema and provenance requirements, and converts declared units. Domain
+calculators under `engineering_audit/` independently recompute supported
+reference quantities. Checks compare those quantities, formulas, assumptions,
+and extracted reasoning with the submitted answer using
+[`tolerance_policy.md`](tolerance_policy.md).
 
 For a complete case, `passed` means the computed detected-mode set equals the
 annotated expected-mode set. It does not mean the original model answer was
@@ -70,7 +71,7 @@ correct: a correctly detected failure case also produces a benchmark PASS.
 Regenerate [`reports/benchmark-results.md`](../reports/benchmark-results.md):
 
 ```bash
-mechaudit eval benchmark/ --report reports/benchmark-results.md
+engineering-audit eval benchmark/ --report reports/benchmark-results.md
 ```
 
 The current aggregate is 17 passed, 0 failed, and 2 skipped. The denominator is
@@ -91,7 +92,7 @@ and CLI behavior.
 ## Single-case reports
 
 ```bash
-mechaudit audit benchmark/real_world/rw-stress-concentration-claude-haiku-0001.md \
+engineering-audit audit benchmark/real_world/rw-stress-concentration-claude-haiku-0001.md \
   --output reports/rw-stress-concentration-claude-haiku-0001.md
 ```
 
@@ -101,11 +102,11 @@ committed example reports are generated text, not separate experiments.
 
 ## Capture data
 
-`mechaudit capture` does not call a model. It packages an already recorded
-prompt and response with model metadata, run settings, timestamps, raw artifact
-paths, and digests. `source.json` is the manifest for a run. Tests recompute the
-hashes and require promoted real-world cases to point to their own matching raw
-artifact.
+`engineering-audit capture` does not call a model. It packages an already
+recorded prompt and response with model metadata, run settings, timestamps, raw
+artifact paths, and digests. `source.json` is the manifest for a run. Tests
+recompute the hashes and require promoted real-world cases to point to their own
+matching raw artifact.
 
 Capture commands, model metadata, and session context are under `captures/`.
 The challenge protocol is not intended to represent ordinary user traffic.

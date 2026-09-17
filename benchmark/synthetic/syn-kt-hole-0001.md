@@ -2,7 +2,7 @@
 
 **This is a synthetic, analytically/FEA-grade-validated GROUND-TRUTH control —
 NOT a wild model capture.** The correct answer is computed independently in-repo
-by `mechaudit.stress_concentration.plate_with_hole`, whose Kt correlation is the
+by `engineering_audit.stress_concentration.plate_with_hole`, whose Kt correlation is the
 Heywood/Howland fit to Peterson's chart (Pilkey, *Peterson's Stress Concentration
 Factors*, Chart 4.1, flat tension bar with a transverse hole; same fit in Roark,
 Table 17.1). The fit is validated by its d/W -> 0 limit recovering the Kirsch
@@ -11,7 +11,7 @@ infinite-plate value Kt = 3.0 to within ~0.4% (the fit's limit is 3.004). See
 
 It is a no-failure positive control: the `llm_response` shown is an *author-written
 correct solution* used to exercise false-positive behavior, with
-`failure_modes: []`. The capture harness (`mechaudit capture`) and provenance
+`failure_modes: []`. The capture harness (`engineering-audit capture`) and provenance
 tiers are reserved for genuine model runs; this case is `provenance_tier:
 synthetic` and carries no transcript.
 
@@ -52,7 +52,7 @@ synthetic` and carries no transcript.
   "notes": {
     "assumptions_stated": ["linear-elastic isotropic material", "central transverse circular hole", "uniaxial tension", "Kt referenced to net-section stress"],
     "limitations": ["Synthetic analytically-validated GROUND TRUTH, not a transcript-backed model run.", "Kt is the Heywood/Howland fit to Peterson's chart, valid for 0 < d/W < 1.", "The current verifier has no Kt-specific check; this case loads as a no-failure positive control validating the schema and false-positive behavior."],
-    "reviewer_notes": "Reference solution computed in-repo by mechaudit.stress_concentration.plate_with_hole and asserted in tests/test_ground_truth_references.py: d/W = 0.25, Kt_net = 2.432375, sigma_net = 60.0 MPa, sigma_max = 145.9425 MPa. The fit's d/W -> 0 limit gives Kt = 3.004, recovering the Kirsch value 3.0 within ~0.4% and validating the correlation. The author can reproduce this peak stress with an FEA model of the holed plate.",
+    "reviewer_notes": "Reference solution computed in-repo by engineering_audit.stress_concentration.plate_with_hole and asserted in tests/test_ground_truth_references.py: d/W = 0.25, Kt_net = 2.432375, sigma_net = 60.0 MPa, sigma_max = 145.9425 MPa. The fit's d/W -> 0 limit gives Kt = 3.004, recovering the Kirsch value 3.0 within ~0.4% and validating the correlation. The author can reproduce this peak stress with an FEA model of the holed plate.",
     "expected_verifier_behavior": "Load the case under schema 0.3.0 and detect no failure modes. The reported 145.9 MPa is within tolerance of the validated 145.9425 MPa. This is a positive/control case, not an elicited failure."
   }
 }

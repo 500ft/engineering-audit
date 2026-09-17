@@ -1,4 +1,4 @@
-"""Minimal MechAudit verifier package."""
+"""Minimal engineering-audit verifier package."""
 
 from .case_loader import BenchmarkCase, load_benchmark_cases
 from .pressure_vessel import audit_case

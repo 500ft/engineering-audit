@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from mechaudit.case_loader import (
+from engineering_audit.case_loader import (
     CaseLoadError,
     load_case_file,
     verify_artifact_integrity,

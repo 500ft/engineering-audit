@@ -1,7 +1,7 @@
 # Contributing
 
-MechAudit is benchmark-driven: observed or deliberately constructed cases define
-the behavior before verifier logic is extended.
+engineering-audit is benchmark-driven: observed or deliberately constructed
+cases define the behavior before verifier logic is extended.
 
 ## Development setup
 
@@ -15,7 +15,7 @@ python -m pip install -e ".[test]"
 
 ```bash
 pytest
-mechaudit eval benchmark/
+engineering-audit eval benchmark/
 ```
 
 Both commands must pass. The batch evaluator is also a false-positive gate for
@@ -36,9 +36,9 @@ model transcript from a summary.
 
 ## Captured outputs
 
-Use `mechaudit capture` so prompt, response, metadata, and digests are stored
-together. Do not edit a completed raw artifact in place. Create a new run when
-the prompt, response, model settings, or metadata change.
+Use `engineering-audit capture` so prompt, response, metadata, and digests are
+stored together. Do not edit a completed raw artifact in place. Create a new run
+when the prompt, response, model settings, or metadata change.
 
 ## CAD loop
 
@@ -61,4 +61,4 @@ tests run in CI. When changing it:
 ## Pull requests
 
 List the cases added or changed, the failure modes affected, and the output of
-both the test suite and `mechaudit eval benchmark/`.
+both the test suite and `engineering-audit eval benchmark/`.

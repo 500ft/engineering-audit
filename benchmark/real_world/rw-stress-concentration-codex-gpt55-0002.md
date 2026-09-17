@@ -2,7 +2,7 @@
 
 **Genuine verbatim `gold` Codex capture of `gpt-5.5` at `reasoning_effort=low`.** The run used `codex exec -s read-only --json --ignore-rules --ignore-user-config -c model_reasoning_effort="low"`; the raw answer and JSON event stream are stored under `captures/runs/` and referenced below by SHA-256.
 
-This is an elicited real-world failure under MechAudit's net-section Kt convention, not a synthetic answer. The Codex response applied or approximated a stress-concentration factor but paired it with the wrong nominal-stress convention.
+This is an elicited real-world failure under engineering-audit's net-section Kt convention, not a synthetic answer. The Codex response applied or approximated a stress-concentration factor but paired it with the wrong nominal-stress convention.
 
 ```json
 {
@@ -182,7 +182,7 @@ This is an elicited real-world failure under MechAudit's net-section Kt conventi
       "The comparison controls reasoning effort explicitly: local config is gpt-5.5/high, but these runs used --ignore-user-config and model_reasoning_effort=low."
     ],
     "reviewer_notes": "gpt-5.5/low explicitly said it was using gross-section nominal stress, then paired it with a finite-width Kt≈2.42 and reported 121 MPa instead of the net-reference peak 162.158 MPa.",
-    "expected_verifier_behavior": "Detect FM-04 because the reported peak stress does not match Kt_net*sigma_net under the MechAudit net-section convention."
+    "expected_verifier_behavior": "Detect FM-04 because the reported peak stress does not match Kt_net*sigma_net under the engineering-audit net-section convention."
   }
 }
 ```
@@ -196,4 +196,4 @@ sigma_net = 40000 N / ((100 - 25) mm * 8 mm) = 66.6667 MPa
 sigma_max = 2.432375 * 66.6667 = 162.158 MPa
 ```
 
-Codex reported **121 MPa**. MechAudit flags `FM-04` because the correct net-reference peak is **162.158 MPa**.
+Codex reported **121 MPa**. engineering-audit flags `FM-04` because the correct net-reference peak is **162.158 MPa**.

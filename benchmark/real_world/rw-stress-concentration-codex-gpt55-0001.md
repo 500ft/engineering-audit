@@ -2,7 +2,7 @@
 
 **Genuine verbatim `gold` Codex capture of `gpt-5.5` at `reasoning_effort=low`.** The run used `codex exec -s read-only --json --ignore-rules --ignore-user-config -c model_reasoning_effort="low"`; the raw answer and JSON event stream are stored under `captures/runs/` and referenced below by SHA-256.
 
-This is an elicited real-world failure under MechAudit's net-section Kt convention, not a synthetic answer. The Codex response applied or approximated a stress-concentration factor but paired it with the wrong nominal-stress convention.
+This is an elicited real-world failure under engineering-audit's net-section Kt convention, not a synthetic answer. The Codex response applied or approximated a stress-concentration factor but paired it with the wrong nominal-stress convention.
 
 ```json
 {
@@ -181,8 +181,8 @@ This is an elicited real-world failure under MechAudit's net-section Kt conventi
       "Codex tools were not hard-disabled the way Claude Haiku tools were; JSON event streams for these runs show zero command_execution, web_search, MCP tool, or file_change events.",
       "The comparison controls reasoning effort explicitly: local config is gpt-5.5/high, but these runs used --ignore-user-config and model_reasoning_effort=low."
     ],
-    "reviewer_notes": "gpt-5.5/low used gross-section nominal stress P/(W t)=50 MPa with Kt≈2.51, reporting 125 MPa. The benchmark expects the net-section Kt convention used by MechAudit.",
-    "expected_verifier_behavior": "Detect FM-04 because the reported peak stress does not match Kt_net*sigma_net under the MechAudit net-section convention."
+    "reviewer_notes": "gpt-5.5/low used gross-section nominal stress P/(W t)=50 MPa with Kt≈2.51, reporting 125 MPa. The benchmark expects the net-section Kt convention used by engineering-audit.",
+    "expected_verifier_behavior": "Detect FM-04 because the reported peak stress does not match Kt_net*sigma_net under the engineering-audit net-section convention."
   }
 }
 ```
@@ -196,4 +196,4 @@ sigma_net = 18000 N / ((60 - 12) mm * 6 mm) = 62.5 MPa
 sigma_max = 2.519040 * 62.5 = 157.44 MPa
 ```
 
-Codex reported **125 MPa**. MechAudit flags `FM-04` because the correct net-reference peak is **157.44 MPa**.
+Codex reported **125 MPa**. engineering-audit flags `FM-04` because the correct net-reference peak is **157.44 MPa**.

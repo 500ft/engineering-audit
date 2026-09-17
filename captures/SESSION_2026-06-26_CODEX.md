@@ -11,7 +11,7 @@
 - Codex does not expose a Claude-style hard `--disallowedTools` flag for `codex exec`. The prompt still said "No calculator, no tools," the sandbox was `read-only`, and every JSON event stream was retained and inspected.
 - All 20 formal runs had zero `command_execution`, `web_search`, `mcp_tool_call`, and `file_change` events in their `codex exec --json` streams.
 - Raw final-answer bytes are stored verbatim under `captures/runs/`; the JSONL event stream is stored beside each run as a hashed `api_response` artifact.
-- Pass/fail verdicts below are computed from in-repo MechAudit ground truth, not operator judgment.
+- Pass/fail verdicts below are computed from in-repo engineering-audit ground truth, not operator judgment.
 
 ## Runs
 
@@ -42,6 +42,6 @@
 
 - 20 new verbatim gold Codex captures written under `captures/runs/`: 10 for `gpt-5.4-mini/low`, 10 for `gpt-5.5/low`.
 - Both models passed the pressure-vessel controls and axial controls in substance. One `gpt-5.5` axial answer rounded the final value to 72 MPa after showing the exact expression `225/pi`; this was kept as a rounded control, not promoted.
-- Stress-concentration behavior was not simply "frontier model passes." Both Codex cohorts frequently selected a finite-width Kt expression but paired it with gross-section nominal stress. Under MechAudit's net-section Kt convention this under-predicts the validated hole-edge peak.
+- Stress-concentration behavior was not simply "frontier model passes." Both Codex cohorts frequently selected a finite-width Kt expression but paired it with gross-section nominal stress. Under engineering-audit's net-section Kt convention this under-predicts the validated hole-edge peak.
 - Promoted to complete `real_world` benchmark cases: two clear `gpt-5.4-mini/low` failures and two clear `gpt-5.5/low` failures (`rw-stress-concentration-codex-gpt54mini-000{1,2}` and `rw-stress-concentration-codex-gpt55-000{1,2}`).
 - The comparison is therefore explicitly **Haiku/no-tool vs Codex/low-effort/no-observed-tool-events**, not Haiku/no-tool vs inherited Codex high effort.

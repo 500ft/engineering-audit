@@ -1,8 +1,9 @@
 # Capture Provenance
 
-This document defines how MechAudit records where a benchmark case's model output
-came from, and how strongly that origin is evidenced. Provenance is enforced by
-the loader as of schema version `0.3.0`; it is not an honor-system annotation.
+This document defines how engineering-audit records where a benchmark case's
+model output came from, and how strongly that origin is evidenced. Provenance is
+enforced by the loader as of schema version `0.3.0`; it is not an honor-system
+annotation.
 
 The goal is narrow and deliberate: a reader must be able to tell, mechanically,
 whether a "real" case is backed by a verbatim model artifact or is a reviewer's
@@ -60,11 +61,11 @@ The loader enforces, for `0.3.0`:
 
 ## Capture harness (the rail for real captures)
 
-`mechaudit.capture` (CLI: `mechaudit capture`) is the provenance-first tool that
-real `gold`/`silver` captures run on. It is deliberately offline: it never calls
-a model or the network. The operator performs the model run with their own
-credentials, then hands the **verbatim** raw output to the harness via a file or
-stdin. The harness:
+`engineering_audit.capture` (CLI: `engineering-audit capture`) is the
+provenance-first tool that real `gold`/`silver` captures run on. It is
+deliberately offline: it never calls a model or the network. The operator
+performs the model run with their own credentials, then hands the **verbatim**
+raw output to the harness via a file or stdin. The harness:
 
 - computes the SHA-256 of the verbatim bytes;
 - writes the bytes as an immutable artifact under `captures/runs/<run_id>/`,
@@ -88,9 +89,9 @@ recorded.
 
 ## Why reviewer synthesis is quarantined
 
-The first MechAudit "real" fixtures were reviewer-written descriptions of model
-runs, with `raw_output_available: false`. They are honest as controls — they
-exercise the verifier's false-positive behavior — but they are not evidence that
-any model produced any specific output. Tier `deprecated` exists to keep these
-cases usable while making it impossible for them to masquerade as captures, in
-the schema or in reporting.
+The first engineering-audit "real" fixtures were reviewer-written descriptions
+of model runs, with `raw_output_available: false`. They are honest as controls —
+they exercise the verifier's false-positive behavior — but they are not evidence
+that any model produced any specific output. Tier `deprecated` exists to keep
+these cases usable while making it impossible for them to masquerade as
+captures, in the schema or in reporting.
