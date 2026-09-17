@@ -6,7 +6,7 @@ Raw bytes are stored under `captures/runs/` and referenced below by SHA-256; the
 loader recomputes the hash and fails `P-01` on any edit. This is a clean Kt
 error: Haiku got the net section right (`sigma_net = 62.5 MPa`) but used the
 Kirsch infinite-plate `Kt = 3.0` instead of the finite-width factor `Kt_net =
-2.519`, reporting `187.5 MPa` versus the validated `157.44 MPa`. MechAudit flags
+2.519`, reporting `187.5 MPa` versus the validated `157.44 MPa`. engineering-audit flags
 `FM-04`.
 
 ```json
@@ -67,7 +67,7 @@ Kirsch infinite-plate `Kt = 3.0` instead of the finite-width factor `Kt_net =
   "notes": {
     "assumptions_stated": ["net-section nominal approach", "central transverse circular hole", "uniaxial tension", "Kt approx 3.0 (incorrect: that is the infinite-plate value)"],
     "limitations": ["Genuine verbatim gold capture; raw bytes under captures/runs/, referenced by SHA-256.", "Model run via claude -p with all tools disabled, so model/version/date are self-reported, not provider-API metadata.", "Kt_net is the Heywood/Howland fit to Peterson's chart, valid for 0 < d/W < 1."],
-    "reviewer_notes": "In-repo ground truth via mechaudit.stress_concentration.plate_with_hole: d/W = 0.2, Kt_net = 2.519040, sigma_net = 62.5 MPa, sigma_max = 157.44 MPa. Haiku computed the net section correctly (sigma_net = 62.5 MPa) but used the Kirsch infinite-plate Kt = 3.0 instead of the finite-width Kt_net = 2.519, so the peak came out 187.5 MPa, ~1.19x the true 157.44 MPa (over-prediction).",
+    "reviewer_notes": "In-repo ground truth via engineering_audit.stress_concentration.plate_with_hole: d/W = 0.2, Kt_net = 2.519040, sigma_net = 62.5 MPa, sigma_max = 157.44 MPa. Haiku computed the net section correctly (sigma_net = 62.5 MPa) but used the Kirsch infinite-plate Kt = 3.0 instead of the finite-width Kt_net = 2.519, so the peak came out 187.5 MPa, ~1.19x the true 157.44 MPa (over-prediction).",
     "expected_verifier_behavior": "Detect FM-04. The reported 187.5 MPa matches neither the net-section nominal (62.5 MPa) nor the validated peak (157.44 MPa), so the message should report a wrong Kt or wrong nominal (correct Kt_net = 2.519)."
   }
 }
@@ -85,4 +85,4 @@ sigma_max = 2.519040 * 62.5 = 157.44 MPa
 
 Haiku reported **187.5 MPa** — the net section was right, but it used the Kirsch
 infinite-plate `Kt = 3.0` instead of the finite-width `Kt_net = 2.519`. The peak
-is ~1.19x the true value. MechAudit flags `FM-04`.
+is ~1.19x the true value. engineering-audit flags `FM-04`.

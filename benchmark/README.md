@@ -1,8 +1,8 @@
 # Benchmark Cases
 
-The benchmark defines what MechAudit should eventually verify. Cases should be
-added before verifier logic whenever possible so implementation follows observed
-failure behavior instead of imagined behavior.
+The benchmark defines what engineering-audit should eventually verify. Cases
+should be added before verifier logic whenever possible so implementation
+follows observed failure behavior instead of imagined behavior.
 
 ## Folders
 
@@ -11,7 +11,7 @@ failure behavior instead of imagined behavior.
   includes both single-mode failure cases (`syn-fm*`, `syn-arith-*`) and
   analytically/FEA-grade-validated **ground-truth controls** (`syn-kt-hole-*`,
   `syn-cantilever-*`) whose correct answer is computed independently in-repo by
-  `mechaudit.stress_concentration` and asserted in
+  `engineering_audit.stress_concentration` and asserted in
   `tests/test_ground_truth_references.py`. The ground-truth controls are
   no-failure positives (`failure_modes: []`), `provenance_tier: synthetic`; they
   are not model runs and must never be described as wild captures.

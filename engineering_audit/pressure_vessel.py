@@ -93,7 +93,7 @@ def compute_plate_with_hole(case: BenchmarkCase) -> dict[str, float]:
     """Recompute net stress, Kt, and peak stress for a holed-plate case in MPa.
 
     Independent of any LLM output: pulls the geometry/load from ``inputs`` and
-    defers to :func:`mechaudit.stress_concentration.plate_with_hole`, the in-repo
+    defers to :func:`engineering_audit.stress_concentration.plate_with_hole`, the in-repo
     analytically/FEA-validated oracle (Peterson/Heywood Kt). All lengths are
     converted to mm and the force to N so the result is in MPa.
     """

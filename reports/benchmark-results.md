@@ -1,4 +1,4 @@
-# MechAudit benchmark eval
+# engineering-audit benchmark eval
 
 | case | verdict | detail |
 | --- | --- | --- |

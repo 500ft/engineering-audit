@@ -1,7 +1,7 @@
 # Schema Contract
 
-This document defines the structured data contract MechAudit benchmark files
-and verifier code consume. As of `0.3.0` the loader validates the **full**
+This document defines the structured data contract engineering-audit benchmark
+files and verifier code consume. As of `0.3.0` the loader validates the **full**
 contract with Pydantic and rejects unknown keys (`extra = "forbid"`). There is
 no permissive provenance area: every field below is modeled, and any field not
 listed here causes a `P-01` load failure.

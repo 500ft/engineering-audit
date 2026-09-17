@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from mechaudit.capture import (
+from engineering_audit.capture import (
     CaptureError,
     SourceRecord,
     build_run_id,

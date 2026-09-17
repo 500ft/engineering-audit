@@ -1,4 +1,4 @@
-# MechAudit v1 Credibility Plan
+# engineering-audit v1 Credibility Plan
 
 Date: 2026-06-21
 Schedule: 2026-06-22 through 2026-07-31
@@ -6,9 +6,9 @@ Assumption: one primary engineer
 
 ## Objective
 
-Ship a defensible v1 of MechAudit that demonstrates transparent, reproducible
-failure detection on genuine model outputs within its stated scope: thin-wall
-pressure-vessel and axial-stress calculations.
+Ship a defensible v1 of engineering-audit that demonstrates transparent,
+reproducible failure detection on genuine model outputs within its stated scope:
+thin-wall pressure-vessel and axial-stress calculations.
 
 The current verifier has a working CLI, CI, 24 tests, convention-aware
 pressure-vessel calculations, five synthetic failure cases, and three
@@ -93,7 +93,8 @@ real capture.
 
 - At least five Gold or Silver captures have immutable raw artifacts in the
   repository.
-- At least two captures contain genuine model failures detected by MechAudit.
+- At least two captures contain genuine model failures detected by
+  engineering-audit.
 - `tests/test_real_world_cases.py` asserts the reviewed expected modes.
 - If the fixed protocol produces no failures, publish that result as controls
   rather than modifying prompts after seeing the output.
@@ -166,7 +167,7 @@ supported family rather than only the original examples.
 - Add a batch command:
 
   ```text
-  mechaudit eval benchmark/ --report out/
+  engineering-audit eval benchmark/ --report out/
   ```
 
 - Emit aggregate Markdown and JSON reports containing:
@@ -214,7 +215,7 @@ metrics, explicit limitations, and a reproducible CI evaluation.
 - Results are reported as detected/annotated counts per mode, not bare
   percentages.
 - The frozen control set has zero false positives.
-- `mechaudit eval benchmark/` is reproducible and CI-gated.
+- `engineering-audit eval benchmark/` is reproducible and CI-gated.
 - `LIMITATIONS.md` scopes all claims to the implemented engineering family.
 - No reviewer-synthesized fixture is labeled as real-world evidence.
 

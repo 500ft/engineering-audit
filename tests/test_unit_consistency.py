@@ -6,13 +6,13 @@ from typing import Any
 
 import pytest
 
-from mechaudit.case_loader import BenchmarkCase
-from mechaudit.pressure_vessel import (
+from engineering_audit.case_loader import BenchmarkCase
+from engineering_audit.pressure_vessel import (
     audit_case,
     audit_output_unit_consistency,
     compute_pressure_vessel,
 )
-from mechaudit.audit_result import AuditResult
+from engineering_audit.audit_result import AuditResult
 
 
 def _pv_case(hoop_value: float, hoop_unit: str | None) -> BenchmarkCase:

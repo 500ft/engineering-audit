@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from mechaudit.capture import verify_capture
+from engineering_audit.capture import verify_capture
 
 
 ROOT = Path(__file__).resolve().parents[1]

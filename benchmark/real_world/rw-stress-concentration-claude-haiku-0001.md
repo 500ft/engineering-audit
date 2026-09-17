@@ -5,7 +5,7 @@
 no-tool calculation. The raw bytes are stored under `captures/runs/` and
 referenced below by SHA-256; the loader recomputes the hash and fails `P-01` on
 any edit. This is an **elicited real-world failure**, not a synthetic control:
-the expected answer is the in-repo Kt-validated `sigma_max`, and MechAudit flags
+the expected answer is the in-repo Kt-validated `sigma_max`, and engineering-audit flags
 `FM-04` because the model omitted the stress concentration **and** used the wrong
 net area (subtracting the circular hole *area* `pi(d/2)^2` instead of the strip
 `d t`), under-predicting the true peak by ~2x.
@@ -67,7 +67,7 @@ net area (subtracting the circular hole *area* `pi(d/2)^2` instead of the strip
   "notes": {
     "assumptions_stated": ["net-section nominal approach", "central transverse circular hole", "uniaxial tension"],
     "limitations": ["Genuine verbatim gold capture; raw bytes under captures/runs/, referenced by SHA-256.", "Model run via claude -p with all tools disabled, so model/version/date are self-reported, not provider-API metadata.", "Kt_net is the Heywood/Howland fit to Peterson's chart, valid for 0 < d/W < 1."],
-    "reviewer_notes": "In-repo ground truth via mechaudit.stress_concentration.plate_with_hole: d/W = 0.2, Kt_net = 2.519040, sigma_net = 62.5 MPa, sigma_max = 157.44 MPa. Haiku omitted the stress concentration entirely AND used the wrong net area (subtracted the circular hole area pi(d/2)^2 = 113.1 mm^2 instead of the transverse strip d*t = 72 mm^2), reporting 72.9 MPa. That under-predicts the true peak by ~2.16x, a dangerous non-conservative error.",
+    "reviewer_notes": "In-repo ground truth via engineering_audit.stress_concentration.plate_with_hole: d/W = 0.2, Kt_net = 2.519040, sigma_net = 62.5 MPa, sigma_max = 157.44 MPa. Haiku omitted the stress concentration entirely AND used the wrong net area (subtracted the circular hole area pi(d/2)^2 = 113.1 mm^2 instead of the transverse strip d*t = 72 mm^2), reporting 72.9 MPa. That under-predicts the true peak by ~2.16x, a dangerous non-conservative error.",
     "expected_verifier_behavior": "Detect FM-04. The reported 72.9 MPa is neither the net-section nominal sigma_net = 62.5 MPa nor the validated peak sigma_max = 157.44 MPa, so the message should report a wrong Kt or wrong nominal in addition to the missing concentration factor."
   }
 }
@@ -85,4 +85,4 @@ sigma_max = 2.519040 * 62.5 = 157.44 MPa
 
 Haiku reported **72.9 MPa** — it omitted `Kt` and computed the nominal on a wrong
 net area `(W t - pi(d/2)^2)` instead of `(W - d) t`. The true peak is ~2.16x
-higher. MechAudit flags `FM-04`.
+higher. engineering-audit flags `FM-04`.
