@@ -33,6 +33,13 @@ cantilever controls, and finite-width stress concentration. It is a
 domain-bounded verifier, not a general proof checker or a benchmark of overall
 model capability.
 
+A second subsystem, [`cadloop/`](cadloop/README.md), builds parametric CAD on a
+SOLIDWORKS host and gates each build on a closed-form volume oracle before
+exporting STEP. Its purpose is to author reference geometry whose measurements a
+benchmark case can cite, rather than relying on hand analytics alone. The FEA
+stage of that loop is not yet implemented; see
+[`docs/cad_fea_loop.md`](docs/cad_fea_loop.md).
+
 ## Quick start
 
 ```bash
@@ -81,17 +88,21 @@ the counts, case provenance, and report generation path are documented in
 | [`docs/tolerance_policy.md`](docs/tolerance_policy.md) | Numeric comparison policy |
 | [`docs/capture_provenance.md`](docs/capture_provenance.md) | Capture tiers, metadata, and digest rules |
 | [`docs/real_case_classification_rubric.md`](docs/real_case_classification_rubric.md) | Captured-case classification process |
+| [`docs/cad_fea_loop.md`](docs/cad_fea_loop.md) | CAD build-and-validate loop: stages, contracts, gates, and unimplemented stages |
+| [`docs/solidworks_api_findings.md`](docs/solidworks_api_findings.md) | Host API behaviour the CAD loop works around |
+| [`cadloop/README.md`](cadloop/README.md) | CAD loop layout, host requirements, and use |
 | [`LIMITATIONS.md`](LIMITATIONS.md) | Supported scope and interpretation limits |
 
 ## Repository map
 
 ```text
 mechaudit/          CLI, loader, calculations, checks, capture, and report writer
+cadloop/            parametric CAD builds, oracle gate, and STEP export
 benchmark/          synthetic, reference-control, captured, and pending cases
 captures/           prompts, raw responses, metadata, hashes, and session notes
 docs/               schema, taxonomy, tolerance, provenance, and data lineage
 reports/            aggregate and single-case audit outputs
-tests/              calculations, mutations, schema, provenance, and CLI tests
+tests/              calculations, mutations, schema, provenance, CLI, and oracle tests
 ```
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) before adding a domain or failure mode.
