@@ -22,6 +22,7 @@ SW_END_COND_THROUGH_ALL = 1
 SW_START_SKETCH_PLANE = 0
 DENSITY_KG_M3 = 1000.0
 DEFAULT_SAVE_PATH = r"C:\CADLoop\templates\plate.sldprt"
+FALLBACK_PART_TEMPLATE = r"C:\ProgramData\SolidWorks\SOLIDWORKS 2024\templates\Part.prtdot"
 
 # Authored defaults, in metres for the API and millimetres for the equations.
 LENGTH_M, WIDTH_M, THICKNESS_M, HOLE_DIAMETER_M = 0.100, 0.060, 0.005, 0.008
@@ -87,6 +88,11 @@ def main():
         sw.Visible = False
 
         part_template = sw.GetUserPreferenceStringValue(SW_DEFAULT_PART_TEMPLATE)
+        if not part_template or not os.path.exists(part_template):
+            # GetUserPreferenceStringValue(swDefaultTemplatePart) has been observed
+            # to return an empty string on this host. See
+            # docs/solidworks_api_findings.md.
+            part_template = FALLBACK_PART_TEMPLATE
         step("resolve_part_template", part_template and os.path.exists(part_template), part_template)
 
         part = sw.NewDocument(part_template, 0, 0, 0)

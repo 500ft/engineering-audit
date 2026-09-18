@@ -35,9 +35,9 @@ flowchart LR
 | Design intent to job specification | `cadloop/jobs/*.json`: template, parameter names with explicit units, oracle, tolerance, timeout | Implemented |
 | Parametric build | `worker.py` sets only declared global variables, forces a full rebuild, walks every feature's error code | Implemented |
 | Oracle gate | measured mass properties compared against a closed-form oracle within tolerance | Implemented |
-| STEP export and preview | non-empty STEP file plus an isometric image, both verified to exist | Implemented |
-| FEA run | STEP imported and solved, results returned as measurements | Not implemented |
-| Result package and review | `result.json`, STEP, preview retrieved to `cadloop/runs/<job_id>/` | Implemented for the CAD half |
+| STEP export and preview | non-empty STEP file, a non-empty IGES file, and an isometric image, all verified to exist | Implemented |
+| FEA run | IGES imported into MAPDL, meshed as a solid, solved, displacement and stress returned as measurements | Implemented for the plate fixture; no oracle |
+| Result package and review | `result.json`, STEP, preview retrieved to `cadloop/runs/<job_id>/` | Implemented for the CAD half; FEA results are not yet retrieved by an equivalent orchestrator |
 | Feedback to a new job | owner edits parameters and reruns | Implemented |
 
 ## Why the gate is the oracle and not the rebuild
@@ -78,16 +78,39 @@ feature and its error code.
 oracle, a non-empty STEP file, a preview image, and — checked by the
 orchestrator rather than the worker — those artifacts present on local disk.
 
+## Parametric re-drive: recorded
+
+`orchestrator.py cadloop/jobs/plate-150x80x6.json`, run against the template
+re-authored on 2026-09-18, drove the same template to a second parameter set
+(150 x 80 x 6 mm, 10 mm hole) and measured 71 528.761 101 961 53 mm³ against a
+71 528.761 101 961 54 mm³ oracle — 2e-14% error, one solid body, STEP and
+preview both retrieved to local disk. See
+[`cadloop/evidence/parametric-redrive-2026-09-18.json`](../cadloop/evidence/parametric-redrive-2026-09-18.json).
+This was the loop's first acceptance test; it is no longer open.
+
+## FEA stage: first solve recorded
+
+[`cadloop/fea/`](../cadloop/fea/README.md) imports the plate job's IGES export
+into MAPDL, builds a volume from its 8 surfaces (IGES import has no volume of
+its own), meshes it with `SOLID186` under free (not mapped) tetrahedral
+meshing, fixes the face at `X=0`, pressurizes the face at `X=Length`, and
+solves. Run against the `plate-150x80x6` job's export (150 x 80 x 6 mm plate,
+10 mm hole) at 1 MPa: 4224 elements, 8329 nodes, 0.000776 mm maximum
+displacement, 2.75 MPa maximum von Mises stress — a stress concentration
+factor near 2.75 against the nominal 1 MPa, consistent with a circular hole in
+a finite plate. Reproduced from a fresh MAPDL session with matching results to
+thirteen significant figures. See
+[`cadloop/evidence/fea-geometry-inspection-2026-09-18.json`](../cadloop/evidence/fea-geometry-inspection-2026-09-18.json)
+and
+[`cadloop/evidence/fea-static-plate-2026-09-18.json`](../cadloop/evidence/fea-static-plate-2026-09-18.json).
+
+This is a solve, not a validated one: no oracle checks the stress or
+displacement value, so `status: ok` here means the solve completed and
+produced finite results, not that the results are correct. See
+`cadloop/fea/README.md` for what the stage does not yet do.
+
 ## Not yet established
 
-- **The FEA stage does not run.** A PyAnsys client is installed on the
-  workstation and a gRPC path to a licensed MAPDL host is understood, but no
-  job in this repository imports a STEP file, solves it, or returns stress or
-  displacement results. Until it does, the loop is a build-and-measure loop.
-- **The parametric re-drive is unproven.** The oracle gate is in place, but no
-  committed run shows a template being driven to a second parameter set and
-  measuring the new expected volume. That run is the loop's first acceptance
-  test and has not been recorded.
 - **One fixture, one configuration.** Coverage is a single plate template in
   its `Default` configuration. Configuration-specific equations, design tables,
   and externally linked equations are outside the contract.

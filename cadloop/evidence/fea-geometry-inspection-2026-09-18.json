@@ -1,0 +1,23 @@
+{
+  "iges_path": "cadloop/runs/plate-150x80x6/plate-150x80x6.igs",
+  "status": "ok",
+  "message": "",
+  "n_areas": 8,
+  "n_lines": 18,
+  "n_keypoints": 14,
+  "n_volumes": 0,
+  "bounding_box": {
+    "x": [
+      0.0,
+      150.0
+    ],
+    "y": [
+      0.0,
+      80.0
+    ],
+    "z": [
+      0.0,
+      6.0
+    ]
+  }
+}

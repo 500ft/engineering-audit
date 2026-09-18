@@ -1,0 +1,48 @@
+{
+  "job_id": "plate-150x80x6",
+  "status": "ok",
+  "stage": "done",
+  "message": "build accepted",
+  "warnings": [],
+  "resolved_parameters": {
+    "Length": "150mm",
+    "Width": "80mm",
+    "PlateThickness": "6mm",
+    "HoleDiameter": "10mm"
+  },
+  "artifacts": {
+    "step": "plate-150x80x6.step",
+    "preview": "plate-150x80x6.bmp"
+  },
+  "applied_equations": [
+    {
+      "name": "Length",
+      "index": 0,
+      "readback": "\"Length\"= 150mm"
+    },
+    {
+      "name": "Width",
+      "index": 1,
+      "readback": "\"Width\"= 80mm"
+    },
+    {
+      "name": "PlateThickness",
+      "index": 2,
+      "readback": "\"PlateThickness\"= 6mm"
+    },
+    {
+      "name": "HoleDiameter",
+      "index": 3,
+      "readback": "\"HoleDiameter\"= 10mm"
+    }
+  ],
+  "body_count": 1,
+  "volume_check": {
+    "oracle": "plate_with_center_hole",
+    "accepted": true,
+    "expected_mm3": 71528.76110196154,
+    "measured_mm3": 71528.76110196153,
+    "error_pct": 2.0344145493619898e-14,
+    "tolerance_pct": 0.5
+  }
+}

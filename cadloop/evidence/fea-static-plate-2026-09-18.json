@@ -1,0 +1,22 @@
+{
+  "status": "ok",
+  "message": "solved",
+  "inputs": {
+    "length_mm": 150.0,
+    "pressure_mpa": 1.0,
+    "ip": "127.0.0.1",
+    "port": 50052,
+    "element_size_mm": 5.0,
+    "youngs_modulus_mpa": 200000.0,
+    "poissons_ratio": 0.3,
+    "result": "cadloop/runs/plate-150x80x6/static_plate_result.json"
+  },
+  "mesh_status": "GENERATE NODES AND ELEMENTS   IN  ALL  SELECTED VOLUMES  \n\n NUMBER OF VOLUMES MESHED   =         1\n MAXIMUM NODE NUMBER        =      8329\n MAXIMUM ELEMENT NUMBER     =      4224",
+  "n_elements": 4224,
+  "n_nodes": 8329,
+  "fixed_node_count": 113,
+  "loaded_area_count": 1,
+  "solve_output_tail": "ute value= 0 at node 0 .            \n\n   *** ELEMENT RESULT CALCULATION TIMES\n     TYPE    NUMBER     ENAME   TOTAL ELAPSED   AVG ELAPSED\n\n        1      4224  SOLID186          0.0000   0.000000000\n\n   *** NODAL LOAD CALCULATION TIMES\n     TYPE    NUMBER     ENAME   TOTAL ELAPSED   AVG ELAPSED\n\n        1      4224  SOLID186          0.0000   0.000000000\n *** LOAD STEP     1   SUBSTEP     1  COMPLETED.    CUM ITER =      1\n *** TIME =   1.00000         TIME INC =   1.00000      NEW TRIANG MATRIX",
+  "max_displacement_mm": 0.0007757450453498308,
+  "max_von_mises_mpa": 2.750631488744426
+}

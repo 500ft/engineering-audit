@@ -236,6 +236,17 @@ def main():
         result["artifacts"]["step"] = os.path.basename(step_path)
         log(job_dir, "exported %s" % step_path)
 
+        result["stage"] = "export_iges"
+        document.ClearSelection2(True)
+        iges_path = os.path.join(job_dir, job["output_name"] + ".igs")
+        iges_status = document.SaveAs3(iges_path, 0, 0)
+        if not os.path.exists(iges_path) or os.path.getsize(iges_path) == 0:
+            result["message"] = "IGES export produced no file (SaveAs3 returned %s)" % (iges_status,)
+            write_result(job_dir, result)
+            return
+        result["artifacts"]["iges"] = os.path.basename(iges_path)
+        log(job_dir, "exported %s" % iges_path)
+
         result["stage"] = "preview"
         document.ShowNamedView2("*Isometric", 7)
         document.ViewZoomtofit2()

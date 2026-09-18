@@ -16,6 +16,12 @@ test = [
   # double-integration of beam curvature). It is not a runtime dependency.
   "numpy>=1.26",
 ]
+# Workstation-side client for cadloop's FEA stage. Connects over gRPC to a
+# licensed MAPDL instance on the CAD host; installs nothing on the host
+# itself, so it does not appear in cadloop's host requirements.
+fea = [
+  "ansys-mapdl-core>=0.68",
+]
 
 [project.scripts]
 engineering-audit = "engineering_audit.cli:main"

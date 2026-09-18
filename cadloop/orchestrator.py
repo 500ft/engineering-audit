@@ -110,6 +110,11 @@ def run_job(job_spec):
     if transfer.returncode != 0:
         return fail(job_id, "upload", "could not upload job.json: %s" % transfer.stderr.strip())
 
+    # A rerun with the same job_id must not read back a previous run's result:
+    # the worker writes result.json atomically but never deletes a stale one,
+    # and it is only ever created, not guaranteed absent, before a fresh launch.
+    remote(config, 'del /Q "%s\\result.json"' % remote_dir)
+
     launch = (
         r'%s -accepteula -i %d -u %s -p %s "%s" %s\worker.py %s'
         % (config["psexec_path"], config["session_id"], config["windows_user"],
