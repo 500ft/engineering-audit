@@ -60,7 +60,9 @@ in the order they block the rest:
 - [ ] Anchor the profile sketch to the origin; `SketchAddConstraints` returns
       false during authoring, leaving the sketch under-defined.
 - [ ] Add a gate that constrains feature position, not only volume.
-- [ ] Implement the FEA stage (STEP import, solve, measurements returned).
+- [x] Implement the FEA stage (IGES import, solve, measurements returned).
+      Recorded 2026-09-18 for the plate fixture; no FEA-side oracle yet. See
+      `cadloop/fea/README.md`.
 - [ ] Explain or bound the unstable `OpenDoc6` latency.
 
 The author can do CAD and FEA, which is used to:
