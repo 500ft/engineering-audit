@@ -54,9 +54,9 @@ a parametric plate template on a licensed SOLIDWORKS host, driven over COM,
 gated on a closed-form volume oracle, exporting STEP and a preview. Open items,
 in the order they block the rest:
 
-- [ ] Record a parametric re-drive: one template, a second parameter set,
-      measuring its own expected volume. This is the loop's first acceptance
-      test and is not yet recorded.
+- [x] Record a parametric re-drive: one template, a second parameter set,
+      measuring its own expected volume. Recorded 2026-09-18; see
+      `cadloop/evidence/parametric-redrive-2026-09-18.json`.
 - [ ] Anchor the profile sketch to the origin; `SketchAddConstraints` returns
       false during authoring, leaving the sketch under-defined.
 - [ ] Add a gate that constrains feature position, not only volume.

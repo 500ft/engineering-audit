@@ -78,16 +78,22 @@ feature and its error code.
 oracle, a non-empty STEP file, a preview image, and — checked by the
 orchestrator rather than the worker — those artifacts present on local disk.
 
+## Parametric re-drive: recorded
+
+`orchestrator.py cadloop/jobs/plate-150x80x6.json`, run against the template
+re-authored on 2026-09-18, drove the same template to a second parameter set
+(150 x 80 x 6 mm, 10 mm hole) and measured 71 528.761 101 961 53 mm³ against a
+71 528.761 101 961 54 mm³ oracle — 2e-14% error, one solid body, STEP and
+preview both retrieved to local disk. See
+[`cadloop/evidence/parametric-redrive-2026-09-18.json`](../cadloop/evidence/parametric-redrive-2026-09-18.json).
+This was the loop's first acceptance test; it is no longer open.
+
 ## Not yet established
 
 - **The FEA stage does not run.** A PyAnsys client is installed on the
   workstation and a gRPC path to a licensed MAPDL host is understood, but no
   job in this repository imports a STEP file, solves it, or returns stress or
   displacement results. Until it does, the loop is a build-and-measure loop.
-- **The parametric re-drive is unproven.** The oracle gate is in place, but no
-  committed run shows a template being driven to a second parameter set and
-  measuring the new expected volume. That run is the loop's first acceptance
-  test and has not been recorded.
 - **One fixture, one configuration.** Coverage is a single plate template in
   its `Default` configuration. Configuration-specific equations, design tables,
   and externally linked equations are outside the contract.
