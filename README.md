@@ -90,6 +90,8 @@ the counts, case provenance, and report generation path are documented in
 | [`docs/real_case_classification_rubric.md`](docs/real_case_classification_rubric.md) | Captured-case classification process |
 | [`docs/cad_fea_loop.md`](docs/cad_fea_loop.md) | CAD build-and-validate loop: stages, contracts, gates, and unimplemented stages |
 | [`docs/solidworks_api_findings.md`](docs/solidworks_api_findings.md) | Host API behaviour the CAD loop works around |
+| [`docs/host_setup.md`](docs/host_setup.md) | Bringing a Windows SOLIDWORKS host up from nothing, with the traps |
+| [`docs/cad_agent_briefing.md`](docs/cad_agent_briefing.md) | What the CAD/FEA setup can do and how to use it without repeating known mistakes |
 | [`cadloop/README.md`](cadloop/README.md) | CAD loop layout, host requirements, and use |
 | [`LIMITATIONS.md`](LIMITATIONS.md) | Supported scope and interpretation limits |
 

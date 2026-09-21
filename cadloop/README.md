@@ -25,6 +25,9 @@ runs/                     retrieved results and artifacts (not committed)
 
 ## Host requirements
 
+[`../docs/host_setup.md`](../docs/host_setup.md) is the step-by-step bring-up;
+this section is the resulting state it must reach.
+
 - Windows with SOLIDWORKS licensed and installed, OpenSSH Server enabled.
 - Python 3.12 with `pywin32`, and `PsExec` available at the configured path.
 - A logged-in interactive session. SOLIDWORKS' COM server will not start from a
