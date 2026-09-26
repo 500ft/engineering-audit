@@ -73,6 +73,33 @@ and `probe_sketch_dims.py`.
 | `GetUserPreferenceStringValue(swDefaultTemplatePart)` has returned an empty string on an authoring run where the previous day's run on the same host returned a valid path. | Not a one-time first-run condition; intermittent. `author_template.py` falls back to the literal templates path (`C:\ProgramData\SolidWorks\SOLIDWORKS 2024\templates\Part.prtdot`) when the preference lookup is empty or does not resolve to a file that exists. |
 | A host network outage left the interactive session unable to complete COM calls across multiple consecutive attempts — `OpenDoc6` and, separately, `AddDimension2` both failed with `The remote procedure call failed` or `The RPC server is unavailable` on back-to-back fresh-process attempts after the host's network dropped and reconnected. | Not the same failure mode as the unstable-latency finding above: the process was confirmed absent before each attempt, so this was not a zombie COM server, and every attempt failed at a different call rather than reliably at the same one. Recovered without rebooting the host: kill any SOLIDWORKS process, wait, and retry the whole script from `Dispatch` onward. Two retries were needed before a clean run; a working session does not appear to need this. |
 
+## MAPDL / ANSYS on this host
+
+From building `cadloop/fea/run_fea.py`. MAPDL v261 lives at
+`C:\Program Files\ANSYS Inc\ANSYS Student\v261\ansys\bin\winx64\ANSYS261.exe`.
+
+| Finding | Consequence |
+| --- | --- |
+| A stale `<jobname>.lock` stops MAPDL starting, and it exits before opening a log. | The symptom is the worst kind: no process, no port, no new log file, nothing to read. A lock survives a killed session or a crash, so one abandoned run blocks every later one under the same job name. Delete `<jobname>*.lock` before launching. |
+| `start "" /b` over SSH did not keep MAPDL alive. | The server has to be launched over an SSH channel that is then held open for the life of the run; closing the channel hangs up the server. Completion is detected by the listening port, never by the launch call returning. |
+| `-smp` is required. | In its default distributed-memory mode the same executable left a wrapper process that never bound the port. |
+| MAPDL binds `127.0.0.1` on the host. | That is a gRPC server argument, not a firewall rule, so the port is unreachable from the workstation without `ssh -L 50052:127.0.0.1:50052`. |
+| PyMAPDL's plotting methods raise `ModuleNotFoundError` rather than degrading. | `pip install "ansys-mapdl-core[graphics]"` — it needs `ansys-tools-visualization-interface`, which the base install omits. Rendering is client-side, so nothing has to be installed on the host for images. |
+| ANSYS Student stops at 128k nodes for a structural solve. | A licence ceiling, not a modelling choice. It bounds how fine a mesh convergence study can go, and a sweep that hits it has not converged — it has run out of licence. |
+| IGES import produces surfaces, not a solid: 8 areas and 0 volumes for the plate. | The volume must be built explicitly with `VA` before meshing, and free tetrahedral meshing (`MSHAPE,1,3D` + `MSHKEY,0`) is what the plate-with-hole topology admits. |
+
+### One that was not an API problem
+
+The first FEA gate rejected a correct solve at 22% error because the
+Heywood/Howland stress-concentration series was taken as **gross**-section
+referenced when it is **net**-section referenced. The prediction was low by
+W/(W-d), 32% for that plate. The tell was that measured Kt *rose* with hole size
+while the series falls; gross-referenced Kt must rise without bound as the
+ligaments vanish. The `d/W -> 0` limit is 3.0 either way, so a passing Kirsch
+check did not catch it. Recorded here because a wrong oracle is worse than no
+oracle: it rejects good work confidently, and would accept bad work in the other
+direction.
+
 ## Uninstall behaviour
 
 The Ansys Student uninstaller reported `Uninstallation Complete` while leaving

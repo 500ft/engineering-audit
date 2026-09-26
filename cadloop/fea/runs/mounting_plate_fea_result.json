@@ -1,0 +1,147 @@
+{
+  "status": "ok",
+  "message": "solved; peak stress at the hole agrees with Heywood/Howland to 7.3%",
+  "part": "mounting_plate",
+  "iges_name": "mounting_plate.igs",
+  "geometry_mm": {
+    "length": 80.0,
+    "width": 50.0,
+    "thickness": 8.0,
+    "hole_diameter": 12.0
+  },
+  "pressure_mpa": 1.0,
+  "material": {
+    "E_mpa": 200000.0,
+    "nu": 0.3
+  },
+  "meshes": [
+    {
+      "element_size_mm": 5.0,
+      "n_elements": 1769,
+      "n_nodes": 3409,
+      "bbox_mm": [
+        80.0,
+        50.0,
+        8.000000000000025
+      ],
+      "expected_bbox_mm": [
+        80.0,
+        50.0,
+        8.0
+      ],
+      "origin_mm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "fixed_nodes": 117,
+      "loaded_areas": 1,
+      "max_displacement_mm": 0.00043809386321903794,
+      "max_von_mises_mpa_global": 2.811333219689058,
+      "hole_band_nodes": 286,
+      "max_von_mises_mpa_at_hole": 2.811333219689058
+    },
+    {
+      "element_size_mm": 3.0,
+      "n_elements": 10070,
+      "n_nodes": 16207,
+      "bbox_mm": [
+        80.00000000000001,
+        50.00000000000001,
+        8.000000000000025
+      ],
+      "expected_bbox_mm": [
+        80.0,
+        50.0,
+        8.0
+      ],
+      "origin_mm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "fixed_nodes": 261,
+      "loaded_areas": 1,
+      "max_displacement_mm": 0.00043891996534910254,
+      "max_von_mises_mpa_global": 2.9839993999327836,
+      "hole_band_nodes": 725,
+      "max_von_mises_mpa_at_hole": 2.9839993999327836
+    },
+    {
+      "element_size_mm": 2.0,
+      "n_elements": 25291,
+      "n_nodes": 39475,
+      "bbox_mm": [
+        80.00000000000001,
+        50.00000000000001,
+        8.000000000000025
+      ],
+      "expected_bbox_mm": [
+        80.0,
+        50.0,
+        8.0
+      ],
+      "origin_mm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "fixed_nodes": 475,
+      "loaded_areas": 1,
+      "max_displacement_mm": 0.0004390005670546688,
+      "max_von_mises_mpa_global": 2.973359739293081,
+      "hole_band_nodes": 1947,
+      "max_von_mises_mpa_at_hole": 2.973359739293081
+    }
+  ],
+  "oracle": {
+    "kt_net_section": 2.43846528,
+    "gross_stress_mpa": 1.0,
+    "net_stress_mpa": 1.3157894736842106,
+    "net_over_gross": 1.3157894736842106,
+    "expected_peak_mpa": 3.2085069473684213,
+    "expected_peak_over_gross": 3.2085069473684213,
+    "source": "Heywood/Howland finite-width plate, central hole, uniaxial tension",
+    "d_over_W": 0.24,
+    "tolerance_rel": 0.12,
+    "measured_peak_mpa": 2.973359739293081,
+    "measured_peak_over_gross": 2.973359739293081,
+    "error_rel": 0.07328867037928823,
+    "agrees": true
+  },
+  "mapdl_launch": "already listening on 50052",
+  "mapdl_version": "26.1",
+  "imported_areas": 8,
+  "volumes_after_va": 1,
+  "images": {
+    "mesh": "mounting_plate_h2_mesh.png",
+    "von_mises": "mounting_plate_h2_von_mises.png",
+    "displacement": "mounting_plate_h2_displacement.png"
+  },
+  "finest_solved": {
+    "element_size_mm": 2.0,
+    "n_elements": 25291,
+    "n_nodes": 39475,
+    "bbox_mm": [
+      80.00000000000001,
+      50.00000000000001,
+      8.000000000000025
+    ],
+    "expected_bbox_mm": [
+      80.0,
+      50.0,
+      8.0
+    ],
+    "origin_mm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fixed_nodes": 475,
+    "loaded_areas": 1,
+    "max_displacement_mm": 0.0004390005670546688,
+    "max_von_mises_mpa_global": 2.973359739293081,
+    "hole_band_nodes": 1947,
+    "max_von_mises_mpa_at_hole": 2.973359739293081
+  }
+}
