@@ -1,0 +1,12 @@
+{
+  "_comment": "Single source of geometry, read by both oracle.py and author_part.py so they cannot disagree. Give every value an evidence_state; see docs/cad_agent_briefing.md for what the states mean and which may be chosen by the designer.",
+  "mounting_plate": {
+    "length": {"value": 80.0, "unit": "mm", "evidence_state": "design_choice"},
+    "width": {"value": 50.0, "unit": "mm", "evidence_state": "design_choice"},
+    "thickness": {"value": 8.0, "unit": "mm", "evidence_state": "design_choice"},
+    "hole_diameter": {"value": 12.0, "unit": "mm", "evidence_state": "design_choice"}
+  },
+  "material": {
+    "density": {"value": 2700.0, "unit": "kg/m^3", "evidence_state": "model_assumption"}
+  }
+}

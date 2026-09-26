@@ -44,6 +44,22 @@ the authored dimensions already carry those values. The template looks
 parametric and is not. Reading the equation table back, which
 `inspect_template.py` does, is the check that catches it.
 
+## Sketch dimensions and what actually drives geometry
+
+All of this was measured on the host by `cadloop/scaffold/probe_rectangle.py`
+and `probe_sketch_dims.py`.
+
+| Finding | Consequence |
+| --- | --- |
+| `CreateCornerRectangle` **sometimes** dimensions its own rectangle. In the scaffold run the sketch already held two dimensions (`D1`, `D2`) immediately after the call, before `AddDimension2` was used at all. | Dimensions added afterwards are then a *second* pair on the same two edges. Ours report driving and the tool's already fix the geometry, so driving ours moves nothing. Delete what the tool created before adding your own; `swhelpers.clear_sketch_dimensions` does this. |
+| It is not a property of the API call. The same call on the same host produced **no** dimensions when `root_clamp` was authored in `autonomous-racing-systems`: that sketch holds exactly the two dimensions the script added, in the order it added them, and all three clamp variables re-drive correctly. The scaffold, authored later, got two. | The rectangle tool's automatic-dimension option is sticky host state that changes between sessions, so neither outcome can be assumed. Do not write code that depends on the tool dimensioning, or on it not dimensioning. Clearing first makes the result the same either way — with the option off there is simply nothing to remove, which is what the circle sketches show (`removed: []`). |
+| The over-defined sketch still measures correctly. | The rectangle was drawn at the intended size, so the oracle agrees to 1e-16 and the part looks finished. It is not parametric. Only a parameter change exposes it — this is exactly the failure the re-drive test exists for, and it was caught that way. |
+| `EditDelete` returns `False` for a dimension it successfully deleted. | Do not test the return value. Confirm by re-reading the sketch's dimension list; after the "failed" deletes the list was empty and the sketch had dropped back to under-defined. |
+| `IDimension::DrivenState` is not meaningful inside an open sketch. | Dimensions that report `2` (driven) while the sketch is open report `1` (driving) once it closes and solves. Gating on it mid-sketch reads every new dimension as driven. |
+| `GetConstrainedStatus` returned `3` for both a correctly fully-defined sketch and the over-defined four-dimension sketch. | It does not distinguish them, so it cannot be used as the parametricity check. The empty sketch returned `2`. |
+| The `Equations` folder reports `GetErrorCode2` = 1, with the by-reference warning flag *clear*, for the remainder of the session that added the equations — surviving any number of `ForceRebuild3` calls. Saving and reopening clears it. | Two consequences. First, rebuild state must be verified on the reopened file, not in the authoring session; that also checks the artifact on disk rather than the live session. Second, the code was not noise: here it was a true signal pointing at the over-defined sketch, and it went away when the cause was fixed. |
+| `GetErrorCode2` takes a by-reference flag saying whether a non-zero code is a warning. | Read it. Treating every non-zero code as a failure rejects parts whose geometry is correct; ignoring the code entirely accepts parts whose features are in error. |
+
 ## Session and process behaviour
 
 | Finding | Consequence |

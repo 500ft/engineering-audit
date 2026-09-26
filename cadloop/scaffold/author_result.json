@@ -1,0 +1,263 @@
+{
+  "status": "ok",
+  "message": "reopened part rebuilds clean, matches the oracle, and its equations drive it",
+  "stages": [
+    {
+      "stage": "new_document",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "stage": "select_front_plane",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "stage": "clear_rectangle_dimensions",
+      "ok": true,
+      "detail": {
+        "removed": [
+          "D1@Sketch1",
+          "D2@Sketch1"
+        ],
+        "remaining": []
+      }
+    },
+    {
+      "stage": "dimension_plate",
+      "ok": true,
+      "detail": [
+        "D1@Sketch1",
+        "D2@Sketch1"
+      ]
+    },
+    {
+      "stage": "extrude_plate",
+      "ok": true,
+      "detail": {
+        "volume_mm3": 32000.000000000004
+      }
+    },
+    {
+      "stage": "select_top_face",
+      "ok": true,
+      "detail": null
+    },
+    {
+      "stage": "clear_circle_dimensions",
+      "ok": true,
+      "detail": {
+        "removed": [],
+        "remaining": []
+      }
+    },
+    {
+      "stage": "dimension_hole",
+      "ok": true,
+      "detail": "D1@Sketch2"
+    },
+    {
+      "stage": "cut_bore",
+      "ok": true,
+      "detail": {
+        "volume_mm3": 31095.221315766143
+      }
+    },
+    {
+      "stage": "equations",
+      "ok": true,
+      "detail": [
+        {
+          "equation": "\"PlateLength\"= 80mm",
+          "index": 0
+        },
+        {
+          "equation": "\"PlateWidth\"= 50mm",
+          "index": 1
+        },
+        {
+          "equation": "\"PlateThickness\"= 8mm",
+          "index": 2
+        },
+        {
+          "equation": "\"HoleDiameter\"= 12mm",
+          "index": 3
+        },
+        {
+          "equation": "\"D1@Sketch1\"= \"PlateLength\"",
+          "index": 4
+        },
+        {
+          "equation": "\"D2@Sketch1\"= \"PlateWidth\"",
+          "index": 5
+        },
+        {
+          "equation": "\"D1@Boss-Extrude1\"= \"PlateThickness\"",
+          "index": 6
+        },
+        {
+          "equation": "\"D1@Sketch2\"= \"HoleDiameter\"",
+          "index": 7
+        }
+      ]
+    },
+    {
+      "stage": "reopen",
+      "ok": true,
+      "detail": "C:\\CADLoop\\scaffold\\mounting_plate.sldprt"
+    },
+    {
+      "stage": "rebuild",
+      "ok": true,
+      "detail": {
+        "failures": [],
+        "warnings": []
+      }
+    },
+    {
+      "stage": "redrive",
+      "ok": true,
+      "detail": [
+        {
+          "name": "longer_plate_smaller_bore",
+          "globals": {
+            "PlateLength": 100.0,
+            "HoleDiameter": 10.0
+          },
+          "applied": {
+            "PlateLength": "\"PlateLength\"= 100mm",
+            "HoleDiameter": "\"HoleDiameter\"= 10mm"
+          },
+          "rebuild": {
+            "failures": [],
+            "warnings": []
+          },
+          "expected_volume_mm3": 39371.68146928204,
+          "measured_volume_mm3": 39371.68146928205,
+          "error_rel": 1.8480180024467991e-16,
+          "n_solids": 1,
+          "rebuild_ok": true,
+          "measured_baseline_instead": false,
+          "driven": true
+        },
+        {
+          "name": "thicker_plate",
+          "globals": {
+            "PlateThickness": 12.0
+          },
+          "applied": {
+            "PlateThickness": "\"PlateThickness\"= 12mm"
+          },
+          "rebuild": {
+            "failures": [],
+            "warnings": []
+          },
+          "expected_volume_mm3": 46642.831973649205,
+          "measured_volume_mm3": 46642.83197364921,
+          "error_rel": 1.5599304987085619e-16,
+          "n_solids": 1,
+          "rebuild_ok": true,
+          "measured_baseline_instead": false,
+          "driven": true
+        }
+      ]
+    },
+    {
+      "stage": "accepted",
+      "ok": true,
+      "detail": {
+        "sldprt_written": true,
+        "step_written": true,
+        "iges_written": true,
+        "preview_written": true,
+        "measured_volume_mm3": 31095.221315766135,
+        "oracle_volume_mm3": 31095.22131576614,
+        "error_rel": 1.1699478740314213e-16,
+        "tolerance_rel": 1e-06,
+        "n_solids": 1,
+        "measured_mass_kg": 0.08395709755256857,
+        "oracle_match": true,
+        "rebuild_ok": true,
+        "rebuild": {
+          "failures": [],
+          "warnings": []
+        },
+        "equations_drive": true,
+        "accepted": true
+      }
+    }
+  ],
+  "part": {
+    "sldprt_written": true,
+    "step_written": true,
+    "iges_written": true,
+    "preview_written": true,
+    "measured_volume_mm3": 31095.221315766135,
+    "oracle_volume_mm3": 31095.22131576614,
+    "error_rel": 1.1699478740314213e-16,
+    "tolerance_rel": 1e-06,
+    "n_solids": 1,
+    "measured_mass_kg": 0.08395709755256857,
+    "oracle_match": true,
+    "rebuild_ok": true,
+    "rebuild": {
+      "failures": [],
+      "warnings": []
+    },
+    "equations_drive": true,
+    "accepted": true
+  },
+  "unattended": [
+    {
+      "preference_id": 10,
+      "target": false,
+      "was": true,
+      "now": false,
+      "applied": true
+    }
+  ],
+  "redrive": [
+    {
+      "name": "longer_plate_smaller_bore",
+      "globals": {
+        "PlateLength": 100.0,
+        "HoleDiameter": 10.0
+      },
+      "applied": {
+        "PlateLength": "\"PlateLength\"= 100mm",
+        "HoleDiameter": "\"HoleDiameter\"= 10mm"
+      },
+      "rebuild": {
+        "failures": [],
+        "warnings": []
+      },
+      "expected_volume_mm3": 39371.68146928204,
+      "measured_volume_mm3": 39371.68146928205,
+      "error_rel": 1.8480180024467991e-16,
+      "n_solids": 1,
+      "rebuild_ok": true,
+      "measured_baseline_instead": false,
+      "driven": true
+    },
+    {
+      "name": "thicker_plate",
+      "globals": {
+        "PlateThickness": 12.0
+      },
+      "applied": {
+        "PlateThickness": "\"PlateThickness\"= 12mm"
+      },
+      "rebuild": {
+        "failures": [],
+        "warnings": []
+      },
+      "expected_volume_mm3": 46642.831973649205,
+      "measured_volume_mm3": 46642.83197364921,
+      "error_rel": 1.5599304987085619e-16,
+      "n_solids": 1,
+      "rebuild_ok": true,
+      "measured_baseline_instead": false,
+      "driven": true
+    }
+  ]
+}
