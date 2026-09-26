@@ -1,0 +1,187 @@
+{
+  "status": "ok",
+  "message": "probe complete",
+  "equations": [
+    {
+      "index": 0,
+      "equation": "\"PlateLength\"= 80mm",
+      "status": "TypeError: 'int' object is not callable",
+      "value": 80.0
+    },
+    {
+      "index": 1,
+      "equation": "\"PlateWidth\"= 50mm",
+      "status": "TypeError: 'int' object is not callable",
+      "value": 50.0
+    },
+    {
+      "index": 2,
+      "equation": "\"PlateThickness\"= 8mm",
+      "status": "TypeError: 'int' object is not callable",
+      "value": 8.0
+    },
+    {
+      "index": 3,
+      "equation": "\"HoleDiameter\"= 12mm",
+      "status": "TypeError: 'int' object is not callable",
+      "value": 12.0
+    },
+    {
+      "index": 4,
+      "equation": "\"D3@Sketch1\"= \"PlateLength\"",
+      "status": "TypeError: 'int' object is not callable",
+      "value": 80.0
+    },
+    {
+      "index": 5,
+      "equation": "\"D4@Sketch1\"= \"PlateWidth\"",
+      "status": "TypeError: 'int' object is not callable",
+      "value": 50.0
+    },
+    {
+      "index": 6,
+      "equation": "\"D1@Boss-Extrude1\"= \"PlateThickness\"",
+      "status": "TypeError: 'int' object is not callable",
+      "value": 8.0
+    },
+    {
+      "index": 7,
+      "equation": "\"D1@Sketch2\"= \"HoleDiameter\"",
+      "status": "TypeError: 'int' object is not callable",
+      "value": 12.0
+    }
+  ],
+  "features": [
+    {
+      "name": "Comments",
+      "type": "CommentsFolder",
+      "error_code": 0,
+      "warning": null
+    },
+    {
+      "name": "Favorites",
+      "type": "FavoriteFolder",
+      "error_code": 0,
+      "warning": null
+    },
+    {
+      "name": "History",
+      "type": "HistoryFolder",
+      "error_code": 0,
+      "warning": null
+    },
+    {
+      "name": "Selection Sets",
+      "type": "SelectionSetFolder",
+      "error_code": 0,
+      "warning": null
+    },
+    {
+      "name": "Sensors",
+      "type": "SensorFolder",
+      "error_code": 0,
+      "warning": null
+    },
+    {
+      "name": "Design Binder",
+      "type": "DocsFolder",
+      "error_code": 0,
+      "warning": null
+    },
+    {
+      "name": "Annotations",
+      "type": "DetailCabinet",
+      "error_code": 0,
+      "warning": null
+    },
+    {
+      "name": "Surface Bodies",
+      "type": "SurfaceBodyFolder",
+      "error_code": 0,
+      "warning": null
+    },
+    {
+      "name": "Solid Bodies",
+      "type": "SolidBodyFolder",
+      "error_code": 0,
+      "warning": null
+    },
+    {
+      "name": "Lights and Cameras",
+      "type": "EnvFolder",
+      "error_code": 0,
+      "warning": null
+    },
+    {
+      "name": "Markups",
+      "type": "InkMarkupFolder",
+      "error_code": 0,
+      "warning": null
+    },
+    {
+      "name": "Equations",
+      "type": "EqnFolder",
+      "error_code": 1,
+      "warning": false
+    },
+    {
+      "name": "Material <not specified>",
+      "type": "MaterialFolder",
+      "error_code": 0,
+      "warning": null
+    },
+    {
+      "name": "Front Plane",
+      "type": "RefPlane",
+      "error_code": 0,
+      "warning": null
+    },
+    {
+      "name": "Top Plane",
+      "type": "RefPlane",
+      "error_code": 0,
+      "warning": null
+    },
+    {
+      "name": "Right Plane",
+      "type": "RefPlane",
+      "error_code": 0,
+      "warning": null
+    },
+    {
+      "name": "Origin",
+      "type": "OriginProfileFeature",
+      "error_code": 0,
+      "warning": null
+    },
+    {
+      "name": "Sketch1",
+      "type": "ProfileFeature",
+      "error_code": 0,
+      "warning": null
+    },
+    {
+      "name": "Boss-Extrude1",
+      "type": "Extrusion",
+      "error_code": 0,
+      "warning": null
+    },
+    {
+      "name": "Sketch2",
+      "type": "ProfileFeature",
+      "error_code": 0,
+      "warning": null
+    },
+    {
+      "name": "Cut-Extrude1",
+      "type": "ICE",
+      "error_code": 0,
+      "warning": null
+    }
+  ],
+  "rebuild": {
+    "failures": [],
+    "warnings": []
+  },
+  "volume_mm3": 31095.221315766143
+}

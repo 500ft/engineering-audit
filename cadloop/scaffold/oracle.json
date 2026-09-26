@@ -1,0 +1,48 @@
+{
+  "density_kg_m3": 2700.0,
+  "parts": {
+    "mounting_plate": {
+      "volume_mm3": 31095.22131576614,
+      "bbox_mm": [
+        80.0,
+        50.0,
+        8.0
+      ],
+      "n_solids": 1,
+      "mass_kg": 0.08395709755256858
+    }
+  },
+  "redrive": [
+    {
+      "name": "longer_plate_smaller_bore",
+      "globals": {
+        "PlateLength": 100.0,
+        "HoleDiameter": 10.0
+      },
+      "expected": {
+        "volume_mm3": 39371.68146928204,
+        "bbox_mm": [
+          100.0,
+          50.0,
+          8.0
+        ],
+        "n_solids": 1
+      }
+    },
+    {
+      "name": "thicker_plate",
+      "globals": {
+        "PlateThickness": 12.0
+      },
+      "expected": {
+        "volume_mm3": 46642.831973649205,
+        "bbox_mm": [
+          80.0,
+          50.0,
+          12.0
+        ],
+        "n_solids": 1
+      }
+    }
+  ]
+}

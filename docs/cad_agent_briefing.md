@@ -18,6 +18,11 @@ Work spans two repositories. They do not overlap.
 | Contract | `cadloop/` gates on `volume.py` oracles | `cad/contract.json` (frozen specimen), `cad/solidworks/contract-assembly.v1.json` |
 | CI | oracle tests only; authoring needs the host | same |
 
+**Start from `cadloop/scaffold/`.** It is a complete working part — author,
+oracle gate, re-drive, export — small enough to read in one sitting and meant to
+be copied. Its `README.md` says what to change. Every trap below is already
+encoded in its `swhelpers.py`, so adapt it rather than starting from a blank file.
+
 ## What is proven to work
 
 Each of these has a recorded run, not an intention.
@@ -47,7 +52,7 @@ concentration on nominal, consistent with a circular hole in a finite plate.
 
 **A clean rebuild is not evidence.** SOLIDWORKS reporting no error does not mean
 it produced the geometry you asked for. This is not a theoretical concern — it
-happened three separate times in one week:
+happened four separate times, each with a different cause:
 
 1. A job reported `status: ok` while returning the *template's original* volume.
    The parameters had been written but never reached a dimension.
@@ -56,8 +61,20 @@ happened three separate times in one week:
 3. Three `FeatureCut4` calls returned `None`. Nothing raised. The result was a
    solid block with no bore, no slot and no holes — and a `.sldprt`, a `.step`
    and a preview image that all looked plausible.
+4. A plate matched its oracle to 1e-16 while not being parametric at all.
+   `CreateCornerRectangle` had dimensioned its own rectangle, so the dimensions
+   added afterwards were a second pair on the same edges, driving nothing. The
+   part was drawn at the intended size, so the volume was exactly right.
 
-In every case a screenshot would have passed. The number did not.
+In the first three a screenshot would have passed and the number did not. The
+fourth is worse: the number passed too. Changing `PlateLength` from 80 to 100 mm
+is what exposed it — the bore moved, the plate stayed 80×50. A clean rebuild, a
+correct measured volume, a plausible preview and a valid STEP file were all
+present throughout.
+
+So the two checks catch different things and neither replaces the other: the
+oracle catches wrong geometry, the re-drive catches a model that is right once and
+cannot be changed. **A part is not built until it has been re-driven.**
 
 So: **every part gets a closed-form or independently-computed expected value, and
 is refused if it disagrees.** `cadloop/volume.py` holds the oracles for the plate
@@ -98,6 +115,20 @@ the volume after every feature rather than only at the end; a per-feature trace
 localises a failure in one run instead of three. When two candidate fixes exist
 (a direction flag, say), try both inside the same run and record which worked.
 
+**Delete the dimensions a sketch tool created before adding your own.** The
+rectangle tool dimensions its own rectangle on this host. Adding yours leaves four
+dimensions on two edges; yours report driving and the tool's already fix the
+geometry. `swhelpers.clear_sketch_dimensions` handles it. Do not try to detect
+this with `GetConstrainedStatus` — it returned 3 for both the correct and the
+over-defined sketch — nor with `DrivenState` inside an open sketch, where every
+dimension reads as driven until the sketch closes.
+
+**Verify the reopened file, not the authoring session.** Once equations are added,
+the `Equations` folder reports an error for the rest of that session however many
+rebuilds are forced; saving and reopening clears it. Checking the file on disk
+avoids the false alarm and is the stronger check anyway, since the file is what
+ships.
+
 **Build one closed contour per feature.** A sketch holding two concentric circles
 is rejected by `FeatureExtrusion3`. A tube is a cylinder plus a bore cut.
 
@@ -113,7 +144,9 @@ is rejected by `FeatureExtrusion3`. A tube is a cylinder plus a bore cut.
 5. Round-trip the STEP through CadQuery as a final independent check.
 
 ```bash
-# engineering-audit
+# engineering-audit: the scaffold, and the plate fixture job
+.venv/bin/python cadloop/scaffold/oracle.py
+python3 cadloop/scaffold/run_host.py cadloop/scaffold/author_part.py author_result.json 900
 python cadloop/orchestrator.py cadloop/jobs/plate-150x80x6.json
 
 # autonomous-racing-systems

@@ -1,0 +1,18 @@
+{
+  "_comment": "Parameter-change cases. Equations existing is not equations driving: a part can hold correct-looking equations that no dimension listens to, and it measures right until something is changed. Each case names the global variable to change, the geometry.json path it corresponds to, and the new value. oracle.py computes the expected volume from the path; redrive.py drives the global on the host. One declaration, so the two halves cannot disagree.",
+  "cases": [
+    {
+      "name": "longer_plate_smaller_bore",
+      "set": {
+        "PlateLength": {"path": ["mounting_plate", "length"], "value": 100.0},
+        "HoleDiameter": {"path": ["mounting_plate", "hole_diameter"], "value": 10.0}
+      }
+    },
+    {
+      "name": "thicker_plate",
+      "set": {
+        "PlateThickness": {"path": ["mounting_plate", "thickness"], "value": 12.0}
+      }
+    }
+  ]
+}

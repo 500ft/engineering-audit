@@ -1,0 +1,108 @@
+{
+  "status": "ok",
+  "message": "probe complete",
+  "features": [
+    {
+      "feature": "Sketch1",
+      "type": "ProfileFeature",
+      "dimensions": [
+        {
+          "full_name": "D1@Sketch1@mounting_plate.Part",
+          "short_name": "D1@Sketch1",
+          "value_mm": 50.0,
+          "driven_state": 2,
+          "read_only": 0
+        },
+        {
+          "full_name": "D2@Sketch1@mounting_plate.Part",
+          "short_name": "D2@Sketch1",
+          "value_mm": 80.0,
+          "driven_state": 2,
+          "read_only": 0
+        },
+        {
+          "full_name": "D3@Sketch1@mounting_plate.Part",
+          "short_name": "D3@Sketch1",
+          "value_mm": 80.0,
+          "driven_state": 1,
+          "read_only": 0
+        },
+        {
+          "full_name": "D4@Sketch1@mounting_plate.Part",
+          "short_name": "D4@Sketch1",
+          "value_mm": 50.0,
+          "driven_state": 1,
+          "read_only": 0
+        }
+      ]
+    },
+    {
+      "feature": "Boss-Extrude1",
+      "type": "Extrusion",
+      "dimensions": [
+        {
+          "full_name": "D1@Boss-Extrude1@mounting_plate.Part",
+          "short_name": "D1@Boss-Extrude1",
+          "value_mm": 8.0,
+          "driven_state": 1,
+          "read_only": 0
+        },
+        {
+          "full_name": "D1@Sketch1@mounting_plate.Part",
+          "short_name": "D1@Sketch1",
+          "value_mm": 50.0,
+          "driven_state": 2,
+          "read_only": 0
+        },
+        {
+          "full_name": "D2@Sketch1@mounting_plate.Part",
+          "short_name": "D2@Sketch1",
+          "value_mm": 80.0,
+          "driven_state": 2,
+          "read_only": 0
+        },
+        {
+          "full_name": "D3@Sketch1@mounting_plate.Part",
+          "short_name": "D3@Sketch1",
+          "value_mm": 80.0,
+          "driven_state": 1,
+          "read_only": 0
+        },
+        {
+          "full_name": "D4@Sketch1@mounting_plate.Part",
+          "short_name": "D4@Sketch1",
+          "value_mm": 50.0,
+          "driven_state": 1,
+          "read_only": 0
+        }
+      ]
+    },
+    {
+      "feature": "Sketch2",
+      "type": "ProfileFeature",
+      "dimensions": [
+        {
+          "full_name": "D1@Sketch2@mounting_plate.Part",
+          "short_name": "D1@Sketch2",
+          "value_mm": 11.99999999999999,
+          "driven_state": 1,
+          "read_only": 0
+        }
+      ]
+    },
+    {
+      "feature": "Cut-Extrude1",
+      "type": "ICE",
+      "dimensions": [
+        {
+          "full_name": "D1@Sketch2@mounting_plate.Part",
+          "short_name": "D1@Sketch2",
+          "value_mm": 11.99999999999999,
+          "driven_state": 1,
+          "read_only": 0
+        }
+      ]
+    }
+  ],
+  "sketch1_constraint_state": 3
+}
