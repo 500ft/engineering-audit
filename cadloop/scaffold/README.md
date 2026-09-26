@@ -70,7 +70,10 @@ matter how many rebuilds are forced.
 The re-drive is not a nicety. Building this scaffold, the oracle passed at 1e-16
 on a part that was **not parametric**: `CreateCornerRectangle` had dimensioned its
 own rectangle, so the dimensions added afterwards were a second pair on the same
-edges and drove nothing. The part was drawn at the intended size, so it measured
+edges and drove nothing. That is sticky host state rather than API behaviour — the
+same call did not auto-dimension the RoboRacer clamp authored earlier on this host
+— which is why `clear_sketch_dimensions` runs unconditionally instead of trying to
+detect it. The part was drawn at the intended size, so it measured
 exactly right. Changing `PlateLength` from 80 to 100 mm moved the bore and left
 the plate at 80×50 — and that is the only reason the defect was found. A clean
 rebuild, a correct volume, a plausible preview image and a valid STEP file were

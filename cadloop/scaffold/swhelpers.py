@@ -244,7 +244,11 @@ def clear_sketch_dimensions(part, sketch_name, callout):
     """Delete the dimensions a sketch tool created, so ours are the only ones.
 
     CreateCornerRectangle dimensions its own rectangle on a host where the
-    rectangle tool has automatic dimensions enabled. Adding ours on top leaves
+    rectangle tool has automatic dimensions enabled. That is sticky host state and
+    it varies: the same call did not auto-dimension autonomous-racing-systems'
+    root_clamp, authored earlier on this host. So this runs unconditionally rather
+    than trying to detect which way the host is set -- with the option off there is
+    nothing to remove. Adding ours on top leaves
     four dimensions on two edges: ours report driving, the tool's already fix the
     geometry, and driving ours moves nothing. The measured volume still matches
     the oracle, because the rectangle was drawn at the intended size -- only a

@@ -32,9 +32,12 @@ scratch — tube, sleeve, split clamp with bore, slot and two cross-drilled bolt
 holes across three sketch planes. Not STEP imports; real feature trees.
 
 **Drive a saved part from named global variables.** Changing one variable
-(`ClampEngagement` 35 → 40 mm) re-drove all three parts onto independently
-computed new volumes at 1e-15 or better. Equations existing is *not* the test;
-re-driving is.
+(`ClampEngagement` 35 → 40 mm) re-drove all three mast parts onto independently
+computed new volumes at 1e-15 or better. `cad/solidworks/probe_clamp_parametric.py`
+later checked the clamp's other two variables as well — `ClampWidth` and
+`ClampHeight` both move the geometry — because the one variable already tested
+drove a *feature* dimension, and sketch dimensions are the case that can be inert.
+Equations existing is *not* the test; re-driving each variable is.
 
 **Verify geometry against an independent oracle.** CadQuery builds the same
 geometry, SOLIDWORKS measures its own mass properties, the two are compared
@@ -116,9 +119,14 @@ localises a failure in one run instead of three. When two candidate fixes exist
 (a direction flag, say), try both inside the same run and record which worked.
 
 **Delete the dimensions a sketch tool created before adding your own.** The
-rectangle tool dimensions its own rectangle on this host. Adding yours leaves four
-dimensions on two edges; yours report driving and the tool's already fix the
-geometry. `swhelpers.clear_sketch_dimensions` handles it. Do not try to detect
+rectangle tool sometimes dimensions its own rectangle. When it does, adding yours
+leaves four dimensions on two edges; yours report driving and the tool's already
+fix the geometry. This is sticky host state, not API behaviour: the same call on
+this host auto-dimensioned the scaffold plate and did *not* auto-dimension the
+RoboRacer clamp, which was authored earlier and re-drives correctly on all three
+of its variables. So assume neither outcome — clear first and the result is the
+same either way, since with the option off there is nothing to remove.
+`swhelpers.clear_sketch_dimensions` handles it. Do not try to detect
 this with `GetConstrainedStatus` — it returned 3 for both the correct and the
 over-defined sketch — nor with `DrivenState` inside an open sketch, where every
 dimension reads as driven until the sketch closes.
